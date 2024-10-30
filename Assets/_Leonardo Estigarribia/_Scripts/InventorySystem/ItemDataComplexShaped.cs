@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace LeonardoEstigarribia.InventorySystem.itemData.normalShaped
+namespace LeonardoEstigarribia.InventorySystem.itemData.complexShaped
 {
     [CreateAssetMenu(menuName = "Inventory Item/Normal shaped item")]
-    public class ItemData : ScriptableObject
+    public class ItemDataComplexShaped : ScriptableObject
     {
         /// <summary>
         ///     Width of the item (space that will occupy on a grid).

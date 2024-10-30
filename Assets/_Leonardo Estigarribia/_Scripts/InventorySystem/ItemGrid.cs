@@ -1,5 +1,9 @@
+#region Imported Namespaces
+
 using LeonardoEstigarribia.InventorySystem.inventoryItem;
 using UnityEngine;
+
+#endregion
 
 namespace LeonardoEstigarribia.InventorySystem.itemGrid
 {
@@ -11,7 +15,7 @@ namespace LeonardoEstigarribia.InventorySystem.itemGrid
         public const float tileSizeWidth = 100;
         public const float tileSizeHeight = 100;
 
-        private InventoryItem[,] inventoryItemSlot; // This represents a slot in the inventory.
+        private InventoryItemNormalShaped[,] inventoryItemSlot; // This represents a slot in the inventory.
 
         private RectTransform
             invRectTransform; // Rect transform of the InventoryGrid GameObject (the inventory itself).
@@ -37,36 +41,21 @@ namespace LeonardoEstigarribia.InventorySystem.itemGrid
             InitializeItemGrid(inventoryRowQuantity, inventoryColumnQuantity);
         }
 
-        public InventoryItem GetItem(int x, int y)
+        public InventoryItemNormalShaped GetItem(int x, int y)
         {
             return inventoryItemSlot[x, y];
         }
 
-        public InventoryItem GetItemToPickUp(int x, int y)
+        // Checks if there is an item in the passed coordinates.
+        public InventoryItemNormalShaped GetItemToPickUp(int x, int y)
         {
-            InventoryItem toReturn = inventoryItemSlot[x, y];
+            InventoryItemNormalShaped toReturn = inventoryItemSlot[x, y];
 
             if (toReturn == null) return null;
 
             CleanGridReference(toReturn);
 
             return toReturn;
-        }
-
-        // Clean the Item from the grid independently from their width and size.
-        private void CleanGridReference(InventoryItem item)
-        {
-            for (var ix = 0; ix < item.invItemWidth; ix++)
-            for (var iy = 0; iy < item.invItemHeight; iy++)
-                inventoryItemSlot[item.onGridPositionX + ix, item.onGridPositionY + iy] = null;
-        }
-
-        // Will set the ROWS (x numbers of tiles) and COLUMNS (y numbers of tiles) the grid will have by passing both integer parameters.
-        private void InitializeItemGrid(int rowAmount, int columnAmount)
-        {
-            inventoryItemSlot = new InventoryItem[rowAmount, columnAmount];
-            var size = new Vector2(rowAmount * tileSizeWidth, columnAmount * tileSizeHeight);
-            invRectTransform.sizeDelta = size;
         }
 
         // Gets the coordinates of the row and tile the pointer sits in.
@@ -82,73 +71,94 @@ namespace LeonardoEstigarribia.InventorySystem.itemGrid
 
             return tileGridPosition;
         }
+        
+        // Clean the Item from the grid independently from their width and size.
+        private void CleanGridReference(InventoryItemNormalShaped itemNormalShaped)
+        {
+            for (var ix = 0; ix < itemNormalShaped.invItemWidth; ix++)
+            for (var iy = 0; iy < itemNormalShaped.invItemHeight; iy++)
+                inventoryItemSlot[itemNormalShaped.onGridPositionX + ix, itemNormalShaped.onGridPositionY + iy] = null;
+        }
+
+        // Will set the ROWS (x numbers of tiles) and COLUMNS (y numbers of tiles) the grid will have by passing both integer parameters.
+        private void InitializeItemGrid(int rowAmount, int columnAmount)
+        {
+            inventoryItemSlot = new InventoryItemNormalShaped[rowAmount, columnAmount];
+            var size = new Vector2(rowAmount * tileSizeWidth, columnAmount * tileSizeHeight);
+            invRectTransform.sizeDelta = size;
+        }
+        
 
         // Places the item being dragged to the tile the mouse interacts (left click) with.
-        public bool PlaceItemOnGrid(InventoryItem inventoryItem, int posX, int posY, ref InventoryItem overlapItem)
+        public bool PlaceItemOnGrid(InventoryItemNormalShaped inventoryItemNormalShaped, int posX, int posY, ref InventoryItemNormalShaped overlapItemNormalShaped)
         {
             // Check the boundaries of the item.
-            if (BoundaryCheck(posX, posY, inventoryItem.invItemWidth, inventoryItem.invItemHeight) == false)
+            if (BoundaryCheck(posX, posY, inventoryItemNormalShaped.invItemWidth, inventoryItemNormalShaped.invItemHeight) == false)
                 return false;
 
             // Check if its overlapping another item.
-            if (OverlapCheck(posX, posY, inventoryItem.invItemWidth, inventoryItem.invItemHeight, ref overlapItem) ==
+            if (OverlapCheck(posX, posY, inventoryItemNormalShaped.invItemWidth, inventoryItemNormalShaped.invItemHeight, ref overlapItemNormalShaped) ==
                 false)
             {
-                overlapItem = null;
+                overlapItemNormalShaped = null;
                 return false;
             }
 
-            if (overlapItem != null) CleanGridReference(overlapItem);
+            if (overlapItemNormalShaped != null) CleanGridReference(overlapItemNormalShaped);
 
-            HandleItemPlacing(inventoryItem, posX, posY);
+            HandleItemPlacing(inventoryItemNormalShaped, posX, posY);
 
             // If the item was managed to be placed.
             return true;
         }
 
-        public void HandleItemPlacing(InventoryItem inventoryItem, int posX, int posY)
+        // posX and posY should be the coordinates of the tile that was selected by the mouse in the grid.
+        public void HandleItemPlacing(InventoryItemNormalShaped _selectedItemNormalShaped, int _selectedMouseOnTileCoordinateX, int _selectedMouseOnTileCoordinateY)
         {
-            RectTransform itemRectTransform = inventoryItem.GetComponent<RectTransform>();
-            itemRectTransform.SetParent(invRectTransform); // Set the inventory grid as a parent of the item icon.
+            // Gets the rect of the selectedItem.
+            RectTransform itemRectTransform = _selectedItemNormalShaped.GetComponent<RectTransform>();
+            // Set the inventory grid as a parent of the item icon.
+            itemRectTransform.SetParent(invRectTransform); 
 
             // Sets the tiles data (depending on width and size) to be occupied by the item.
-            for (var x = 0; x < inventoryItem.invItemWidth; x++)
-            for (var y = 0; y < inventoryItem.invItemHeight; y++)
-                inventoryItemSlot[posX + x, posY + y] =
-                    inventoryItem; // Sets the space the item icon is occupying on the grid.
+            for (var x = 0; x < _selectedItemNormalShaped.invItemWidth; x++)
+            for (var y = 0; y < _selectedItemNormalShaped.invItemHeight; y++)
+                inventoryItemSlot[_selectedMouseOnTileCoordinateX + x, _selectedMouseOnTileCoordinateY + y] =
+                    _selectedItemNormalShaped; 
 
-            inventoryItem.onGridPositionX = posX;
-            inventoryItem.onGridPositionY = posY;
+            // Sets the "pivot space" from which it calculates the space its being occupied. 
+            _selectedItemNormalShaped.onGridPositionX = _selectedMouseOnTileCoordinateX;
+            _selectedItemNormalShaped.onGridPositionY = _selectedMouseOnTileCoordinateY;
 
-            var itemIconPosition = CalculatePositionOnGrid(inventoryItem, posX, posY);
+            var itemIconPosition = CalculateIconPositionOnGrid(_selectedItemNormalShaped, _selectedMouseOnTileCoordinateX, _selectedMouseOnTileCoordinateY);
 
             itemRectTransform.localPosition = itemIconPosition;
         }
 
-        public Vector2 CalculatePositionOnGrid(InventoryItem inventoryItem, int posX, int posY)
+        public Vector2 CalculateIconPositionOnGrid(InventoryItemNormalShaped inventoryItemNormalShaped, int _selectedMouseOnTileCoordinateX, int _selectedMouseOnTileCoordinateY)
         {
-            // Set the icon on its corresponding position in the grid.
             var itemIconPosition = new Vector2();
+            // Set the icon on its corresponding position in the grid.
             // The division of the inventoryXQuantity by 2 is done to create an offset that will center the item in the middle due to the pivot.
-            itemIconPosition.x = posX * tileSizeWidth + tileSizeWidth * inventoryItem.invItemWidth / 2;
+            itemIconPosition.x = _selectedMouseOnTileCoordinateX * tileSizeWidth + tileSizeWidth * inventoryItemNormalShaped.invItemWidth / 2;
             itemIconPosition.y =
-                -(posY * tileSizeHeight +
-                  tileSizeHeight * inventoryItem.invItemHeight / 2); // Negative because of the items' pivot.
+                -(_selectedMouseOnTileCoordinateY * tileSizeHeight +
+                  tileSizeHeight * inventoryItemNormalShaped.invItemHeight / 2); // Negative because of the items' pivot.
             return itemIconPosition;
         }
 
         // Cycle through the grid to check if there is an Item in the passed item slot position.
         private bool OverlapCheck(int posX, int posY, int itemDataWidth, int itemDataHeight,
-            ref InventoryItem overlapItem)
+            ref InventoryItemNormalShaped overlapItemNormalShaped)
         {
             for (var ix = 0; ix < itemDataWidth; ix++)
             for (var iy = 0; iy < itemDataHeight; iy++)
                 if (inventoryItemSlot[posX + ix, posY + iy] != null)
                 {
-                    if (overlapItem == null)
-                        overlapItem = inventoryItemSlot[posX + ix, posY + iy];
+                    if (overlapItemNormalShaped == null)
+                        overlapItemNormalShaped = inventoryItemSlot[posX + ix, posY + iy];
 
-                    else if (overlapItem != inventoryItemSlot[posX + ix, posY + iy]) return false;
+                    else if (overlapItemNormalShaped != inventoryItemSlot[posX + ix, posY + iy]) return false;
                 }
 
             return true;
@@ -181,14 +191,14 @@ namespace LeonardoEstigarribia.InventorySystem.itemGrid
 
         // Find space for an object in the grid.
         // Note: The '?' next to the struct turns it "nullable".
-        public Vector2Int? FindSpaceForObject(InventoryItem itemToInsert)
+        public Vector2Int? FindSpaceForObject(InventoryItemNormalShaped itemNormalShapedToInsert)
         {
-            var height = inventoryColumnQuantity - itemToInsert.invItemHeight + 1;
-            var width = inventoryRowQuantity - itemToInsert.invItemWidth + 1;
+            var height = inventoryColumnQuantity - itemNormalShapedToInsert.invItemHeight + 1;
+            var width = inventoryRowQuantity - itemNormalShapedToInsert.invItemWidth + 1;
 
             for (var y = 0; y < height; y++)
             for (var x = 0; x < width; x++)
-                if (CheckSpaceAvailability(x, y, itemToInsert.invItemWidth, itemToInsert.invItemHeight))
+                if (CheckSpaceAvailability(x, y, itemNormalShapedToInsert.invItemWidth, itemNormalShapedToInsert.invItemHeight))
                     return new Vector2Int(x, y);
             return null;
         }

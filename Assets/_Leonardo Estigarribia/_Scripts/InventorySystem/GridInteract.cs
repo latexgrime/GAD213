@@ -1,7 +1,11 @@
-using UnityEngine;
-using UnityEngine.EventSystems;
+#region Imported Namespaces
+
 using LeonardoEstigarribia.InventorySystem.inventoryController;
 using LeonardoEstigarribia.InventorySystem.itemGrid;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+#endregion
 
 namespace LeonardoEstigarribia.InventorySystem.gridInteraction
 {

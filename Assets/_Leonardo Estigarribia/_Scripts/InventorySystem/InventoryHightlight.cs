@@ -1,6 +1,10 @@
+#region Imported Namespaces
+
 using LeonardoEstigarribia.InventorySystem.inventoryItem;
 using LeonardoEstigarribia.InventorySystem.itemGrid;
 using UnityEngine;
+
+#endregion
 
 namespace LeonardoEstigarribia.InventorySystem.inventoryHighlight
 {
@@ -16,11 +20,11 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryHighlight
             itemHighlighter.gameObject.SetActive(show);
         }
 
-        public void SetHighlighterSize(InventoryItem targetItem)
+        public void SetHighlighterSize(InventoryItemNormalShaped targetItemNormalShaped)
         {
             var size = new Vector2();
-            size.x = targetItem.invItemWidth * ItemGrid.tileSizeWidth;
-            size.y = targetItem.invItemHeight * ItemGrid.tileSizeHeight;
+            size.x = targetItemNormalShaped.invItemWidth * ItemGrid.tileSizeWidth;
+            size.y = targetItemNormalShaped.invItemHeight * ItemGrid.tileSizeHeight;
             itemHighlighter.sizeDelta = size;
         }
 
@@ -28,11 +32,11 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryHighlight
         ///     Sets the highlighter position when the player is about to make a selection in the grid.
         /// </summary>
         /// <param name="targetGrid"></param>
-        /// <param name="targetItem"></param>
-        public void SetHighlighterPositionSelection(ItemGrid targetGrid, InventoryItem targetItem)
+        /// <param name="targetItemNormalShaped"></param>
+        public void SetHighlighterPositionSelection(ItemGrid targetGrid, InventoryItemNormalShaped targetItemNormalShaped)
         {
             var pos =
-                targetGrid.CalculatePositionOnGrid(targetItem, targetItem.onGridPositionX, targetItem.onGridPositionY);
+                targetGrid.CalculateIconPositionOnGrid(targetItemNormalShaped, targetItemNormalShaped.onGridPositionX, targetItemNormalShaped.onGridPositionY);
 
             // Change the local position because now this is a child of the targetGrid.
             itemHighlighter.localPosition = pos;
@@ -42,12 +46,12 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryHighlight
         ///     Sets the highlighter position when the player already selected an item in the grid.
         /// </summary>
         /// <param name="targetGrid"></param>
-        /// <param name="targetItem"></param>
+        /// <param name="targetItemNormalShaped"></param>
         /// <param name="posX"></param>
         /// <param name="posY"></param>
-        public void SetHighlighterPositionSelected(ItemGrid targetGrid, InventoryItem targetItem, int posX, int posY)
+        public void SetHighlighterPositionSelected(ItemGrid targetGrid, InventoryItemNormalShaped targetItemNormalShaped, int posX, int posY)
         {
-            var pos = targetGrid.CalculatePositionOnGrid(targetItem, posX, posY);
+            var pos = targetGrid.CalculateIconPositionOnGrid(targetItemNormalShaped, posX, posY);
 
             // Change the local position because now this is a child of the targetGrid.
             itemHighlighter.localPosition = pos;
