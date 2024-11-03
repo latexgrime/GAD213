@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace LeonardoEstigarribia.InventorySystem.itemData.normalShaped
 {
-    [CreateAssetMenu(menuName = "Inventory Item/Normal shaped item")]
+    [CreateAssetMenu(menuName = "Inventory Item/Rectangle-based Item")]
     public class ItemData : ScriptableObject
     {
         /// <summary>

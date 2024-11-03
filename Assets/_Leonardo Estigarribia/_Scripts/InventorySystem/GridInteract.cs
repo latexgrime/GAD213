@@ -27,12 +27,12 @@ namespace LeonardoEstigarribia.InventorySystem.gridInteraction
         // Using interfaces to detect if the mouse is hovering over a grid and reference it or not.
         public void OnPointerEnter(PointerEventData eventData)
         {
-            inventoryController.SelectedGrid = itemGrid;
+            inventoryController.selectedGrid = itemGrid;
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            inventoryController.SelectedGrid = null;
+            inventoryController.selectedGrid = null;
         }
     }
 }

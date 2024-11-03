@@ -1,13 +1,18 @@
 #region Imported Namespaces
 
 using System.Collections.Generic;
+using System.Numerics;
 using LeonardoEstigarribia.InventorySystem.inventoryHighlight;
 using LeonardoEstigarribia.InventorySystem.inventoryItem;
+using LeonardoEstigarribia.InventorySystem.itemData.complexShaped;
 using LeonardoEstigarribia.InventorySystem.itemData.normalShaped;
 using LeonardoEstigarribia.InventorySystem.itemGrid;
+using Unity.VisualScripting;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
+using Vector2 = UnityEngine.Vector2;
 
 #endregion
 
@@ -22,9 +27,9 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
 
         // A GRID is a container of items (i.e. the player inventory or a chest with items).
         // Currently selected grid container.
-        private ItemGrid selectedGrid;
+        public ItemGrid selectedGrid;
 
-        public ItemGrid SelectedGrid
+        /*public ItemGrid SelectedGrid
         {
             get => selectedGrid;
             // This makes it so every time the selected grid is called, the inventoryHighlight SetParentGrid function happens
@@ -34,14 +39,15 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
                 selectedGrid = value;
                 inventoryHighlight.SetParentGrid(value);
             }
-        }
+        }*/
         
-        private InventoryItemNormalShaped selectedItemNormalShaped; // Currently selected Item (the one in the position of the mouse).
-        private InventoryItemNormalShaped overlapItemNormalShaped; // The target Item to be overlapped.
+        private InventoryItem selectedItem; // Currently selected Item (the one in the position of the mouse).
+        private InventoryItem overlapItem; // The target Item to be overlapped.
 
         private RectTransform selectedItemRect;
 
         [SerializeField] private List<ItemData> existingItemsInProject; // DEBUG - To generate random items.
+        [SerializeField] private List<ItemDataComplexShaped> existingComplexItemsInProject; // DEBUG - To generate random items.
 
         [SerializeField] private GameObject itemPrefab; // An prefab that have empty containers for information to be filled by scriptable objects. 
 
@@ -62,7 +68,7 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
             // DEBUG - Spawn a random selected Item
             if (Input.GetKeyDown(KeyCode.Y))
             {
-                if (selectedItemNormalShaped != null) return;
+                if (selectedItem != null) return;
                 CreateRandomItem();
             }
 
@@ -89,49 +95,52 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
         // Sets the current selected item to match the position of the mouse. 
         private void DragItemIcon()
         {
-            if (selectedItemNormalShaped != null)
+            if (selectedItem != null)
             {
                 selectedItemRect.position = Input.mousePosition;
                 selectedItemRect.SetParent(canvasTransform);
             }
         }
         
+        
+        private InventoryItem itemToHighlight;
         // Handles the apparition of the highlighter over items with the mouse on top of them.
         private void HandleHighlight()
         {
-            var positionOnGrid = GetCurrentTileCoordinates();
-            if (oldPosition == null) return;
-            oldPosition = positionOnGrid;
-            // Check if there is a selected item or not.
-            if (selectedItemNormalShaped == null)
+            // Check for the grid first.
+            if (selectedGrid == null) return;
+            
+            // Get the coordinates the mouse is hovering over.
+            Vector2Int positionOnGrid = GetCurrentTileCoordinates();
+            
+            // If there is no item selected by the player (being dragged), look for an item below the mouse.
+            if (selectedItem == null)
             {
-                itemNormalShapedToHighlight = selectedGrid.GetItem(positionOnGrid.x, positionOnGrid.y);
-
-                // Highlight the Item that might be picked up by the player.
-                if (itemNormalShapedToHighlight != null)
+                itemToHighlight = selectedGrid.CheckCoordinateForItem(positionOnGrid.x, positionOnGrid.y);
+                // Makes sure its not instantiating highlights every frame.
+                if (inventoryHighlight.ChangedCursorPosition(itemToHighlight, selectedGrid))
                 {
-                    inventoryHighlight.Show(true);
-                    inventoryHighlight.SetHighlighterSize(itemNormalShapedToHighlight);
-
-                    inventoryHighlight.SetHighlighterPositionSelection(selectedGrid, itemNormalShapedToHighlight);
-                }
-                else
-                {
-                    inventoryHighlight.Show(false);
+                    // If there is an item under the cursor show the highlights.
+                    if (itemToHighlight != null)
+                    {
+                        inventoryHighlight.Show(true);
+                        inventoryHighlight.ShowHighlightsItemTiles(selectedGrid, itemToHighlight);
+                    }
+                    else
+                    {
+                        inventoryHighlight.Show(false);
+                        inventoryHighlight.ClearActiveHighlights();
+                    }
                 }
             }
-            else
+            if (selectedItem != null)
             {
-                // This line uses the BoundaryCheck from the ItemGrid class to check if the highlighter is in the allowed area.
-                inventoryHighlight.Show(selectedGrid.BoundaryCheck(positionOnGrid.x, positionOnGrid.y,
-                    selectedItemNormalShaped.invItemWidth, selectedItemNormalShaped.invItemHeight));
-
-                inventoryHighlight.SetHighlighterSize(selectedItemNormalShaped);
-
-                inventoryHighlight.SetHighlighterPositionSelected(selectedGrid, selectedItemNormalShaped, positionOnGrid.x,
-                    positionOnGrid.y);
+                inventoryHighlight.Show(false);
+                inventoryHighlight.ClearActiveHighlights();
             }
+            
         }
+
 
         // Happens after clicking the mouse button.
         private void LeftMouseButtonPressAction()
@@ -139,7 +148,7 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
             Vector2Int mouseCoordinatesOnGrid = GetCurrentTileCoordinates();
 
             // If there is no object picked at the moment.
-            if (selectedItemNormalShaped == null)
+            if (selectedItem == null)
                 // Pick up the object in the tile position the mouse is over.
                 PickUp(mouseCoordinatesOnGrid);
            
@@ -154,10 +163,10 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
             // Offset the item position based on the item size.
             Vector2 _mousePosition = Input.mousePosition;
 
-            if (selectedItemNormalShaped != null)
+            if (selectedItem != null)
             {
-                _mousePosition.x -= (selectedItemNormalShaped.invItemWidth - 1) * ItemGrid.tileSizeWidth / 2;
-                _mousePosition.y += (selectedItemNormalShaped.invItemHeight - 1) * ItemGrid.tileSizeHeight / 2;
+                _mousePosition.x -= (selectedItem.complexWidth - 1) * ItemGrid.tileSizeWidth / 2;
+                _mousePosition.y += (selectedItem.complexHeight - 1) * ItemGrid.tileSizeHeight / 2;
             }
 
             // Gets the tile coordinates clicked by the cursor.
@@ -168,92 +177,84 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
         private void PickUp(Vector2Int _mouseCoordinatesOnGrid)
         {
             // Checks if there is an item occupying that position and sets it as the selectedItem.
-            selectedItemNormalShaped = selectedGrid.GetItemToPickUp(_mouseCoordinatesOnGrid.x, _mouseCoordinatesOnGrid.y);
+            selectedItem = selectedGrid.PickUpAndCleanItem(_mouseCoordinatesOnGrid.x, _mouseCoordinatesOnGrid.y);
             
             // If there IS an item in those coordinates, sets the rect of the selectedItem to the selectedItemRect rect.
             // Note: This will make use of the DragItem method. Making it so the selectedItemRect is on the position of the mouse. 
-            if (selectedItemNormalShaped != null) selectedItemRect = selectedItemNormalShaped.GetComponent<RectTransform>();
+            if (selectedItem != null) selectedItemRect = selectedItem.GetComponent<RectTransform>();
         }
         
+        // Places the item in the grid in the Vector2 parameter. 
+        private void PlacePickedItem(Vector2Int _mouseCoordinatesOnGrid)
+        {
+            bool itemWasPlaced =
+                selectedGrid.PlaceItemOnGrid(selectedItem, _mouseCoordinatesOnGrid.x, _mouseCoordinatesOnGrid.y);
+            // If the item was successfully placed, nullify the selected item.
+            if (itemWasPlaced)
+            {
+                selectedItem = null;
+
+                // If there is a target Item that the player is trying to overlap.
+                if (overlapItem != null)
+                {
+                    // Set the overlap Item as the selected item and get its rect.
+                    selectedItem = overlapItem;
+                    overlapItem = null;
+                    selectedItemRect = selectedItem.GetComponent<RectTransform>();
+                }
+            }
+        }
+
         private void RotateItem()
         {
-            if (selectedItemNormalShaped == null) return;
+            if (selectedItem == null) return;
 
-            selectedItemNormalShaped.RotateItemNormalShapedItem();
+            selectedItem.RotateItemNormalShapedItem();
         }
 
         private void InsertRandomItem()
         {
             if (selectedGrid == null)
             {
-                Debug.LogError(
-                    "No current selected grid. Select the grid by hovering your mouse over the inventory you want to insert the item to.");
                 return;
             }
 
             CreateRandomItem();
-            var itemToInsert = selectedItemNormalShaped;
-            selectedItemNormalShaped = null;
+            var itemToInsert = selectedItem;
+            selectedItem = null;
             InsertItem(itemToInsert);
         }
 
-        private void InsertItem(InventoryItemNormalShaped itemNormalShapedToInsert)
+        private void InsertItem(InventoryItem itemToInsert)
         {
             if (selectedGrid == null)
             {
-                Debug.LogError(
-                    "No current selected grid. Select the grid by hovering your mouse over the inventory you want to insert the item to.");
                 return;
             }
 
-            var posOnGrid = selectedGrid.FindSpaceForObject(itemNormalShapedToInsert);
+            var posOnGrid = selectedGrid.FindSpaceForObject(itemToInsert);
 
             if (posOnGrid == null) return;
 
-            selectedGrid.HandleItemPlacing(itemNormalShapedToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
+            selectedGrid.HandleItemPlacing(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
         }
 
 
         // DEBUGGING - Creates random item and selects it.
         private void CreateRandomItem()
         {
-            var inventoryItem = Instantiate(itemPrefab).GetComponent<InventoryItemNormalShaped>();
-            selectedItemNormalShaped = inventoryItem;
+            var inventoryItem = Instantiate(itemPrefab).GetComponent<InventoryItem>();
+            selectedItem = inventoryItem;
 
             selectedItemRect = inventoryItem.GetComponent<RectTransform>();
             selectedItemRect.SetParent(canvasTransform);
 
-            var selectedItemID = Random.Range(0, existingItemsInProject.Count);
-            inventoryItem.SetNormalShapedItemData(existingItemsInProject[selectedItemID]);
+            var selectedItemID = Random.Range(0, existingComplexItemsInProject.Count);
+            inventoryItem.SetComplexItem(existingComplexItemsInProject[selectedItemID]);
         }
 
 
-        private Vector2Int oldPosition;
 
-        private InventoryItemNormalShaped itemNormalShapedToHighlight;
-
-        // Places the item in the grid in the Vector2 parameter. 
-        private void PlacePickedItem(Vector2Int _mouseCoordinatesOnGrid)
-        {
-            bool itemWasPlaced =
-                selectedGrid.PlaceItemOnGrid(selectedItemNormalShaped, _mouseCoordinatesOnGrid.x, _mouseCoordinatesOnGrid.y, ref overlapItemNormalShaped);
-
-            // If the item was successfully placed, nullify the selected item.
-            if (itemWasPlaced)
-            {
-                selectedItemNormalShaped = null;
-
-                // If there is a target Item that the player is trying to overlap.
-                if (overlapItemNormalShaped != null)
-                {
-                    // Set the overlap Item as the selected item and get its rect.
-                    selectedItemNormalShaped = overlapItemNormalShaped;
-                    overlapItemNormalShaped = null;
-                    selectedItemRect = selectedItemNormalShaped.GetComponent<RectTransform>();
-                }
-            }
-        }
-        
 
         
         

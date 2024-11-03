@@ -1,7 +1,13 @@
 #region Imported Namespaces
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 using LeonardoEstigarribia.InventorySystem.inventoryItem;
 using LeonardoEstigarribia.InventorySystem.itemGrid;
+using Unity.VisualScripting;
+using UnityEditor.Search;
 using UnityEngine;
 
 #endregion
@@ -14,53 +20,83 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryHighlight
     public class InventoryHightlight : MonoBehaviour
     {
         [SerializeField] private RectTransform itemHighlighter;
+        [SerializeField] private List<RectTransform>activeHighlighters = new List<RectTransform>(); // List of all the current highlight game objects.
+        [SerializeField] private int highlighterPoolSize = 10;
+
+        private InventoryItem lastItemHighlighted;
+        private List<Vector2Int> lastHighlightedCoordinates = new List<Vector2Int>();
+        
+        private void Awake()
+        {
+            // Instantiate a reusable pool of highlighters.
+            for (int i = 0; i < highlighterPoolSize; i++)
+            {
+                RectTransform instantiatedHighlighter = Instantiate(itemHighlighter);
+                instantiatedHighlighter.gameObject.SetActive(false);
+                activeHighlighters.Add(instantiatedHighlighter);
+            }
+        }
 
         public void Show(bool show)
         {
-            itemHighlighter.gameObject.SetActive(show);
+            foreach (var highlighter in activeHighlighters)
+            {
+                highlighter.gameObject.SetActive(show);
+            }
         }
-
-        public void SetHighlighterSize(InventoryItemNormalShaped targetItemNormalShaped)
+        
+        public bool ChangedCursorPosition(InventoryItem item, ItemGrid selectedGrid)
         {
-            var size = new Vector2();
-            size.x = targetItemNormalShaped.invItemWidth * ItemGrid.tileSizeWidth;
-            size.y = targetItemNormalShaped.invItemHeight * ItemGrid.tileSizeHeight;
-            itemHighlighter.sizeDelta = size;
-        }
+            if (item == null) return lastHighlightedCoordinates.Count > 0;
 
-        /// <summary>
-        ///     Sets the highlighter position when the player is about to make a selection in the grid.
-        /// </summary>
-        /// <param name="targetGrid"></param>
-        /// <param name="targetItemNormalShaped"></param>
-        public void SetHighlighterPositionSelection(ItemGrid targetGrid, InventoryItemNormalShaped targetItemNormalShaped)
+            List<Vector2Int> newCoordinates =
+                selectedGrid.GetItemCoordinates(item.onGridPositionX, item.onGridPositionY, item.itemShape);
+            bool hasChanged = item != lastItemHighlighted || newCoordinates != lastHighlightedCoordinates;
+
+            lastItemHighlighted = item;
+            lastHighlightedCoordinates = newCoordinates;
+            return hasChanged;
+        }
+        
+        public void ShowHighlightsItemTiles(ItemGrid selectedGrid, InventoryItem item)
         {
-            var pos =
-                targetGrid.CalculateIconPositionOnGrid(targetItemNormalShaped, targetItemNormalShaped.onGridPositionX, targetItemNormalShaped.onGridPositionY);
+            ClearActiveHighlights();
+            
+            List<Vector2Int> occupiedCoordinates =
+                selectedGrid.GetItemCoordinates(item.onGridPositionX, item.onGridPositionY, item.itemShape);
 
-            // Change the local position because now this is a child of the targetGrid.
-            itemHighlighter.localPosition = pos;
+            for (int i = 0; i < occupiedCoordinates.Count; i++)
+            {
+                if (i >= activeHighlighters.Count)
+                {
+                    break;
+                }
+
+                // Made this so its easier to read because I'm going crazy.
+                Vector2Int currentCoordinate = occupiedCoordinates[i];
+                RectTransform currentHighlighter = activeHighlighters[i];
+                
+                currentHighlighter.gameObject.SetActive(true);
+                SetParentGrid(currentHighlighter, selectedGrid);
+                UnityEngine.Vector2 targetPosition = selectedGrid.CalculateHighlightPosition(currentCoordinate.x, currentCoordinate.y);
+                currentHighlighter.localPosition = targetPosition;
+            }
+    
         }
-
-        /// <summary>
-        ///     Sets the highlighter position when the player already selected an item in the grid.
-        /// </summary>
-        /// <param name="targetGrid"></param>
-        /// <param name="targetItemNormalShaped"></param>
-        /// <param name="posX"></param>
-        /// <param name="posY"></param>
-        public void SetHighlighterPositionSelected(ItemGrid targetGrid, InventoryItemNormalShaped targetItemNormalShaped, int posX, int posY)
+        
+        public void ClearActiveHighlights()
         {
-            var pos = targetGrid.CalculateIconPositionOnGrid(targetItemNormalShaped, posX, posY);
-
-            // Change the local position because now this is a child of the targetGrid.
-            itemHighlighter.localPosition = pos;
+            // Set all highlights to inactive in the scene.
+            foreach (var highlighter in activeHighlighters)
+            {
+                highlighter.gameObject.SetActive(false);
+            }
         }
-
-        public void SetParentGrid(ItemGrid targetGrid)
+        
+        public void SetParentGrid(RectTransform child,ItemGrid targetGrid)
         {
             if (targetGrid == null) return;
-            itemHighlighter.SetParent(targetGrid.GetComponent<RectTransform>());
+            child.SetParent(targetGrid.GetComponent<RectTransform>());
         }
     }
 }

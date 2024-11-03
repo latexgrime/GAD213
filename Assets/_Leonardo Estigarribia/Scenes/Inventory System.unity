@@ -324,8 +324,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7cfd42ecd3f40b459ff8282623e397d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryRowQuantity: 6
-  inventoryColumnQuantity: 3
+  inventoryRowQuantity: 10
+  inventoryColumnQuantity: 6
   inventoryItemPrefab: {fileID: 8423469868171641495, guid: b6bf3a9dbe0dbfa41960b53965900952,
     type: 3}
 --- !u!114 &160276116
@@ -548,10 +548,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8a0322c4329faa4c9fa8957f8dbf6e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  items:
+  selectedGrid: {fileID: 0}
+  existingItemsInProject:
   - {fileID: 11400000, guid: 5caff936ac7005942a24f23f2a4e7923, type: 2}
   - {fileID: 11400000, guid: 619dc502453d923459a1cfd1b90b41d8, type: 2}
   - {fileID: 11400000, guid: 484751e572bed95409ed0d0e2fed95ac, type: 2}
+  existingComplexItemsInProject:
+  - {fileID: 11400000, guid: 8d187f73c63b5da40a75abdab9791f9f, type: 2}
   itemPrefab: {fileID: 8423469868171641495, guid: b6bf3a9dbe0dbfa41960b53965900952,
     type: 3}
   canvasTransform: {fileID: 1327503816}
@@ -568,6 +571,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemHighlighter: {fileID: 1395419857}
+  activeHighlighters: []
+  highlighterPoolSize: 10
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1310,12 +1315,12 @@ PrefabInstance:
     - target: {fileID: 558027981133538136, guid: 83bdb55f86b5f224cbd0f33230e5e1e7,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1280
+      value: -1404
       objectReference: {fileID: 0}
     - target: {fileID: 558027981133538136, guid: 83bdb55f86b5f224cbd0f33230e5e1e7,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 720
+      value: -886
       objectReference: {fileID: 0}
     - target: {fileID: 558027981133538136, guid: 83bdb55f86b5f224cbd0f33230e5e1e7,
         type: 3}
