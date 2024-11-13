@@ -55,7 +55,7 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryItem
         public int complexWidth;
         public int onGridPositionX; 
         public int onGridPositionY;
-        public bool[,] itemShape => itemDataComplexShaped.shape;
+        public bool[,] itemShape => itemDataComplexShaped.shape; // 2D Array of bools that holds the shape of the object.
         
 
         public void SetComplexItem(ItemDataComplexShaped _itemDataComplexShaped)
