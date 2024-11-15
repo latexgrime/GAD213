@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Numerics;
+using Cinemachine;
 using LeonardoEstigarribia.InventorySystem.inventoryHighlight;
 using LeonardoEstigarribia.InventorySystem.inventoryItem;
 using LeonardoEstigarribia.InventorySystem.itemData.complexShaped;
@@ -10,10 +11,10 @@ using LeonardoEstigarribia.InventorySystem.itemGrid;
 using Unity.VisualScripting;
 using UnityEditor.Search;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
-
 #endregion
 
 namespace LeonardoEstigarribia.InventorySystem.inventoryController
@@ -28,27 +29,27 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
         // A GRID is a container of items (i.e. the player inventory or a chest with items).
         // Currently selected grid container.
         public ItemGrid selectedGrid;
-
-        /*public ItemGrid SelectedGrid
-        {
-            get => selectedGrid;
-            // This makes it so every time the selected grid is called, the inventoryHighlight SetParentGrid function happens
-            // with the passed value being the selectedGrid.
-            set
-            {
-                selectedGrid = value;
-                inventoryHighlight.SetParentGrid(value);
-            }
-        }*/
         
         private InventoryItem selectedItem; // Currently selected Item (the one in the position of the mouse).
         private InventoryItem overlapItem; // The target Item to be overlapped.
 
         private RectTransform selectedItemRect;
 
-        [SerializeField] private List<ItemData> existingItemsInProject; // DEBUG - To generate random items.
+        [Header("- Inventory management KeyCodes")] 
+        [SerializeField] private KeyCode itemRotationKeyCode = KeyCode.R;
+        
+        [Header("- Debug parameters.")]
         [SerializeField] private List<ItemDataComplexShaped> existingComplexItemsInProject; // DEBUG - To generate random items.
+        /// <summary>
+        /// Key used to spawn a random item on the position of the mouse.(Your pointer needs to be hovering over a grid)
+        /// </summary>
+        [SerializeField] private KeyCode spawnRandomItemKeyCode = KeyCode.Y;
+        /// <summary>
+        /// Key used to spawn a random item in the selected inventory.(Your pointer needs to be hovering over a grid)
+        /// </summary>
+        [SerializeField] KeyCode setRandomItemInInventoryKeyCode = KeyCode.T;
 
+        [Header("- Items.")]
         [SerializeField] private GameObject itemPrefab; // An prefab that have empty containers for information to be filled by scriptable objects. 
 
         [SerializeField] private Transform canvasTransform; // The transform of the pixelScaled canvas that displays the grids.
@@ -66,18 +67,31 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
             #region Debug Inputs
 
             // DEBUG - Spawn a random selected Item
-            if (Input.GetKeyDown(KeyCode.Y))
+            if (Input.GetKeyDown(spawnRandomItemKeyCode))
             {
                 if (selectedItem != null) return;
+                if (selectedGrid == null)
+                {
+                    Debug.LogWarning($"Your pointer needs to be hovering an inventory :)!");
+                    return;
+                }
                 CreateRandomItem();
             }
 
             // DEBUG - Pretend to grab a random item (i.e. the player walks over an item to put it in their inventory.)
-            if (Input.GetKeyDown(KeyCode.T)) InsertRandomItem();
+            if (Input.GetKeyDown(setRandomItemInInventoryKeyCode))
+            {
+                if (selectedGrid == null)
+                {
+                    Debug.LogWarning($"Your pointer needs to be hovering the inventory you want to spawn the item in :)!");
+                    return;
+                }
+                InsertRandomItem();
+            }
 
             #endregion
 
-            if (Input.GetKeyDown(KeyCode.R)) RotateItem(); // In the future, make this work with the InputManager.
+            if (Input.GetKeyDown(itemRotationKeyCode)) RotateItem(); // In the future, make this work with the InputManager.
 
             // If there is no grid selected.
             if (selectedGrid == null)
@@ -89,6 +103,7 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
 
             HandleHighlight();
 
+            // If the player clicks.
             if (Input.GetMouseButtonDown(0)) LeftMouseButtonPressAction();
         }
         

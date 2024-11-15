@@ -100,11 +100,11 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryItem
             int rows = itemShape.GetLength(0);
             
             // This would be Y,
-            int cols = itemShape.GetLength(1);
-            bool[,] rotatedShape = new bool[cols, rows];
+            int columns = itemShape.GetLength(1);
+            bool[,] rotatedShape = new bool[columns, rows];
 
             // Rotate the array.
-            for (int x = 0; x < cols; x++)
+            for (int x = 0; x < columns; x++)
             {
                 for (int y = 0; y < rows; y++)
                 {
@@ -116,6 +116,7 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryItem
 
             // Update the shape 2D array to be the rotated one.
             itemShape = rotatedShape;
+            // Transpose the dimensions.
             (complexWidth, complexHeight) = (complexHeight, complexWidth);
         }
     }
