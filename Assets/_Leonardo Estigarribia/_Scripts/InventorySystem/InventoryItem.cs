@@ -71,16 +71,33 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryItem
             GetComponent<RectTransform>().sizeDelta = size;
         }
 
+        // Updated to work with complex data shapes.
         public bool CanFitInGrid(ItemGrid selectedGrid, int mouseX, int mouseY)
         {
-            for (var x = 0; x < complexWidth; x++)
-            for (var y = 0; y < complexHeight; y++)
-                if (itemDataComplexShaped.shape[mouseX, mouseY] &&
-                    (mouseX + x >= selectedGrid.inventoryRowQuantity ||
-                     mouseY + y >= selectedGrid.inventoryColumnQuantity ||
-                     selectedGrid.IsOccupied(mouseX + x, mouseY + y)))
-                    return false;
+            for (int x = 0; x < complexWidth; x++)
+            {
+                for (int y = 0; y < complexHeight; y++)
+                {
+                    // Check that the bounds of the shape array are not being surpassed (prevent an out of Index error).
+                    if (x >= itemDataComplexShaped.shape.GetLength(0) || y >= itemDataComplexShaped.shape.GetLength(1))
+                    {
+                        // Skip this part if it is out of bounds. (This is a workaround for L shaped items that return a false value for empty spaces)
+                        continue;
+                    }
 
+                    if (itemDataComplexShaped.shape[x, y])
+                    {
+                        if (mouseX + x >= selectedGrid.inventoryRowQuantity ||
+                            mouseY + y >= selectedGrid.inventoryColumnQuantity ||
+                            selectedGrid.IsOccupied(mouseX + x, mouseY + y))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            // Otherwise everything is good.
             return true;
         }
 

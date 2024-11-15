@@ -192,7 +192,7 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
             // If the item was successfully placed, nullify the selected item.
             if (itemWasPlaced)
             {
-               
+                selectedGrid.HandleItemPlacing(selectedItem, _mouseCoordinatesOnGrid.x, _mouseCoordinatesOnGrid.y);
                 selectedItem = null;
                 
                 // If there is a target Item that the player is trying to overlap. REMOVE OR UPDATE (THIS WAS PART OF THE OLD SYSTEM)
@@ -202,6 +202,10 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
                     selectedItem = overlapItem;
                     overlapItem = null;
                 }
+            }
+            else
+            {
+                Debug.LogError($"Item can't be placed.");
             }
         }
 
