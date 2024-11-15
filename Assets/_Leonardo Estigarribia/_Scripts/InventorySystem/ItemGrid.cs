@@ -102,7 +102,6 @@ namespace LeonardoEstigarribia.InventorySystem.itemGrid
 
             return tileGridPosition;
         }
-        
 
         // Will set the ROWS (x numbers of tiles) and COLUMNS (y numbers of tiles) the grid will have by passing both integer parameters.
         private void InitializeItemGrid(int rowAmount, int columnAmount)

@@ -188,19 +188,19 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
         private void PlacePickedItem(Vector2Int _mouseCoordinatesOnGrid)
         {
             bool itemWasPlaced =
-                selectedGrid.PlaceItemOnGrid(selectedItem, _mouseCoordinatesOnGrid.x, _mouseCoordinatesOnGrid.y);
+                selectedGrid.PlaceItemOnGrid(selectedItem, _mouseCoordinatesOnGrid.x, _mouseCoordinatesOnGrid.y) && selectedItem.CanFitInGrid(selectedGrid ,_mouseCoordinatesOnGrid.x, _mouseCoordinatesOnGrid.y);
             // If the item was successfully placed, nullify the selected item.
             if (itemWasPlaced)
             {
+               
                 selectedItem = null;
-
-                // If there is a target Item that the player is trying to overlap.
+                
+                // If there is a target Item that the player is trying to overlap. REMOVE OR UPDATE (THIS WAS PART OF THE OLD SYSTEM)
                 if (overlapItem != null)
                 {
                     // Set the overlap Item as the selected item and get its rect.
                     selectedItem = overlapItem;
                     overlapItem = null;
-                    selectedItemRect = selectedItem.GetComponent<RectTransform>();
                 }
             }
         }
