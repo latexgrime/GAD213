@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b5fdcf7935012444b605f3f44e9873b, type: 3}
   m_Name: + shaped
   m_EditorClassIdentifier: 
-  selectedShape: 0
-  itemIcon: {fileID: 0}
+  selectedShape: 1
+  itemIcon: {fileID: 21300000, guid: bbd6a4c223f1d44c4bde769739e768f2, type: 3}

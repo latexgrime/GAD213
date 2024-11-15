@@ -213,7 +213,7 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
         {
             if (selectedItem == null) return;
 
-            selectedItem.RotateItemNormalShapedItem();
+            selectedItem.RotateComplexItem();
         }
 
         private void InsertRandomItem()
@@ -240,7 +240,15 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryController
 
             if (posOnGrid == null) return;
 
-            selectedGrid.HandleItemPlacing(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
+            bool canPlaceItem = selectedGrid.PlaceItemOnGrid(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
+            if (canPlaceItem)
+            {
+                selectedGrid.HandleItemPlacing(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
+            }
+            else
+            {
+                Debug.LogWarning("Can't place item in inventory, not enough space.");
+            }
         }
 
 

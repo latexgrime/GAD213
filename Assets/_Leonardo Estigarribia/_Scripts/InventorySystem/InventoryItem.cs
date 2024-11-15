@@ -3,8 +3,10 @@
 using LeonardoEstigarribia.InventorySystem.itemData.complexShaped;
 using LeonardoEstigarribia.InventorySystem.itemData.normalShaped;
 using LeonardoEstigarribia.InventorySystem.itemGrid;
+using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 
 #endregion
 
@@ -55,8 +57,11 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryItem
         public int onGridPositionX;
         public int onGridPositionY;
 
-        public bool[,] itemShape =>
-            itemDataComplexShaped.shape; // 2D Array of bools that holds the shape of the object.
+        public bool[,] itemShape
+        {
+            get => itemDataComplexShaped.shape; // 2D Array of bools that holds the shape of the object.
+            set => itemDataComplexShaped.shape = value;
+        }
 
 
         public void SetComplexItem(ItemDataComplexShaped _itemDataComplexShaped)
@@ -101,6 +106,51 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryItem
             return true;
         }
 
+        // Handle the rotation of the space the complex item is going to occupy.
+        public void RotateComplexItem()
+        {
+            isRotated = !isRotated;
+            
+            RotateShapeArray();
+            RotateItemIcon();
+        }
+
+        private int rotationState = 0;
+        private void RotateItemIcon()
+        {
+            // The item can only rotate 90 degrees (basically 4 rotations).
+            rotationState = (rotationState + 1) % 4;
+            
+            var itemRect = GetComponent<RectTransform>();
+            itemRect.rotation = Quaternion.Euler(0, 0 ,rotationState * 90f);
+        }
+
+        private void RotateShapeArray()
+        {
+            // This would be X.
+            int rows = itemShape.GetLength(0);
+            
+            // This would be Y,
+            int cols = itemShape.GetLength(1);
+            bool[,] rotatedShape = new bool[cols, rows];
+
+            // Rotate the array.
+            for (int x = 0; x < cols; x++)
+            {
+                for (int y = 0; y < rows; y++)
+                {
+                    // X and Y are saved in the rotatedShape array but inverted.
+                    // -1 because the array indexes start at 0.
+                    rotatedShape[x, y] = itemShape[rows - y - 1, x];
+                }
+            }
+
+            // Update the shape 2D array to be the rotated one.
+            itemDataComplexShaped.shape = rotatedShape;
+            (complexWidth, complexHeight) = (complexHeight, complexWidth);
+        }
+
+        
         #endregion
     }
 }
