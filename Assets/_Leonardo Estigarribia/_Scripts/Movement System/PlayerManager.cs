@@ -13,11 +13,15 @@ public class PlayerManager : MonoBehaviour
     public bool isInteracting;
     private void Awake()
     {
+        FindComponents();
+    }
+
+    private void FindComponents()
+    {
         animator = GetComponent<Animator>();
         inputManager = GetComponent<InputManager>();
         cameraManager = FindObjectOfType<CameraManager>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
-        
     }
 
     private void Update()
