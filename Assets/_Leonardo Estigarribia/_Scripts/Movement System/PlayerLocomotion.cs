@@ -52,6 +52,11 @@ public class PlayerLocomotion : MonoBehaviour
     public bool isDodging;
     private void Awake()
     {
+        FindComponents();
+    }
+
+    private void FindComponents()
+    {
         playerManager = GetComponent<PlayerManager>();
         animatorManager = GetComponent<AnimatorManager>();
         inputManager = GetComponent<InputManager>();
@@ -219,7 +224,7 @@ public class PlayerLocomotion : MonoBehaviour
                 rollDirection += cameraObject.transform.right * inputManager.horizontalInput;
 
                 rollDirection.y = 0;
-                Quaternion playerRotation = Quaternion.LookRotation(rollDirection);
+                Quaternion.LookRotation(rollDirection);
                 rollDirection.Normalize();
             
                 animatorManager.PlayTargetAnimation("Roll_Forward_01",true, false);
@@ -244,7 +249,7 @@ public class PlayerLocomotion : MonoBehaviour
             //float easeFactor = Mathf.SmoothStep(0f, 1f, timeElapsed / dodgeDuration);
 
             // Apply the force using the easing factor.
-            playerRigidbody.AddForce(transform.forward * dodgePower * Time.deltaTime, ForceMode.Impulse);
+            playerRigidbody.AddForce(transform.forward * (dodgePower * Time.deltaTime), ForceMode.Impulse);
 
             timeElapsed += Time.deltaTime;
             yield return null;

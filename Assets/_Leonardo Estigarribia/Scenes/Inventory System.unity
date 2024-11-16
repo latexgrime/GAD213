@@ -555,6 +555,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 484751e572bed95409ed0d0e2fed95ac, type: 2}
   existingComplexItemsInProject:
   - {fileID: 11400000, guid: 8d187f73c63b5da40a75abdab9791f9f, type: 2}
+  - {fileID: 11400000, guid: a7a48e8411592bf4098cfb416fe6d699, type: 2}
   itemPrefab: {fileID: 8423469868171641495, guid: b6bf3a9dbe0dbfa41960b53965900952,
     type: 3}
   canvasTransform: {fileID: 1327503816}

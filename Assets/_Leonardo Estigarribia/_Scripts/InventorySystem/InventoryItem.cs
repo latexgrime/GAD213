@@ -1,10 +1,9 @@
 #region Imported Namespaces
 
 using LeonardoEstigarribia.InventorySystem.itemData.complexShaped;
-using LeonardoEstigarribia.InventorySystem.itemData.normalShaped;
 using LeonardoEstigarribia.InventorySystem.itemGrid;
 using UnityEngine;
-using UnityEngine.UI;
+using Image = UnityEngine.UI.Image;
 
 #endregion
 
@@ -15,75 +14,97 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryItem
     /// </summary>
     public class InventoryItem : MonoBehaviour
     {
-        public ItemData itemData;
-
-        public bool isRotated;
-
-        // Sets the data of the item scriptable object to the empty prefab.
-        public void SetNormalShapedItemData(ItemData itemData)
-        {
-            // Set the reference of the passed itemData to be the itemData referenced in this script (which should be in the itemPrefabGameObject).
-            this.itemData = itemData;
-
-            // Set the image.
-            GetComponent<Image>().sprite = itemData.itemIcon;
-
-            // Set the size of the image by using the rect sizeDelta.
-            var size = new Vector2();
-            size.x = itemData.width * ItemGrid.tileSizeWidth;
-            size.y = itemData.height * ItemGrid.tileSizeHeight;
-            GetComponent<RectTransform>().sizeDelta = size;
-        }
-
-        public void RotateItemNormalShapedItem()
-        {
-            isRotated = !isRotated;
-
-            var itemRect = GetComponent<RectTransform>();
-
-            // This checks if the isRotated bool is true.
-            // If TRUE, the angle value will be 90. 
-            // If FALSE, the angle value will be 0.
-            itemRect.rotation = Quaternion.Euler(0, 0, isRotated ? 90f : 0);
-        }
-
-        #region Complex-Shaped Items
-
         public ItemDataComplexShaped itemDataComplexShaped;
+        
+        public bool isRotated;
         public int complexHeight;
         public int complexWidth;
         public int onGridPositionX;
         public int onGridPositionY;
 
-        public bool[,] itemShape =>
-            itemDataComplexShaped.shape; // 2D Array of bools that holds the shape of the object.
+        // The shape of the individual item attached to this script.
+        public bool[,] itemShape;
 
 
         public void SetComplexItem(ItemDataComplexShaped _itemDataComplexShaped)
         {
             itemDataComplexShaped = _itemDataComplexShaped;
 
+            // Set the shape and set it to this specific object.
+            itemDataComplexShaped.SetShape();
+            itemShape = itemDataComplexShaped.shape;
+
             complexHeight = _itemDataComplexShaped.SetShape().GetLength(0);
             complexWidth = _itemDataComplexShaped.SetShape().GetLength(1);
 
+            // Re-size the icon to match the amount of rows and columns the item takes.
             GetComponent<Image>().sprite = itemDataComplexShaped.itemIcon;
             var size = new Vector2(complexWidth * ItemGrid.tileSizeWidth, complexHeight * ItemGrid.tileSizeHeight);
             GetComponent<RectTransform>().sizeDelta = size;
         }
 
+        // Updated to work with complex data shapes.
         public bool CanFitInGrid(ItemGrid selectedGrid, int mouseX, int mouseY)
         {
             for (var x = 0; x < complexWidth; x++)
             for (var y = 0; y < complexHeight; y++)
-                if (itemDataComplexShaped.shape[mouseX, mouseY] &&
-                    (mouseX + x >= selectedGrid.inventoryRowQuantity ||
-                     mouseY + y >= selectedGrid.inventoryColumnQuantity ||
-                     selectedGrid.IsOccupied(mouseX + x, mouseY + y)))
-                    return false;
+            {
+                // Check that the bounds of the shape array are not being surpassed (prevent an out of Index error).
+                if (x >= itemDataComplexShaped.shape.GetLength(0) || y >= itemDataComplexShaped.shape.GetLength(1))
+                    // Skip this part if it is out of bounds (This is a workaround for items that return a false value for empty spaces).
+                    continue;
 
+                if (itemDataComplexShaped.shape[x, y])
+                    if (mouseX + x >= selectedGrid.inventoryRowQuantity ||
+                        mouseY + y >= selectedGrid.inventoryColumnQuantity ||
+                        selectedGrid.IsOccupied(mouseX + x, mouseY + y))
+                        return false;
+            }
+
+            // Otherwise everything is good.
             return true;
         }
 
-        #endregion
+        // Handle the rotation of the space the complex item is going to occupy.
+        public void RotateComplexItem()
+        {
+            isRotated = !isRotated;
+
+            RotateShapeArray();
+            RotateItemIcon();
+        }
+
+        private int rotationState;
+
+        private void RotateItemIcon()
+        {
+            // The item can only rotate 90 degrees (basically 4 rotations).
+            rotationState = (rotationState + 1) % 4;
+
+            var itemRect = GetComponent<RectTransform>();
+            itemRect.rotation = Quaternion.Euler(0, 0, rotationState * 90f);
+        }
+
+        private void RotateShapeArray()
+        {
+            // This would be X.
+            var rows = itemShape.GetLength(0);
+
+            // This would be Y,
+            var columns = itemShape.GetLength(1);
+            var rotatedShape = new bool[columns, rows];
+
+            // Rotate the array.
+            for (var x = 0; x < columns; x++)
+            for (var y = 0; y < rows; y++)
+                // X and Y are saved in the rotatedShape array but inverted.
+                // -1 because the array indexes start at 0.
+                rotatedShape[x, y] = itemShape[rows - y - 1, x];
+
+            // Update the shape 2D array to be the rotated one.
+            itemShape = rotatedShape;
+            // Transpose the dimensions.
+            (complexWidth, complexHeight) = (complexHeight, complexWidth);
+        }
     }
 }

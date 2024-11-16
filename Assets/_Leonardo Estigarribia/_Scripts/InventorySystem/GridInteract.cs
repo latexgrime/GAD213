@@ -18,6 +18,7 @@ namespace LeonardoEstigarribia.InventorySystem.gridInteraction
         private InventoryController inventoryController; // Reference to the inventory controller.
         private ItemGrid itemGrid; // Reference to the inventory item grid.
 
+        // Get components.
         private void Awake()
         {
             inventoryController = FindObjectOfType<InventoryController>(); // OPTIMIZE THIS LATER ---
