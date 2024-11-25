@@ -1,55 +1,46 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.Timeline;
 
 public class PlayerLocomotion : MonoBehaviour
 {
     private PlayerManager playerManager;
     private InputManager inputManager;
     private AnimatorManager animatorManager;
-    
+
     private Vector3 moveDirection;
     private Transform cameraObject;
     private Rigidbody playerRigidbody;
 
-    [Header("- Falling")]
-    [SerializeField] private float inAirTimer;
+    [Header("- Falling")] [SerializeField] private float inAirTimer;
     [SerializeField] private float leapingVelocity;
     [SerializeField] private float fallingSpeed;
     [SerializeField] private float rayCastHeightOffset = 0.5f;
     [SerializeField] private float landingSphereCastMaxDistance = 1;
     [SerializeField] private float landingSphereCastRadius = 0.2f;
     [SerializeField] private LayerMask groundLayer;
-    
-    [Header("- Movement Flags")]
-    public bool isSprinting;
+
+    [Header("- Movement Flags")] public bool isSprinting;
     public bool isWalking; // For keyboard.
     public bool isGrounded;
 
-    [Header("- Jumping")] 
-    public bool isJumping;
+    [Header("- Jumping")] public bool isJumping;
     public bool startJump;
-    
+
     [SerializeField] private float jumpPower = 50f;
-    [SerializeField] private float jumpDuration = 0.3f;  // How long the upward force is applied.
-    
-    [Header("- Movement Speeds")]
-    [SerializeField] private float walkingSpeed = 1.5f;
+    [SerializeField] private float jumpDuration = 0.3f; // How long the upward force is applied.
+
+    [Header("- Movement Speeds")] [SerializeField]
+    private float walkingSpeed = 1.5f;
+
     [SerializeField] private float runningSpeed = 4f;
     [SerializeField] private float sprintingSpeed = 7f;
     [SerializeField] private float rotationSpeed = 15f;
 
-    [Header("- Dodge")]
-    [SerializeField] private Vector3 rollDirection ;
+    [Header("- Dodge")] [SerializeField] private Vector3 rollDirection;
     [SerializeField] private float dodgeDuration = 0.3f;
     [SerializeField] private float dodgePower = 10f;
     public bool isDodging;
+
     private void Awake()
     {
         FindComponents();
@@ -66,30 +57,24 @@ public class PlayerLocomotion : MonoBehaviour
 
     public void HandleAllMovement()
     {
-        if (startJump)
-        {
-            HandleJumping();
-        }
+        if (startJump) HandleJumping();
 
-        if (isDodging)
-        {
-            HandleDodge();
-        }
+        if (isDodging) HandleDodge();
 
         HandleFallingAndLanding();
-        
-        if (playerManager.isInteracting) 
+
+        if (playerManager.isInteracting)
             return;
 
         HandleMovement();
         HandleRotation();
     }
-    
+
     private void HandleMovement()
     {
-        if (isJumping) 
+        if (isJumping)
             return;
-        
+
         moveDirection = cameraObject.forward * inputManager.verticalInput;
         moveDirection = moveDirection + cameraObject.right * inputManager.horizontalInput;
         moveDirection.Normalize();
@@ -102,31 +87,26 @@ public class PlayerLocomotion : MonoBehaviour
         else
         {
             if (inputManager.moveAmount >= 0.5f && !isWalking)
-            {
                 moveDirection = moveDirection * runningSpeed;
-            }
             else if (inputManager.moveAmount > 0.01f && isWalking)
-            {
                 moveDirection = moveDirection * walkingSpeed; // For keyboard.
-            }
-            else 
+            else
                 moveDirection = moveDirection * walkingSpeed; // For controllers [TO BE TESTED]
         }
-        
 
-        
+
         moveDirection = moveDirection * sprintingSpeed;
 
-        Vector3 movementVelocity = moveDirection;
+        var movementVelocity = moveDirection;
         playerRigidbody.velocity = movementVelocity;
     }
 
     private void HandleRotation()
     {
-        if (isJumping) 
+        if (isJumping)
             return;
-        
-        Vector3 targetDirection = Vector3.zero;
+
+        var targetDirection = Vector3.zero;
 
         targetDirection = cameraObject.forward * inputManager.verticalInput;
         targetDirection = targetDirection + cameraObject.right * inputManager.horizontalInput;
@@ -136,8 +116,8 @@ public class PlayerLocomotion : MonoBehaviour
         if (targetDirection == Vector3.zero)
             targetDirection = transform.forward;
 
-        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-        Quaternion playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        var targetRotation = Quaternion.LookRotation(targetDirection);
+        var playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
         transform.rotation = playerRotation;
     }
@@ -145,30 +125,25 @@ public class PlayerLocomotion : MonoBehaviour
     private void HandleFallingAndLanding()
     {
         RaycastHit hit;
-        Vector3 rayCastOrigin = transform.position;
+        var rayCastOrigin = transform.position;
         rayCastOrigin.y = rayCastOrigin.y + rayCastHeightOffset;
 
         // Player falling forces and animation.
         if (!isGrounded && !isJumping)
         {
-            if (!playerManager.isInteracting)
-            {
-                animatorManager.PlayTargetAnimation("Fall", true, false);
-            }
+            if (!playerManager.isInteracting) animatorManager.PlayTargetAnimation("Fall", true, false);
 
             inAirTimer = inAirTimer + Time.deltaTime;
             playerRigidbody.AddForce(transform.forward * leapingVelocity);
-            playerRigidbody.AddForce(Vector3.down * fallingSpeed * inAirTimer); 
+            playerRigidbody.AddForce(Vector3.down * fallingSpeed * inAirTimer);
         }
 
         // Player landing forces and animation.
-        if (Physics.SphereCast(rayCastOrigin, landingSphereCastRadius, Vector3.down, out hit, landingSphereCastMaxDistance, groundLayer))
+        if (Physics.SphereCast(rayCastOrigin, landingSphereCastRadius, Vector3.down, out hit,
+                landingSphereCastMaxDistance, groundLayer))
         {
-            if (!isGrounded && playerManager.isInteracting)
-            {
-                animatorManager.PlayTargetAnimation("Land", true, false);
-            }
-            
+            if (!isGrounded && playerManager.isInteracting) animatorManager.PlayTargetAnimation("Land", true, false);
+
 
             inAirTimer = 0;
             isGrounded = true;
@@ -192,18 +167,19 @@ public class PlayerLocomotion : MonoBehaviour
             StartCoroutine(ApplyJumpForce());
         }
     }
-    
+
     private IEnumerator ApplyJumpForce()
     {
-        float timeElapsed = 0f;
+        var timeElapsed = 0f;
 
         while (timeElapsed < jumpDuration)
         {
             // Quadratic easing in-out function.
-            float easeFactor = Mathf.SmoothStep(0f, 2f, timeElapsed / jumpDuration);
+            var easeFactor = Mathf.SmoothStep(0f, 2f, timeElapsed / jumpDuration);
 
             // Apply the force using the easing factor.
-            playerRigidbody.AddForce(transform.up * jumpPower * (1 - easeFactor) * Time.deltaTime, ForceMode.Acceleration);
+            playerRigidbody.AddForce(transform.up * jumpPower * (1 - easeFactor) * Time.deltaTime,
+                ForceMode.Acceleration);
 
             timeElapsed += Time.deltaTime;
             yield return null;
@@ -216,7 +192,6 @@ public class PlayerLocomotion : MonoBehaviour
     private void HandleDodge()
     {
         if (!playerManager.isInteracting && isGrounded)
-        {
             // If there is movement from the player, the player is going to roll.
             if (inputManager.moveAmount > 0)
             {
@@ -226,22 +201,20 @@ public class PlayerLocomotion : MonoBehaviour
                 rollDirection.y = 0;
                 Quaternion.LookRotation(rollDirection);
                 rollDirection.Normalize();
-            
-                animatorManager.PlayTargetAnimation("Roll_Forward_01",true, false);
+
+                animatorManager.PlayTargetAnimation("Roll_Forward_01", true, false);
                 StartCoroutine(ApplyDodgeForce());
-                
             }
-            /*else // Roll.
+        /*else // Roll.
             {
                 isDodging = false;
                 // Perform a back step animation
             }*/
-        }
     }
-    
+
     private IEnumerator ApplyDodgeForce()
     {
-        float timeElapsed = 0f;
+        var timeElapsed = 0f;
 
         while (timeElapsed < dodgeDuration)
         {
@@ -255,6 +228,6 @@ public class PlayerLocomotion : MonoBehaviour
             yield return null;
         }
 
-        isDodging= false;
+        isDodging = false;
     }
 }
