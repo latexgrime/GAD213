@@ -202,7 +202,7 @@ public class PlayerLocomotion : MonoBehaviour
                 Quaternion.LookRotation(rollDirection);
                 rollDirection.Normalize();
 
-                animatorManager.PlayTargetAnimation("Roll_Forward_01", true, false);
+                animatorManager.PlayTargetAnimation("Roll Forward", true, false);
                 StartCoroutine(ApplyDodgeForce());
             }
         /*else // Roll.
