@@ -9,6 +9,7 @@ public class CameraManager : MonoBehaviour
     private InputManager inputManager;
 
     private int characterSwitchCounter;
+    [Header("- References")]
     [SerializeField] private Transform cqcTransform;
     [SerializeField] private Transform rangedCharacterTransform;
     
@@ -22,6 +23,7 @@ public class CameraManager : MonoBehaviour
     private Vector3 cameraFollowVelocity = Vector3.zero;
     private Vector3 cameraVectorPosition;
 
+    [Header("- Camera collision settings")]
     [SerializeField] private float cameraCollisionOffset = 0.2f;
     [SerializeField] private float minimumCollisionOffset = 0.2f;
     [SerializeField] private float cameraCollisionLerpTime = 0.2f;

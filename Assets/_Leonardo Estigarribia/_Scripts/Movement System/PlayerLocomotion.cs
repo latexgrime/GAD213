@@ -1,5 +1,10 @@
 using System.Collections;
+using System.Numerics;
+using System.Runtime.InteropServices.ComTypes;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 public class PlayerLocomotion : MonoBehaviour
 {
@@ -41,6 +46,16 @@ public class PlayerLocomotion : MonoBehaviour
     [SerializeField] private float dodgePower = 10f;
     public bool isDodging;
 
+    [FormerlySerializedAs("damage")] [Header("- Attack")] [SerializeField] private int attackDamage;
+    
+    [SerializeField] private float attackVerticalOffset;
+    [SerializeField] private float attackRadius;
+    [SerializeField] private float attackDistance;
+    [SerializeField] private AnimationClip attackAnimLength;
+
+    public bool attackTrigger;
+    public bool isAttacking;
+    
     private void Awake()
     {
         FindComponents();
@@ -61,11 +76,13 @@ public class PlayerLocomotion : MonoBehaviour
 
         if (isDodging) HandleDodge();
 
+        if (attackTrigger) HandleAttacking();
+
         HandleFallingAndLanding();
 
         if (playerManager.isInteracting)
             return;
-
+        
         HandleMovement();
         HandleRotation();
     }
@@ -74,6 +91,8 @@ public class PlayerLocomotion : MonoBehaviour
     {
         if (isJumping)
             return;
+
+
 
         moveDirection = cameraObject.forward * inputManager.verticalInput;
         moveDirection = moveDirection + cameraObject.right * inputManager.horizontalInput;
@@ -204,7 +223,7 @@ public class PlayerLocomotion : MonoBehaviour
 
                 animatorManager.PlayTargetAnimation("Roll Forward", true, false);
                 StartCoroutine(ApplyDodgeForce());
-            }
+            }   
         /*else // Roll.
             {
                 isDodging = false;
@@ -229,5 +248,50 @@ public class PlayerLocomotion : MonoBehaviour
         }
 
         isDodging = false;
+    }
+
+    private void HandleAttacking()
+    {
+        attackTrigger = false;
+        if (!playerManager.isInteracting && isGrounded && !isAttacking)
+        {
+            // Lock the player control when attacking.
+            isAttacking = true;
+            
+            // Attack animation.
+            animatorManager.PlayTargetAnimation("Attack", true, false);
+
+            // Attack thing in front of the player.
+            Vector3 sphereCastOffset = transform.position + Vector3.up * attackVerticalOffset;
+            RaycastHit[] hits =
+                Physics.SphereCastAll(sphereCastOffset, attackRadius, transform.forward, attackDistance);
+
+            Debug.DrawLine(sphereCastOffset,sphereCastOffset + transform.forward * attackDistance, Color.cyan, 0.5f);
+            foreach (var hit in hits)
+            {
+                
+                // If the hit is the player itself, then ignore it.
+                if (hit.transform.gameObject != this.gameObject)
+                {
+                    // If the hit has the EntityStats class, then damage it.
+                    if (hit.transform.gameObject.GetComponent<EntityStats>())
+                    {
+                        EntityStats hitStats = hit.transform.gameObject.GetComponent<EntityStats>();
+                        hitStats.TakeDamage(attackDamage);
+                        Debug.Log($"Damaged {hit.transform.name} for {attackDamage} damage.");
+                    }
+                }
+            }
+            
+            // Reset the isAttacking bool when the animation ends.
+            // This is divided by two because I multiplied the speed of this animation by two in the inspector.
+            StartCoroutine(ResetAttackingBool(attackAnimLength.length / 2));
+        }
+    }
+
+    private IEnumerator ResetAttackingBool(float length)
+    {
+        yield return new WaitForSeconds(length);
+        isAttacking = false;
     }
 }

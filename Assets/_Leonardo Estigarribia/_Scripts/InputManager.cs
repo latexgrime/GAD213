@@ -33,6 +33,7 @@ public class InputManager : MonoBehaviour
     public bool jumpInput; // South button on the controller, SPACE in keyboard.
     public bool dodgeInput; // East button on the controller, F in keyboard.
     public bool switchCharacterInput; // North button on the controller, Q in keyboard.
+    public bool attackInput; // Click button. Make it R1 in the future.
 
     // NEW!
     [Header("- Inventory Input")] 
@@ -54,35 +55,38 @@ public class InputManager : MonoBehaviour
         {
             playerControls = new PlayerControls();
 
-            // Movement callback context
+            // Movement callback context.
             playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
             
-            // Camera callback context
+            // Camera callback context.
             playerControls.PlayerMovement.Camera.performed += i => cameraInput = i.ReadValue<Vector2>();
             
-            // Sprint callback context
+            // Sprint callback context.
             playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
             playerControls.PlayerActions.Sprint.canceled += i => sprintInput = false;
             
-            // Walk callback context
+            // Walk callback context.
             playerControls.PlayerActions.Walk.performed += i => walkInput = true;
             playerControls.PlayerActions.Walk.canceled += i => walkInput = false;
             
-            // Jump callback context
+            // Jump callback context.
             playerControls.PlayerActions.Jump.performed += i => jumpInput = true;
             playerControls.PlayerActions.Jump.canceled += i => jumpInput = false;
             
-            // Dodge callback context
+            // Dodge callback context.
             playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
             playerControls.PlayerActions.Dodge.canceled+= i => dodgeInput = false;
 
-            // Character switch callback context
+            // Character switch callback context.
             playerControls.PlayerActions.CharacterSwitchToggle.performed += i => switchCharacterInput = true;
             playerControls.PlayerActions.CharacterSwitchToggle.canceled += i => switchCharacterInput = false;
             
-            // Inventory opening callback context
+            // Inventory opening callback context.
             playerControls.PlayerActions.OpenInventoryToggle.performed += i => HandleInventoryInput();
             
+            // Attacking callback context.
+            playerControls.PlayerActions.Attack.performed += i => attackInput = true;
+            playerControls.PlayerActions.Attack.canceled += i => attackInput = false;
         }
         playerControls.Enable();
     }
@@ -99,21 +103,32 @@ public class InputManager : MonoBehaviour
         HandleSprintingInput();
         HandleJumpingInput();
         HandleDodgeInput();
+        HandleAttackingInput();
         HandleCharacterSwitchInput();
     }
 
     private void HandleMovementInput()
     {
-        verticalInput = movementInput.y;
-        horizontalInput = movementInput.x;
-
+        if (playerLocomotion.isAttacking)
+        {
+            verticalInput = 0;
+            horizontalInput = 0;
+            moveAmount = 0;
+            animatorManager.UpdateAnimatorValues(0, 0, false, false);
+        }
+        else
+        {
+            verticalInput = movementInput.y;
+            horizontalInput = movementInput.x;
+        
+            moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
+        
+            // Handle animation
+            animatorManager.UpdateAnimatorValues(0, moveAmount, playerLocomotion.isSprinting, playerLocomotion.isWalking);
+        }
+        
         cameraInputX = cameraInput.x;
         cameraInputY = cameraInput.y;
-        
-        moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
-        
-        // Handle animation
-        animatorManager.UpdateAnimatorValues(0, moveAmount, playerLocomotion.isSprinting, playerLocomotion.isWalking);
     }
 
     private void HandleSprintingInput()
@@ -166,8 +181,16 @@ public class InputManager : MonoBehaviour
             switchCharacterInput = false;
         }
     }
+
+    private void HandleAttackingInput()
+    {
+        if (attackInput)
+        {
+            playerLocomotion.attackTrigger = true;
+            attackInput = false;
+        }
+    }
     
-    // NEW! - Project 2
     private void HandleInventoryInput()
     {
         openInventoryInput = !openInventoryInput;
