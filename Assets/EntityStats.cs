@@ -28,10 +28,16 @@ public class EntityStats : MonoBehaviour
     [SerializeField] private AudioClip[] healSFX;
     [SerializeField] private AudioClip dieSFX;
 
+    [Header("- UI")] 
+    private EntityUIManager entityUIManager;
+
     private void Start()
     {
+        entityUIManager = GetComponentInChildren<EntityUIManager>();
         // Make the player have full health at the beginning of the game.
         currentHealth = maxHealth;
+        // Update the UI.
+        entityUIManager.UpdateHealthBar(maxHealth, currentHealth);
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -53,12 +59,14 @@ public class EntityStats : MonoBehaviour
             currentHealth = 0;
             DeadLogic();
         }
+        entityUIManager.UpdateHealthBar(maxHealth, currentHealth);
     }
 
     public void HealEntity(int healAmount)
     {
         currentHealth += healAmount;
-        
+        entityUIManager.UpdateHealthBar(maxHealth, currentHealth);
+
         // Avoid overhealing.
         if (currentHealth >= maxHealth)
         {

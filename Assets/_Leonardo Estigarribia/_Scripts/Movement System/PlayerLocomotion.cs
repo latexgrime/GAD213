@@ -56,9 +56,13 @@ public class PlayerLocomotion : MonoBehaviour
     [SerializeField] private AnimationClip attackAnimLength;
     
     [Header("- VFX")]
-    [SerializeField] private ParticleSystem attackParticles;
+    [SerializeField] private ParticleSystem attackVFX;
+    [SerializeField] private ParticleSystem jumpVFX;
 
     [Header("- SFX")] 
+    [SerializeField] private AudioClip jumpSFX;
+    [SerializeField] private AudioClip landSFX;
+    [SerializeField] private AudioClip[] walkSFX;
     [SerializeField] private AudioClip[] attackSFX;
 
     public bool attackTrigger;
@@ -269,7 +273,7 @@ public class PlayerLocomotion : MonoBehaviour
             
             // Attack animation, VFX and SFX.
             animatorManager.PlayTargetAnimation("Attack", true, false);
-            attackParticles.Play();
+            attackVFX.Play();
             audioSource.PlayOneShot(attackSFX[Random.Range(0, attackSFX.Length)]); // Random SFX from the list.
             
             // Attack thing in front of the player.
