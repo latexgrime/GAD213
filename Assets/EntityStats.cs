@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.ComTypes;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class EntityStats : MonoBehaviour
 {
     [Header("- Health points")]
     [SerializeField] private int maxHealth = 10;
     [SerializeField] private int currentHealth;
+    [SerializeField] private ParticleSystem[] damageParticlesPool;
 
     private void Start()
     {
@@ -19,7 +22,12 @@ public class EntityStats : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        currentHealth = currentHealth - damage;
+        currentHealth -= damage;
+        
+        // Play some particle effects.
+        int randomParticleIndex = Random.Range(0, damageParticlesPool.Length);
+        damageParticlesPool[randomParticleIndex].Play();
+        
         if (currentHealth <= 0)
         {
             currentHealth = 0;

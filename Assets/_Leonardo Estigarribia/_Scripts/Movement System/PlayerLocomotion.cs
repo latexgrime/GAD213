@@ -52,6 +52,7 @@ public class PlayerLocomotion : MonoBehaviour
     [SerializeField] private float attackRadius;
     [SerializeField] private float attackDistance;
     [SerializeField] private AnimationClip attackAnimLength;
+    [FormerlySerializedAs("attackParticle")] [SerializeField] private ParticleSystem attackParticles;
 
     public bool attackTrigger;
     public bool isAttacking;
@@ -260,32 +261,37 @@ public class PlayerLocomotion : MonoBehaviour
             
             // Attack animation.
             animatorManager.PlayTargetAnimation("Attack", true, false);
-
-            // Attack thing in front of the player.
-            Vector3 sphereCastOffset = transform.position + Vector3.up * attackVerticalOffset;
-            RaycastHit[] hits =
-                Physics.SphereCastAll(sphereCastOffset, attackRadius, transform.forward, attackDistance);
-
-            Debug.DrawLine(sphereCastOffset,sphereCastOffset + transform.forward * attackDistance, Color.cyan, 0.5f);
-            foreach (var hit in hits)
-            {
-                
-                // If the hit is the player itself, then ignore it.
-                if (hit.transform.gameObject != this.gameObject)
-                {
-                    // If the hit has the EntityStats class, then damage it.
-                    if (hit.transform.gameObject.GetComponent<EntityStats>())
-                    {
-                        EntityStats hitStats = hit.transform.gameObject.GetComponent<EntityStats>();
-                        hitStats.TakeDamage(attackDamage);
-                        Debug.Log($"Damaged {hit.transform.name} for {attackDamage} damage.");
-                    }
-                }
-            }
+            attackParticles.Play();
             
+            // Attack thing in front of the player.
+            DamageHitObject();
+
             // Reset the isAttacking bool when the animation ends.
             // This is divided by two because I multiplied the speed of this animation by two in the inspector.
             StartCoroutine(ResetAttackingBool(attackAnimLength.length / 2));
+        }
+    }
+
+    private void DamageHitObject()
+    {
+        Vector3 sphereCastOffset = transform.position + Vector3.up * attackVerticalOffset;
+        RaycastHit[] hits =
+            Physics.SphereCastAll(sphereCastOffset, attackRadius, transform.forward, attackDistance);
+        Debug.DrawLine(sphereCastOffset,sphereCastOffset + transform.forward * attackDistance, Color.cyan, 0.5f);
+        foreach (var hit in hits)
+        {
+                
+            // If the hit is the player itself, then ignore it.
+            if (hit.transform.gameObject != this.gameObject)
+            {
+                // If the hit has the EntityStats class, then damage it.
+                if (hit.transform.gameObject.GetComponent<EntityStats>())
+                {
+                    EntityStats hitStats = hit.transform.gameObject.GetComponent<EntityStats>();
+                    hitStats.TakeDamage(attackDamage);
+                    Debug.Log($"Damaged {hit.transform.name} for {attackDamage} damage.");
+                }
+            }
         }
     }
 
