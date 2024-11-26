@@ -12,7 +12,10 @@ public class EntityStats : MonoBehaviour
     [Header("- Health points")]
     [SerializeField] private int maxHealth = 10;
     [SerializeField] private int currentHealth;
+    
+    [Header("- Particle effects")]
     [SerializeField] private ParticleSystem[] damageParticlesPool;
+    [SerializeField] private ParticleSystem[] healParticles;
 
     private void Start()
     {
@@ -28,10 +31,22 @@ public class EntityStats : MonoBehaviour
         int randomParticleIndex = Random.Range(0, damageParticlesPool.Length);
         damageParticlesPool[randomParticleIndex].Play();
         
+        // Avoid negative numbers.
         if (currentHealth <= 0)
         {
             currentHealth = 0;
             CheckIfDead();
+        }
+    }
+
+    public void HealEntity(int healAmount)
+    {
+        currentHealth += healAmount;
+        
+        // Avoid overhealing.
+        if (currentHealth >= maxHealth)
+        {
+            currentHealth = maxHealth;
         }
     }
 
