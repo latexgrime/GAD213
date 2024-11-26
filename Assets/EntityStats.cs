@@ -9,18 +9,25 @@ using Random = UnityEngine.Random;
 
 public class EntityStats : MonoBehaviour
 {
+    private AudioSource audioSource;
+    
     [Header("- Health points")]
     [SerializeField] private int maxHealth = 10;
     [SerializeField] private int currentHealth;
     
-    [Header("- Particle effects")]
-    [SerializeField] private ParticleSystem[] damageParticlesPool;
-    [SerializeField] private ParticleSystem[] healParticles;
+    [Header("- Particle VFX")]
+    [SerializeField] private ParticleSystem[] takingDamageVFX;
+    [SerializeField] private ParticleSystem[] healVFX;
+
+    [Header("- SFX")] 
+    [SerializeField] private AudioClip[] takingDamageSFX;
+    [SerializeField] private AudioClip[] healSFX;
 
     private void Start()
     {
         // Make the player have full health at the beginning of the game.
         currentHealth = maxHealth;
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void TakeDamage(int damage)
@@ -28,8 +35,12 @@ public class EntityStats : MonoBehaviour
         currentHealth -= damage;
         
         // Play some particle effects.
-        int randomParticleIndex = Random.Range(0, damageParticlesPool.Length);
-        damageParticlesPool[randomParticleIndex].Play();
+        int randomVFXIndex = Random.Range(0, takingDamageVFX.Length);
+        takingDamageVFX[randomVFXIndex].Play();
+        
+        //Play some SFX.
+        int randomSFXIndex = Random.Range(0, takingDamageSFX.Length);
+        audioSource.PlayOneShot(takingDamageSFX[randomSFXIndex]);
         
         // Avoid negative numbers.
         if (currentHealth <= 0)

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Numerics;
 using System.Runtime.InteropServices.ComTypes;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Serialization;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
@@ -11,6 +12,7 @@ public class PlayerLocomotion : MonoBehaviour
     private PlayerManager playerManager;
     private InputManager inputManager;
     private AnimatorManager animatorManager;
+    private AudioSource audioSource;
 
     private Vector3 moveDirection;
     private Transform cameraObject;
@@ -46,13 +48,18 @@ public class PlayerLocomotion : MonoBehaviour
     [SerializeField] private float dodgePower = 10f;
     public bool isDodging;
 
-    [FormerlySerializedAs("damage")] [Header("- Attack")] [SerializeField] private int attackDamage;
-    
+    [Header("- Attack")] 
+    [SerializeField] private int attackDamage;
     [SerializeField] private float attackVerticalOffset;
     [SerializeField] private float attackRadius;
     [SerializeField] private float attackDistance;
     [SerializeField] private AnimationClip attackAnimLength;
-    [FormerlySerializedAs("attackParticle")] [SerializeField] private ParticleSystem attackParticles;
+    
+    [Header("- VFX")]
+    [SerializeField] private ParticleSystem attackParticles;
+
+    [Header("- SFX")] 
+    [SerializeField] private AudioClip[] attackSFX;
 
     public bool attackTrigger;
     public bool isAttacking;
@@ -68,6 +75,7 @@ public class PlayerLocomotion : MonoBehaviour
         animatorManager = GetComponent<AnimatorManager>();
         inputManager = GetComponent<InputManager>();
         playerRigidbody = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
         cameraObject = Camera.main.transform;
     }
 
@@ -259,9 +267,10 @@ public class PlayerLocomotion : MonoBehaviour
             // Lock the player control when attacking.
             isAttacking = true;
             
-            // Attack animation.
+            // Attack animation, VFX and SFX.
             animatorManager.PlayTargetAnimation("Attack", true, false);
             attackParticles.Play();
+            audioSource.PlayOneShot(attackSFX[Random.Range(0, attackSFX.Length)]); // Random SFX from the list.
             
             // Attack thing in front of the player.
             DamageHitObject();
