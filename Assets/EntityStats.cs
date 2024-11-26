@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices.ComTypes;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
@@ -18,10 +21,12 @@ public class EntityStats : MonoBehaviour
     [Header("- Particle VFX")]
     [SerializeField] private ParticleSystem[] takingDamageVFX;
     [SerializeField] private ParticleSystem[] healVFX;
+    [SerializeField] private GameObject dieVFX;
 
     [Header("- SFX")] 
     [SerializeField] private AudioClip[] takingDamageSFX;
     [SerializeField] private AudioClip[] healSFX;
+    [SerializeField] private AudioClip dieSFX;
 
     private void Start()
     {
@@ -46,7 +51,7 @@ public class EntityStats : MonoBehaviour
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            CheckIfDead();
+            DeadLogic();
         }
     }
 
@@ -71,13 +76,27 @@ public class EntityStats : MonoBehaviour
         return currentHealth;
     }
 
-    private void CheckIfDead()
+    private void DeadLogic()
     {
         // If the current health is the same or less than zero, this entity is dead.
         if (currentHealth <= 0)
         {
             // Play dead animation from animation manager or something idk.
             Debug.Log($"{gameObject.transform.name} died.");
+
+            StartCoroutine((DyingVFX()));
         }
+    }
+
+    IEnumerator DyingVFX()
+    {
+        GameObject dyingVFX = Instantiate(dieVFX, transform.position, Quaternion.identity);
+        dyingVFX.GetComponent<ParticleSystem>().Play();
+        audioSource.PlayOneShot(dieSFX);
+        yield return new WaitForSeconds(dieSFX.length);
+        
+        // Later rather than destroying it, deactivate its AI and sent it to a pool of Entities below the map.
+        Destroy(gameObject);
+        
     }
 }
