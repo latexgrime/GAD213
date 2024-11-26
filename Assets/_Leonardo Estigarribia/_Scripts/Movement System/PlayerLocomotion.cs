@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices.ComTypes;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Serialization;
@@ -57,13 +59,19 @@ public class PlayerLocomotion : MonoBehaviour
     
     [Header("- VFX")]
     [SerializeField] private ParticleSystem attackVFX;
-    [SerializeField] private ParticleSystem jumpVFX;
+    [FormerlySerializedAs("jumpVFX")] [SerializeField] private ParticleSystem landVFX;
 
     [Header("- SFX")] 
-    [SerializeField] private AudioClip jumpSFX;
+    private float currentStepInterval = 0;
+    [SerializeField] private AudioClip[] jumpSFX;
     [SerializeField] private AudioClip landSFX;
     [SerializeField] private AudioClip[] walkSFX;
     [SerializeField] private AudioClip[] attackSFX;
+
+    private float stepTimer = 0f;
+    [FormerlySerializedAs("walkSFXPeriod")] [SerializeField] private float walkSFXinterval = 0.4f;
+    [FormerlySerializedAs("jogSFXPeriod")] [SerializeField] private float jogSFXInverval = 0.3f;
+    [FormerlySerializedAs("sprintSFXPeriod")] [SerializeField] private float sprintSFXInterval = 0.2f;
 
     public bool attackTrigger;
     public bool isAttacking;
@@ -104,14 +112,15 @@ public class PlayerLocomotion : MonoBehaviour
     {
         if (isJumping)
             return;
-
-
-
+        
         moveDirection = cameraObject.forward * inputManager.verticalInput;
         moveDirection = moveDirection + cameraObject.right * inputManager.horizontalInput;
         moveDirection.Normalize();
         moveDirection.y = 0;
 
+        // Play walking SFX.
+        PlayWalkSFX();
+        
         if (isSprinting)
         {
             moveDirection = moveDirection * sprintingSpeed;
@@ -131,6 +140,54 @@ public class PlayerLocomotion : MonoBehaviour
 
         var movementVelocity = moveDirection;
         playerRigidbody.velocity = movementVelocity;
+    }
+
+    private void PlayWalkSFX()
+    {
+        float originalPitch;
+        float originalVolume;
+
+        originalPitch = audioSource.pitch;
+        originalVolume = audioSource.volume;
+        
+        if (inputManager.moveAmount >= 0.01f)
+        {
+            if (!isJumping && isGrounded)
+            {
+                stepTimer += Time.deltaTime;
+                if (isWalking)
+                {
+                    Debug.Log($"Walking.");
+                    currentStepInterval = walkSFXinterval;
+                }
+
+                if (!isWalking && !isSprinting)
+                {
+                    Debug.Log($"Jogging.");
+                    currentStepInterval = jogSFXInverval;
+                }
+
+                if (isSprinting)
+                {
+                    Debug.Log($"Sprinting.");
+                    currentStepInterval = sprintSFXInterval;
+                }
+
+                if (stepTimer >= currentStepInterval)
+                {
+                    Debug.Log($"Playing walk SFX.");
+
+                    audioSource.volume = Random.Range(audioSource.volume - 0.1f, audioSource.volume + 0.1f);
+                    audioSource.pitch = Random.Range(audioSource.pitch - 0.2f, audioSource.pitch + 0.2f);
+                    
+                    audioSource.PlayOneShot(walkSFX[Random.Range(0, walkSFX.Length)]);
+                    stepTimer = 0;
+                }
+            }
+        }
+
+        audioSource.pitch = originalPitch;
+        audioSource.volume = originalVolume;
     }
 
     private void HandleRotation()
@@ -174,7 +231,13 @@ public class PlayerLocomotion : MonoBehaviour
         if (Physics.SphereCast(rayCastOrigin, landingSphereCastRadius, Vector3.down, out hit,
                 landingSphereCastMaxDistance, groundLayer))
         {
-            if (!isGrounded && playerManager.isInteracting) animatorManager.PlayTargetAnimation("Land", true, false);
+            if (!isGrounded && playerManager.isInteracting)
+            {
+                animatorManager.PlayTargetAnimation("Land", true, false);
+                landVFX.transform.position = transform.position;
+                landVFX.Play();
+                audioSource.PlayOneShot(landSFX);
+            }
 
 
             inAirTimer = 0;
@@ -191,9 +254,13 @@ public class PlayerLocomotion : MonoBehaviour
     {
         if (isGrounded && !isJumping)
         {
+            // Jump animation.
             animatorManager.animator.SetBool("isJumping", true);
             animatorManager.PlayTargetAnimation("Jump", false, false);
-
+            
+            // Random Jump SFX.
+            audioSource.PlayOneShot(jumpSFX[Random.Range(0,jumpSFX.Length)]);
+            
             isJumping = true;
             startJump = false;
             StartCoroutine(ApplyJumpForce());
@@ -235,6 +302,7 @@ public class PlayerLocomotion : MonoBehaviour
                 rollDirection.Normalize();
 
                 animatorManager.PlayTargetAnimation("Roll Forward", true, false);
+                audioSource.PlayOneShot(jumpSFX[Random.Range(0,jumpSFX.Length)]);
                 StartCoroutine(ApplyDodgeForce());
             }   
         /*else // Roll.
