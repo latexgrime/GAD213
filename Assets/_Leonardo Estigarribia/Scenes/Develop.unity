@@ -1608,6 +1608,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b91fd202f20f51a45ba285bf7ec636d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chaseState: {fileID: 0}
   attackCooldown: 1
   attackDamage: 10
 --- !u!4 &1687851312
@@ -27886,6 +27887,11 @@ PrefabInstance:
     - target: {fileID: 5321491517584726171, guid: 99170d3364650a8479a7f4729044ad4b,
         type: 3}
       propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5321491517584726171, guid: 99170d3364650a8479a7f4729044ad4b,
+        type: 3}
+      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 6292289636571058712, guid: 99170d3364650a8479a7f4729044ad4b,

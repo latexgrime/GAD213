@@ -4,8 +4,8 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
 {
     public class ChaseState : State
     {
-        public AttackState attackState;
-        public bool isInAttackRange;
+        private AttackState attackState;
+        private bool isInAttackRange;
     
         [SerializeField] private float moveSpeed = 5f;
         [SerializeField] private float attackRange = 2f;
@@ -13,7 +13,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
     
         private void Start()
         {
-            // Cache player reference
+            attackState = GetComponent<AttackState>();
             player = GameObject.FindGameObjectWithTag("Player").transform;
         }
     

@@ -1,14 +1,20 @@
+using System;
 using UnityEngine;
 
 namespace _Leonardo_Estigarribia._Scripts.Enemy
 {
     public class IdleState : State
     {
-        public ChaseState chaseState;
-        public bool canSeePlayer;
+        private ChaseState chaseState;
+        private bool canSeePlayer;
 
         [SerializeField] private float detectionRadius = 10f;
         [SerializeField] private float rotationSpeed = 30f;
+
+        private void Start()
+        {
+            chaseState = GetComponent<ChaseState>();
+        }
 
         public override State RunCurrentState()
         {
