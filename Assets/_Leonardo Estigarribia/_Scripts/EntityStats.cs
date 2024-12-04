@@ -23,12 +23,11 @@ namespace _Leonardo_Estigarribia._Scripts
         [SerializeField] private AudioClip[] healSFX;
         [SerializeField] private AudioClip dieSFX;
 
-        [Header("- UI")] private EntityUIManager entityUIManager;
+        [Header("- UI")] [SerializeField] EntityUIManager entityUIManager;
 
         private void Start()
         {
-            entityUIManager = GetComponentInChildren<EntityUIManager>();
-            // Make the player have full health at the beginning of the game.
+            // Make the entity have full health at the beginning of the game.
             currentHealth = maxHealth;
             // Update the UI.
             entityUIManager.UpdateHealthBar(maxHealth, currentHealth);

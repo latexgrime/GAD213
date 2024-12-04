@@ -6,6 +6,7 @@ TagManager:
   tags:
   - InventoriesCanvas
   - HealthBarForeground
+  - PlayerUI
   layers:
   - Default
   - TransparentFX

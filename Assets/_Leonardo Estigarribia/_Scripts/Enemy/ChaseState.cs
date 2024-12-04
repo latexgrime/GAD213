@@ -23,20 +23,28 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
             attackState = GetComponent<AttackState>();
             player = GameObject.FindGameObjectWithTag("Player").transform;
         }
-    
+        
         public override State RunCurrentState()
         {
             if (player == null) return this;
+            
             if (!CheckForChaseRadius())
             {
                 return idleState;
             }
+            
             CheckForAttackRange();
-            MoveTowardsPlayer();
+            
+            if (!isInAttackRange)
+            {
+                MoveTowardsPlayer();
+            }
+            
             LookAtPlayer();
             
             if (isInAttackRange)
                 return attackState;
+            
             return this;
         }
 
