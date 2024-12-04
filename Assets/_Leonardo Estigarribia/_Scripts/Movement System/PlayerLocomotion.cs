@@ -157,27 +157,22 @@ public class PlayerLocomotion : MonoBehaviour
             {
                 stepTimer += Time.deltaTime;
                 if (isWalking)
-                {
-                    Debug.Log($"Walking.");
+                { 
                     currentStepInterval = walkSFXinterval;
                 }
 
                 if (!isWalking && !isSprinting)
-                {
-                    Debug.Log($"Jogging.");
+                { 
                     currentStepInterval = jogSFXInverval;
                 }
 
                 if (isSprinting)
                 {
-                    Debug.Log($"Sprinting.");
                     currentStepInterval = sprintSFXInterval;
                 }
 
                 if (stepTimer >= currentStepInterval)
                 {
-                    Debug.Log($"Playing walk SFX.");
-
                     audioSource.volume = Random.Range(audioSource.volume - 0.1f, audioSource.volume + 0.1f);
                     audioSource.pitch = Random.Range(audioSource.pitch - 0.2f, audioSource.pitch + 0.2f);
                     

@@ -4,6 +4,8 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
 {
     public class AttackState : State
     {
+        public ChaseState chaseState;
+        
         [SerializeField] private float attackCooldown = 1f;
         [SerializeField] private float attackDamage = 10f;
         private float nextAttackTime;
@@ -16,7 +18,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
                 nextAttackTime = Time.time + attackCooldown;
             }
         
-            return this;
+            return chaseState;
         }
     
         private void PerformAttack()
