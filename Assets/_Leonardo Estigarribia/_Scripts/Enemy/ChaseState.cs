@@ -27,25 +27,37 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
         public override State RunCurrentState()
         {
             if (player == null) return this;
-            
+        
             if (!CheckForChaseRadius())
             {
+                UpdateAnimator(false);
                 return idleState;
             }
-            
+        
             CheckForAttackRange();
-            
+        
             if (!isInAttackRange)
             {
+                UpdateAnimator(true);
                 MoveTowardsPlayer();
             }
-            
+            else
+            {
+                UpdateAnimator(false);
+            }
+        
             LookAtPlayer();
-            
+        
             if (isInAttackRange)
                 return attackState;
-            
+        
             return this;
+        }
+        
+        private void UpdateAnimator(bool isMoving)
+        {
+            float targetValue = isMoving ? animatorWalkingValue : 0f;
+            stateManager._animator.SetFloat("Horizontal", targetValue);
         }
 
         private bool CheckForChaseRadius()

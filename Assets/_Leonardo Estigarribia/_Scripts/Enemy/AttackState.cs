@@ -9,6 +9,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
     {
         private StateManager stateManager;
         private ChaseState chaseState;
+        private Transform player;
 
         [SerializeField] private float attackingEventDelay;
         [SerializeField] private UnityEvent attackingEvent;
@@ -19,19 +20,30 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
 
         private void Start()
         {
+            player = GameObject.FindWithTag("Player").transform;
             stateManager = GetComponent<StateManager>();
             chaseState = GetComponent<ChaseState>();
         }
-
+        
+        [SerializeField] private float attackRange = 2f;
         public override State RunCurrentState()
         {
+            if (player == null) return this;
+
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+            if (distanceToPlayer > attackRange)
+            {
+                stateManager._animator.SetFloat("Horizontal", 0f); // Reset animation
+                return chaseState;
+            }
+
             if (Time.time >= nextAttackTime)
             {
                 StartCoroutine(PerformAttack());
                 nextAttackTime = Time.time + attackCooldown;
             }
-        
-            return chaseState;
+    
+            return this; // Stay in attack state while in range
         }
     
         private IEnumerator PerformAttack()
