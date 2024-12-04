@@ -1,10 +1,17 @@
+using System;
 using UnityEngine;
 
 namespace _Leonardo_Estigarribia._Scripts.Enemy
 {
     public class StateManager : MonoBehaviour
     {
+        private Animator _animator;
         [SerializeField] private State currentState;
+
+        private void Start()
+        {
+            _animator = GetComponent<Animator>();
+        }
 
         void Update()
         {
