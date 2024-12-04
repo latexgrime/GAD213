@@ -1878,7 +1878,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 1198860672}
-  m_VersionIndex: 1185
+  m_VersionIndex: 1188
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -30233,6 +30233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10f77c02a0848584c84f7da9e84ad61b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chaseRadius: 5
   moveSpeed: 2.5
   attackRange: 2
 --- !u!114 &9038080363715938768
