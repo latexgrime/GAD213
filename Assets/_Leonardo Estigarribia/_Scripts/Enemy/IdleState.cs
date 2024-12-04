@@ -5,6 +5,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
 {
     public class IdleState : State
     {
+        private StateManager stateManager;
         private ChaseState chaseState;
         private bool canSeePlayer;
 
@@ -13,6 +14,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
 
         private void Start()
         {
+            stateManager = GetComponent<StateManager>();
             chaseState = GetComponent<ChaseState>();
         }
 
@@ -28,6 +30,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
             
         private void RotateAround()
         {
+            stateManager._animator.SetFloat("Horizontal", 0f);
             gameObject.transform.root.Rotate(Vector3.up * (rotationSpeed * Time.deltaTime));
         }
         

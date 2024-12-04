@@ -5,6 +5,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
 {
     public class AttackState : State
     {
+        private StateManager stateManager;
         private ChaseState chaseState;
         
         [SerializeField] private float attackCooldown = 1f;
@@ -13,6 +14,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
 
         private void Start()
         {
+            stateManager = GetComponent<StateManager>();
             chaseState = GetComponent<ChaseState>();
         }
 
