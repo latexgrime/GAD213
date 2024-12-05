@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _Leonardo_Estigarribia._Scripts;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;

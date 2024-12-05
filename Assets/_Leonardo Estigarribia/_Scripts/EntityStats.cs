@@ -28,8 +28,9 @@ namespace _Leonardo_Estigarribia._Scripts
         [Header("- UI")] 
         [SerializeField] EntityUIManager entityUIManager;
 
-        [SerializeField] private bool isPlayer;
-        [SerializeField] private StateManager stateManager;
+        private bool isPlayer;
+        private StateManager stateManager;
+        private bool isDying = false;
 
         private void Start()
         {
@@ -58,8 +59,9 @@ namespace _Leonardo_Estigarribia._Scripts
             audioSource.PlayOneShot(takingDamageSFX[randomSFXIndex]);
 
             // Avoid negative numbers.
-            if (currentHealth <= 0)
+            if (currentHealth <= 0 && !isDying)
             {
+                isDying = true;
                 currentHealth = 0;
                 Die();
             }
@@ -95,6 +97,11 @@ namespace _Leonardo_Estigarribia._Scripts
                 {
                     Debug.Log($"{gameObject.transform.name} died.");
                     stateManager.SetStateToDead();
+                }
+
+                if (isPlayer)
+                {
+                    gameObject.GetComponent<AnimatorManager>().PlayTargetAnimation("Death", false, false); 
                 }
                 
                 StartCoroutine(DyingVFX());
