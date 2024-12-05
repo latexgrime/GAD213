@@ -8,24 +8,28 @@ namespace _Leonardo_Estigarribia._Scripts
     public class EntityStats : MonoBehaviour
     {
         private AudioSource audioSource;
-        private StateManager _stateManager;
 
-        [Header("- Health points")] [SerializeField]
-        private int maxHealth = 10;
+        [Header("- Health points")] 
+        [SerializeField] private int maxHealth = 10;
 
         [SerializeField] private int currentHealth;
 
-        [Header("- Particle VFX")] [SerializeField]
-        private ParticleSystem[] takingDamageVFX;
+        [Header("- Particle VFX")] 
+        [SerializeField] private ParticleSystem[] takingDamageVFX;
 
         [SerializeField] private ParticleSystem[] healVFX;
         [SerializeField] private GameObject dieVFX;
 
-        [Header("- SFX")] [SerializeField] private AudioClip[] takingDamageSFX;
+        [Header("- SFX")] 
+        [SerializeField] private AudioClip[] takingDamageSFX;
         [SerializeField] private AudioClip[] healSFX;
         [SerializeField] private AudioClip dieSFX;
 
-        [Header("- UI")] [SerializeField] EntityUIManager entityUIManager;
+        [Header("- UI")] 
+        [SerializeField] EntityUIManager entityUIManager;
+
+        [SerializeField] private bool isPlayer;
+        [SerializeField] private StateManager stateManager;
 
         private void Start()
         {
@@ -34,6 +38,11 @@ namespace _Leonardo_Estigarribia._Scripts
             // Update the UI.
             entityUIManager.UpdateHealthBar(maxHealth, currentHealth);
             audioSource = GetComponent<AudioSource>();
+
+            // If its the player, then set the state manager variable. Otherwise make it null.
+            // In the future would be a good idea to create a StateManager for the player too.
+            isPlayer = gameObject.CompareTag("Player");
+            stateManager = !isPlayer ? GetComponent<StateManager>() : null;
         }
 
         public void TakeDamage(int damage)
@@ -82,9 +91,12 @@ namespace _Leonardo_Estigarribia._Scripts
             // If the current health is the same or less than zero, this entity is dead.
             if (currentHealth <= 0)
             {
-                // Play dead animation from animation manager or something idk.
-                Debug.Log($"{gameObject.transform.name} died.");
-
+                if (!isPlayer)
+                {
+                    Debug.Log($"{gameObject.transform.name} died.");
+                    stateManager.SetStateToDead();
+                }
+                
                 StartCoroutine(DyingVFX());
             }
         }

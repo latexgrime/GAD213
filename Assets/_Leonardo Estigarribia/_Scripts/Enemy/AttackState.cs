@@ -76,11 +76,11 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
             attackingEvent.Invoke();
         }
         
-        private void OnDrawGizmosSelected()
+        /*private void OnDrawGizmosSelected()
         {
             Vector3 attackPos = transform.position + transform.forward * attackOffset.z + transform.up * attackOffset.y;
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(attackPos, attackRadius);
-        }
+        }*/
     }
 }

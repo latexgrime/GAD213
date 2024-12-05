@@ -1,23 +1,31 @@
-using System;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
+using UnityEngine.Android;
 
 namespace _Leonardo_Estigarribia._Scripts.Enemy
 {
     public class StateManager : MonoBehaviour
     {
         public Animator _animator;
+        
+        private State idleState;
+        private State chaseState;
+        private State attackState;
+        private State dieState;
+        
         [SerializeField] private State currentState;
 
         private void Start()
         {
             _animator = GetComponentInChildren<Animator>();
-            if (_animator == null)
-            {
-                Debug.Log($"No animator found for {gameObject.name}.");
-            }
+
+            idleState = GetComponent<IdleState>();
+            chaseState = GetComponent<ChaseState>();
+            attackState = GetComponent<AttackState>();
+            dieState = GetComponent<DieState>();
         }
 
-        void Update()
+        private void Update()
         {
             RunStateMachine();
         }
@@ -25,17 +33,19 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
         private void RunStateMachine()
         {
             // If currentState is not null, run current state.
-            State nextState = currentState?.RunCurrentState();
+            var nextState = currentState?.RunCurrentState();
 
-            if (nextState != null)
-            {
-                SwitchToNextState(nextState);
-            }
+            if (nextState != null) SwitchToNextState(nextState);
         }
 
         private void SwitchToNextState(State nextState)
         {
             currentState = nextState;
         }
-}
+
+        public void SetStateToDead()
+        {
+            currentState = dieState;
+        }
+    }
 }
