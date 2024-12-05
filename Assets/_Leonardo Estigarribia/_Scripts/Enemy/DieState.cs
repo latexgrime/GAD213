@@ -4,10 +4,18 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
 {
     public class DieState : State
     {
-        private StateManager _stateManager;
+        private StateManager stateManager;
+
+        private void Start()
+        {
+            stateManager = GetComponent<StateManager>();
+        }
+
         public override State RunCurrentState()
         {
-            throw new System.NotImplementedException();
+            stateManager._animator.SetBool("Die", true);
+            stateManager._animator.SetFloat("Horizontal", 0f);
+            return this;
         }
     }
 }

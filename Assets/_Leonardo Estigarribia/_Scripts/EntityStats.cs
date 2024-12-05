@@ -1,4 +1,5 @@
 using System.Collections;
+using _Leonardo_Estigarribia._Scripts.Enemy;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,6 +8,7 @@ namespace _Leonardo_Estigarribia._Scripts
     public class EntityStats : MonoBehaviour
     {
         private AudioSource audioSource;
+        private StateManager _stateManager;
 
         [Header("- Health points")] [SerializeField]
         private int maxHealth = 10;
