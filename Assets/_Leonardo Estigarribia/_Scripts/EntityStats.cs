@@ -95,7 +95,6 @@ namespace _Leonardo_Estigarribia._Scripts
             {
                 if (!isPlayer)
                 {
-                    Debug.Log($"{gameObject.transform.name} died.");
                     stateManager.SetStateToDead();
                 }
 
