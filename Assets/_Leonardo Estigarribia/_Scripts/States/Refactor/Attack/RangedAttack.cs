@@ -8,5 +8,10 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Attack
         {
             throw new NotImplementedException();
         }
+
+        protected override void ResetAttackAnimation()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

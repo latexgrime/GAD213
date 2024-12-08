@@ -57,7 +57,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
         private void UpdateAnimator(bool isMoving)
         {
             float targetValue = isMoving ? animatorWalkingValue : 0f;
-            stateManager._animator.SetFloat("Horizontal", targetValue);
+            stateManager.animator.SetFloat("Horizontal", targetValue);
         }
 
         private bool CheckForChaseRadius()
@@ -78,7 +78,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
 
         private void MoveTowardsPlayer()
         {
-            stateManager._animator.SetFloat("Horizontal", animatorWalkingValue);
+            stateManager.animator.SetFloat("Horizontal", animatorWalkingValue);
             Vector3 direction = (player.position - transform.root.position).normalized;
             transform.root.position += direction * (moveSpeed * Time.deltaTime);
         }

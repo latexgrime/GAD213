@@ -40,7 +40,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
             
             if (distanceToPlayer > attackRange)
             {
-                stateManager._animator.SetFloat("Horizontal", 0f);
+                stateManager.animator.SetFloat("Horizontal", 0f);
                 return chaseState;
             }
 
@@ -55,7 +55,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
     
         private IEnumerator Attack()
         {
-            stateManager._animator.SetTrigger("Attack");
+            stateManager.animator.SetTrigger("Attack");
 
             yield return new WaitForSeconds(attackingEventDelay);
             

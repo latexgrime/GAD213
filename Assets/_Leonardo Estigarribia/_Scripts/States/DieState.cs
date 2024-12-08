@@ -13,8 +13,8 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
 
         public override State RunCurrentState()
         {
-            stateManager._animator.SetBool("Die", true);
-            stateManager._animator.SetFloat("Horizontal", 0f);
+            stateManager.animator.SetBool("Die", true);
+            stateManager.animator.SetFloat("Horizontal", 0f);
             return this;
         }
     }

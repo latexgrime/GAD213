@@ -30,7 +30,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
             
         private void RotateAround()
         {
-            stateManager._animator.SetFloat("Horizontal", 0f);
+            stateManager.animator.SetFloat("Horizontal", 0f);
             gameObject.transform.root.Rotate(Vector3.up * (rotationSpeed * Time.deltaTime));
         }
         

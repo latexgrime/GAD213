@@ -21,7 +21,7 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Movement
         protected override void UpdateWalkingAnimation(bool isMoving)
         {
             float walkingTargetAnimatorValue = isMoving ? animatorWalkingValue : 0f;
-            stateManager._animator.SetFloat("Horizontal", walkingTargetAnimatorValue);
+            stateManager.animator.SetFloat("Horizontal", walkingTargetAnimatorValue);
         }
     }
 }

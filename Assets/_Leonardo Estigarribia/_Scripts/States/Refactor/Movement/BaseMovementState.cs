@@ -1,4 +1,6 @@
 using _Leonardo_Estigarribia._Scripts.Enemy;
+using _Leonardo_Estigarribia._Scripts.States.Refactor.Attack;
+using _Leonardo_Estigarribia._Scripts.States.Refactor.Idle;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -10,8 +12,8 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor
     {
         protected StateManager stateManager;
         protected Transform player;
-        protected IdleState idleState;
-        protected AttackState attackState;
+        protected BaseIdleState idleState;
+        protected BaseAttackState attackState;
 
         [SerializeField] protected float detectionRadius = 10f;
         [SerializeField] protected float attackRange = 2f;
@@ -26,8 +28,8 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor
         private void InitializeScript()
         {
             stateManager = GetComponent<StateManager>();
-            idleState = GetComponent<IdleState>();
-            attackState = GetComponent<AttackState>();
+            idleState = GetComponent<BaseIdleState>();
+            attackState = GetComponent<BaseAttackState>();
             player = GameObject.FindGameObjectWithTag("Player").transform;
         }
 

@@ -1,12 +1,13 @@
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Android;
+using UnityEngine.Serialization;
 
 namespace _Leonardo_Estigarribia._Scripts.Enemy
 {
     public class StateManager : MonoBehaviour
     {
-        public Animator _animator;
+        public Animator animator;
         
         private State idleState;
         private State chaseState;
@@ -17,7 +18,7 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
 
         private void Start()
         {
-            _animator = GetComponentInChildren<Animator>();
+            animator = GetComponentInChildren<Animator>();
 
             idleState = GetComponent<IdleState>();
             chaseState = GetComponent<ChaseState>();
