@@ -7,22 +7,22 @@ namespace _Leonardo_Estigarribia._Scripts.Projectiles
     {
         [SerializeField] private float speed = 5f;
         [SerializeField] protected int damage = 2;
-        private Rigidbody rigidbody;
+        private Rigidbody projectileRb;
 
         protected virtual void Awake()
         {
-            rigidbody = GetComponent<Rigidbody>();
+            projectileRb = GetComponent<Rigidbody>();
         }
 
-        public virtual void Shoot(Vector3 direction)
+        public virtual void ShootToDirection(Vector3 direction)
         {
             gameObject.SetActive(true);
-            rigidbody.velocity = direction * speed;
+            projectileRb.velocity = direction * speed;
         }
 
         public virtual void Deactivate()
         {
-            rigidbody.velocity = Vector3.zero;
+            projectileRb.velocity = Vector3.zero;
             gameObject.SetActive(false);
         }
 
@@ -32,7 +32,6 @@ namespace _Leonardo_Estigarribia._Scripts.Projectiles
             {
                 OnHitEntity(entityStats);
             }
-            Deactivate();
         }
 
         protected abstract void OnHitEntity(EntityStats entityStats);
