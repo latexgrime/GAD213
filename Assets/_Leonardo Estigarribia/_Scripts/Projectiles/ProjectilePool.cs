@@ -14,10 +14,19 @@ namespace _Leonardo_Estigarribia._Scripts.Projectiles
         private void Start()
         {
             projectiles = new Projectile[poolSize];
-            for (int i = 0; i < UPPER; i++)
+            for (int i = 0; i < poolSize; i++)
             {
-                
+                GameObject projectile = Instantiate(projectilePrefab, transform);
+                projectiles[i] = projectiles[i].GetComponent<Projectile>();
+                projectile.SetActive(false);
             }
+        }
+
+        public Projectile GetProjectile()
+        {
+            Projectile projectile = projectiles[currentIndex];
+            currentIndex = (currentIndex + 1);
+            return projectile;
         }
         
         
