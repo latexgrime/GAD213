@@ -1,8 +1,8 @@
 using System;
 
-namespace _Leonardo_Estigarribia._Scripts.States.Refactor
+namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Movement
 {
-    public class FlyingBaseMovementState : BaseMovementState
+    public class FlyingMovementState : BaseMovementState
     {
         protected override void MoveTowardsTarget()
         {

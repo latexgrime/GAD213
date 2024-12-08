@@ -1,8 +1,8 @@
 using System;
 
-namespace _Leonardo_Estigarribia._Scripts.States.Refactor
+namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Attack
 {
-    public class RangedAttack : BaseAttackState
+    public class MeleeAttack : BaseAttackState
     {
         protected override void PerformAttack()
         {

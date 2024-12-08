@@ -1,7 +1,6 @@
 using _Leonardo_Estigarribia._Scripts.Enemy;
-using UnityEngine;
 
-namespace _Leonardo_Estigarribia._Scripts.States.Refactor
+namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Attack
 {
     public abstract class BaseAttackState : State
     {
