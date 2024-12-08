@@ -1,5 +1,7 @@
 using _Leonardo_Estigarribia._Scripts.Enemy;
+using _Leonardo_Estigarribia._Scripts.States.Refactor.Movement;
 using UnityEngine;
+using UnityEngine.Serialization;
 using State = _Leonardo_Estigarribia._Scripts.Enemy.State;
 using Vector3 = UnityEngine.Vector3;
 
@@ -8,34 +10,30 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Attack
     public abstract class BaseAttackState : State
     {
         protected StateManager stateManager;
-        protected BaseMovementState movementState;
-        protected Transform player;
 
         [SerializeField] protected float attackRange = 2f;
-        [SerializeField] protected float attackCooldown = 1f;
+        [SerializeField] protected float timeBetweenAttacks = 1f;
         protected float attackTimePeriod;
 
         protected virtual void Start()
         {
             stateManager = GetComponent<StateManager>();
-            movementState = GetComponent<BaseMovementState>();
-            player = GameObject.FindGameObjectWithTag("Player").transform;
         }
 
         public override State RunCurrentState()
         {
-            if (player == null) return this;
+            if (stateManager.playerTransform == null) return this;
 
             if (!IsInAttackRange())
             {
                 ResetAttackAnimation();
-                return movementState;
+                return stateManager.movementState;
             }
 
             if (Time.time >= attackTimePeriod)
             {
                 PerformAttack();
-                attackTimePeriod = Time.time + attackCooldown;
+                attackTimePeriod = Time.time + timeBetweenAttacks;
             }
 
             return this;
@@ -46,7 +44,7 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Attack
 
         protected virtual bool IsInAttackRange()
         {
-            return Vector3.Distance(transform.position, player.position) <= attackRange;
+            return Vector3.Distance(transform.position, stateManager.playerTransform.position) <= attackRange;
         }
     }
 }

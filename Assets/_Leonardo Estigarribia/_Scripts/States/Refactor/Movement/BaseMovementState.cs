@@ -1,19 +1,11 @@
-using _Leonardo_Estigarribia._Scripts.Enemy;
-using _Leonardo_Estigarribia._Scripts.States.Refactor.Attack;
-using _Leonardo_Estigarribia._Scripts.States.Refactor.Idle;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 using State = _Leonardo_Estigarribia._Scripts.Enemy.State;
 
-namespace _Leonardo_Estigarribia._Scripts.States.Refactor
+namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Movement
 {
     public abstract class BaseMovementState : State
     {
         protected StateManager stateManager;
-        protected Transform player;
-        protected BaseIdleState idleState;
-        protected BaseAttackState attackState;
 
         [SerializeField] protected float detectionRadius = 10f;
         [SerializeField] protected float attackRange = 2f;
@@ -28,9 +20,6 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor
         private void InitializeScript()
         {
             stateManager = GetComponent<StateManager>();
-            idleState = GetComponent<BaseIdleState>();
-            attackState = GetComponent<BaseAttackState>();
-            player = GameObject.FindGameObjectWithTag("Player").transform;
         }
 
 
@@ -40,12 +29,12 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor
 
         public override State RunCurrentState()
         {
-            if (player == null) return this;
+            if (stateManager.playerTransform == null) return this;
 
             if (!IsInChaseRange())
             {
                 UpdateWalkingAnimation(false);
-                return idleState;
+                return stateManager.idleState;
             }
 
             CheckAttackRange();
@@ -64,7 +53,7 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor
             
             if (isInAttackRange)
             {
-                return attackState;
+                return stateManager.attackState;
             }
 
             return this;
@@ -72,12 +61,12 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor
 
         private bool IsInChaseRange()
         {
-            return Vector3.Distance(transform.position, player.position) <= detectionRadius;
+            return Vector3.Distance(transform.position, stateManager.playerTransform.position) <= detectionRadius;
         }
         
         private void CheckAttackRange()
         {
-            isInAttackRange = Vector3.Distance(transform.position, player.position) <= attackRange;
+            isInAttackRange = Vector3.Distance(transform.position, stateManager.playerTransform.position) <= attackRange;
         }
     }
 }

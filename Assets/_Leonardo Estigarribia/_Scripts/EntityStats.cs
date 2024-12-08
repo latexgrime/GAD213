@@ -1,5 +1,6 @@
 using System.Collections;
 using _Leonardo_Estigarribia._Scripts.Enemy;
+using _Leonardo_Estigarribia._Scripts.States;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

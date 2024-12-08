@@ -1,5 +1,6 @@
 using System;
 using _Leonardo_Estigarribia._Scripts.Enemy;
+using _Leonardo_Estigarribia._Scripts.States.Refactor.Movement;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -11,8 +12,6 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Idle
     public abstract class BaseIdleState : State
     {
         protected StateManager stateManager;
-        protected BaseMovementState movementState;
-        protected Transform player;
 
         [SerializeField] protected float detectionRadius = 10f;
         protected bool canSeePlayer;
@@ -20,8 +19,6 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Idle
         protected virtual void Start()
         {
             stateManager = GetComponent<StateManager>();
-            movementState = GetComponent<BaseMovementState>();
-            player = GameObject.FindGameObjectWithTag("Player").transform;
         }
 
         public override State RunCurrentState()
@@ -31,7 +28,7 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Idle
             
             if (canSeePlayer)
             {
-                return movementState;
+                return stateManager.movementState;
             }
             
             return this;

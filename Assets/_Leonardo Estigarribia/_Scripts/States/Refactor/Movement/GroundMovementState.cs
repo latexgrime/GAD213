@@ -9,13 +9,13 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Movement
         
         protected override void MoveTowardsTarget()
         {
-            Vector3 direction = (player.position - transform.root.position).normalized;
+            Vector3 direction = (stateManager.playerTransform.position - transform.root.position).normalized;
             transform.root.position += direction * (moveSpeed * Time.deltaTime);
         }
 
         protected override void RotateTowardsTarget()
         {
-            transform.LookAt(player);
+            transform.LookAt(stateManager.playerTransform);
         }
 
         protected override void UpdateWalkingAnimation(bool isMoving)

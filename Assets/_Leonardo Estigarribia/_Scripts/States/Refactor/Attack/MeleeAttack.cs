@@ -9,7 +9,7 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Attack
 {
     public class MeleeAttack : BaseAttackState
     {
-        private bool isAttacking = false;
+        private bool isAttacking;
         [SerializeField] private int attackDamage = 2;
         [SerializeField] private float attackRadius = 1f;
         [SerializeField] private Vector3 attackOffset = new Vector3(0, 1f, 1f);

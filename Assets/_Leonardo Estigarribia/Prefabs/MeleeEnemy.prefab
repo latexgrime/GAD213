@@ -4290,6 +4290,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
+  playerTransform: {fileID: 0}
+  idleState: {fileID: 0}
+  movementState: {fileID: 0}
+  attackState: {fileID: 0}
+  dieState: {fileID: 0}
   currentState: {fileID: 8673911897244492691}
 --- !u!114 &8673911897244492691
 MonoBehaviour:
@@ -4334,11 +4339,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackRange: 2
-  attackCooldown: 1
+  timeBetweenAttacks: 1.5
   attackDamage: 2
   attackRadius: 1
   attackOffset: {x: 0, y: 1, z: 1}
-  attackingEventDelay: 1
+  attackingEventDelay: 0.75
   attackingEvent:
     m_PersistentCalls:
       m_Calls:
