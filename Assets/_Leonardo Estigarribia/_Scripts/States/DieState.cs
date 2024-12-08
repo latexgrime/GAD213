@@ -1,7 +1,6 @@
-using _Leonardo_Estigarribia._Scripts.States;
-using UnityEngine;
+using _Leonardo_Estigarribia._Scripts.Enemy;
 
-namespace _Leonardo_Estigarribia._Scripts.Enemy
+namespace _Leonardo_Estigarribia._Scripts.States
 {
     public class DieState : State
     {
@@ -15,7 +14,6 @@ namespace _Leonardo_Estigarribia._Scripts.Enemy
         public override State RunCurrentState()
         {
             stateManager.animator.SetBool("Die", true);
-            stateManager.animator.SetFloat("Horizontal", 0f);
             return this;
         }
     }
