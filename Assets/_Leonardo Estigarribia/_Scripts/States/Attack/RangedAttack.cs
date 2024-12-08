@@ -12,7 +12,7 @@ namespace _Leonardo_Estigarribia._Scripts.States.Attack
     {
         private bool isAttacking;
         [SerializeField] private ProjectilePool projectilePool;
-        [SerializeField] private Vector3 shootPositionOffset = new(0, 0.5f, 0.5f);
+        [SerializeField] private Vector3 shootPositionOffset = new(0, 0, 1.5f);
         [SerializeField] private float lookDirectionOffsetY = 1f;
         [SerializeField] private float attackingEventDelay;
         [SerializeField] private UnityEvent attackingEvent;
@@ -43,9 +43,6 @@ namespace _Leonardo_Estigarribia._Scripts.States.Attack
                                     transform.right * shootPositionOffset.x + 
                                     transform.up * shootPositionOffset.y + 
                                     transform.forward * shootPositionOffset.z;
-    
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(shootPosition, 0.1f);
 
             Vector3 targetPosition = stateManager.playerTransform.position + Vector3.up * lookDirectionOffsetY;
             
@@ -58,6 +55,15 @@ namespace _Leonardo_Estigarribia._Scripts.States.Attack
             attackingEvent.Invoke();
             isAttacking = false;
             
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(transform.position + 
+                              transform.right * shootPositionOffset.x + 
+                              transform.up * shootPositionOffset.y + 
+                              transform.forward * shootPositionOffset.z, 1f);
         }
 
         protected override void ResetAttackAnimation()
