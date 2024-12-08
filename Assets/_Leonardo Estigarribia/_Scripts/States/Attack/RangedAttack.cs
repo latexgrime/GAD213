@@ -12,8 +12,7 @@ namespace _Leonardo_Estigarribia._Scripts.States.Attack
     {
         private bool isAttacking;
         [SerializeField] private ProjectilePool projectilePool;
-        [SerializeField] private Vector3 shootPositionOffset = new(0, 0, 1.5f);
-        [SerializeField] private float lookDirectionOffsetY = 1f;
+        [SerializeField] private Vector3 lookDirectionOffset = new Vector3(0, 0.5f, 0.5f);
         [SerializeField] private float attackingEventDelay;
         [SerializeField] private UnityEvent attackingEvent;
 
@@ -39,14 +38,9 @@ namespace _Leonardo_Estigarribia._Scripts.States.Attack
             
             yield return new WaitForSeconds(attackingEventDelay);
             
-            Vector3 shootPosition = transform.position + 
-                                    transform.right * shootPositionOffset.x + 
-                                    transform.up * shootPositionOffset.y + 
-                                    transform.forward * shootPositionOffset.z;
-
-            Vector3 targetPosition = stateManager.playerTransform.position + Vector3.up * lookDirectionOffsetY;
-            
-            Vector3 directionToPlayer = (targetPosition - shootPosition).normalized;
+            // Change this to be ranged attack. This was set for testing purposes.
+            Vector3 shootPosition = transform.position + transform.forward * lookDirectionOffset.z + transform.up * lookDirectionOffset.y;
+            Vector3 directionToPlayer = (stateManager.playerTransform.position - shootPosition).normalized;
 
             Projectile projectile = projectilePool.GetProjectile();
             projectile.transform.position = shootPosition;
@@ -55,15 +49,6 @@ namespace _Leonardo_Estigarribia._Scripts.States.Attack
             attackingEvent.Invoke();
             isAttacking = false;
             
-        }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(transform.position + 
-                              transform.right * shootPositionOffset.x + 
-                              transform.up * shootPositionOffset.y + 
-                              transform.forward * shootPositionOffset.z, 1f);
         }
 
         protected override void ResetAttackAnimation()
