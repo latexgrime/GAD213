@@ -13341,8 +13341,9 @@ GameObject:
   - component: {fileID: 4988121712416249460}
   - component: {fileID: 4988121712416249459}
   - component: {fileID: 4988121712416249461}
+  - component: {fileID: 4988121712416249462}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: MeleeEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14607,7 +14608,7 @@ MonoBehaviour:
   attackDamage: 2
   attackRadius: 1
   attackOffset: {x: 0, y: 1, z: 1}
-  attackingEventDelay: 0
+  attackingEventDelay: 1
   attackingEvent:
     m_PersistentCalls:
       m_Calls:
@@ -14636,6 +14637,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4988121712416249462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2855320286094388071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16e0b1e260f1b3142ac20df63014ce59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4999613215406003332
 Transform:
   m_ObjectHideFlags: 0

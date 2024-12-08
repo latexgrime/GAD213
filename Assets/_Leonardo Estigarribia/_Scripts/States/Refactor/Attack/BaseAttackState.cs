@@ -24,7 +24,20 @@ namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Attack
 
         public override State RunCurrentState()
         {
-            PerformAttack();
+            if (player == null) return this;
+
+            if (!IsInAttackRange())
+            {
+                ResetAttackAnimation();
+                return movementState;
+            }
+
+            if (Time.time >= attackTimePeriod)
+            {
+                PerformAttack();
+                attackTimePeriod = Time.time + attackCooldown;
+            }
+
             return this;
         }
 
