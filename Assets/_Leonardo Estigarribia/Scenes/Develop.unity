@@ -2854,6 +2854,105 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8415457410304761046}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5899790605318720060
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7089822814982102355, guid: c22d149bc08071244bbdda56e8af6e22,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 18.204266
+      objectReference: {fileID: 0}
+    - target: {fileID: 7089822814982102355, guid: c22d149bc08071244bbdda56e8af6e22,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.000039815903
+      objectReference: {fileID: 0}
+    - target: {fileID: 7089822814982102355, guid: c22d149bc08071244bbdda56e8af6e22,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.841088
+      objectReference: {fileID: 0}
+    - target: {fileID: 7089822814982102355, guid: c22d149bc08071244bbdda56e8af6e22,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7089822814982102355, guid: c22d149bc08071244bbdda56e8af6e22,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7089822814982102355, guid: c22d149bc08071244bbdda56e8af6e22,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7089822814982102355, guid: c22d149bc08071244bbdda56e8af6e22,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7089822814982102355, guid: c22d149bc08071244bbdda56e8af6e22,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7089822814982102355, guid: c22d149bc08071244bbdda56e8af6e22,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7089822814982102355, guid: c22d149bc08071244bbdda56e8af6e22,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7579501986065123305, guid: c22d149bc08071244bbdda56e8af6e22,
+        type: 3}
+      propertyPath: m_Name
+      value: FlyingRangedEnemy
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8299859878434334773, guid: c22d149bc08071244bbdda56e8af6e22,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5899790605318720062}
+  m_SourcePrefab: {fileID: 100100000, guid: c22d149bc08071244bbdda56e8af6e22, type: 3}
+--- !u!1 &5899790605318720061 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8299859878434334773, guid: c22d149bc08071244bbdda56e8af6e22,
+    type: 3}
+  m_PrefabInstance: {fileID: 5899790605318720060}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &5899790605318720062
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5899790605318720061}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5efebc9ff1bb643cc9fa371b503c0a80, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &8415457410304761046
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2915,7 +3014,7 @@ PrefabInstance:
     - target: {fileID: 8952839226633753151, guid: 0626b11098861954fa0d87bb21d0eba2,
         type: 3}
       propertyPath: m_Name
-      value: MeleeEnemy
+      value: GroundedMeleeEnemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3033,4 +3132,5 @@ SceneRoots:
   - {fileID: 1138980661}
   - {fileID: 2028718808}
   - {fileID: 8415457410304761046}
+  - {fileID: 5899790605318720060}
   - {fileID: 1868340598}
