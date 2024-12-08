@@ -42,6 +42,8 @@ public class EntityUIManager : MonoBehaviour
     private void Update()
     {
         // Make it so its always looking at the player.
-        healthBarCanvas.transform.rotation = Quaternion.LookRotation(healthBarCanvas.transform.position - cam.transform.position);
+        if (!gameObject.CompareTag("PlayerUI")) {
+            healthBarCanvas.transform.rotation = Quaternion.LookRotation(healthBarCanvas.transform.position - cam.transform.position);
+        }
     }
 }

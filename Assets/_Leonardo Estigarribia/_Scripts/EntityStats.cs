@@ -1,4 +1,5 @@
 using System.Collections;
+using _Leonardo_Estigarribia._Scripts.Enemy;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,31 +9,41 @@ namespace _Leonardo_Estigarribia._Scripts
     {
         private AudioSource audioSource;
 
-        [Header("- Health points")] [SerializeField]
-        private int maxHealth = 10;
+        [Header("- Health points")] 
+        [SerializeField] private int maxHealth = 10;
 
         [SerializeField] private int currentHealth;
 
-        [Header("- Particle VFX")] [SerializeField]
-        private ParticleSystem[] takingDamageVFX;
+        [Header("- Particle VFX")] 
+        [SerializeField] private ParticleSystem[] takingDamageVFX;
 
         [SerializeField] private ParticleSystem[] healVFX;
         [SerializeField] private GameObject dieVFX;
 
-        [Header("- SFX")] [SerializeField] private AudioClip[] takingDamageSFX;
+        [Header("- SFX")] 
+        [SerializeField] private AudioClip[] takingDamageSFX;
         [SerializeField] private AudioClip[] healSFX;
         [SerializeField] private AudioClip dieSFX;
 
-        [Header("- UI")] private EntityUIManager entityUIManager;
+        [Header("- UI")] 
+        [SerializeField] EntityUIManager entityUIManager;
+
+        private bool isPlayer;
+        private StateManager stateManager;
+        private bool isDying = false;
 
         private void Start()
         {
-            entityUIManager = GetComponentInChildren<EntityUIManager>();
-            // Make the player have full health at the beginning of the game.
+            // Make the entity have full health at the beginning of the game.
             currentHealth = maxHealth;
             // Update the UI.
             entityUIManager.UpdateHealthBar(maxHealth, currentHealth);
             audioSource = GetComponent<AudioSource>();
+
+            // If its the player, then set the state manager variable. Otherwise make it null.
+            // In the future would be a good idea to create a StateManager for the player too.
+            isPlayer = gameObject.CompareTag("Player");
+            stateManager = !isPlayer ? GetComponent<StateManager>() : null;
         }
 
         public void TakeDamage(int damage)
@@ -48,8 +59,9 @@ namespace _Leonardo_Estigarribia._Scripts
             audioSource.PlayOneShot(takingDamageSFX[randomSFXIndex]);
 
             // Avoid negative numbers.
-            if (currentHealth <= 0)
+            if (currentHealth <= 0 && !isDying)
             {
+                isDying = true;
                 currentHealth = 0;
                 Die();
             }
@@ -81,9 +93,16 @@ namespace _Leonardo_Estigarribia._Scripts
             // If the current health is the same or less than zero, this entity is dead.
             if (currentHealth <= 0)
             {
-                // Play dead animation from animation manager or something idk.
-                Debug.Log($"{gameObject.transform.name} died.");
+                if (!isPlayer)
+                {
+                    stateManager.SetStateToDead();
+                }
 
+                if (isPlayer)
+                {
+                    gameObject.GetComponent<AnimatorManager>().PlayTargetAnimation("Death", false, false); 
+                }
+                
                 StartCoroutine(DyingVFX());
             }
         }

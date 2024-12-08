@@ -6,11 +6,13 @@ TagManager:
   tags:
   - InventoriesCanvas
   - HealthBarForeground
+  - PlayerUI
+  - Enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - PlayableCharacter
+  - Player
   - Water
   - UI
   - Collision
