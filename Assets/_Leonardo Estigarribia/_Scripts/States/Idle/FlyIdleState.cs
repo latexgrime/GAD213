@@ -1,18 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using _Leonardo_Estigarribia._Scripts.States.Refactor.Idle;
 using UnityEngine;
 
-public class FlyIdleState : MonoBehaviour
+namespace _Leonardo_Estigarribia._Scripts.States.Idle
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public class FlyIdleState : BaseIdleState
+    {   
+        protected override void PerformIdleMovement()
+        {
+            stateManager.animator.SetBool("isMoving", false);
+        }
     }
 }

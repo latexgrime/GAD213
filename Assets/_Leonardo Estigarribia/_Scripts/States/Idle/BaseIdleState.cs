@@ -1,13 +1,7 @@
-using System;
-using _Leonardo_Estigarribia._Scripts.Enemy;
-using _Leonardo_Estigarribia._Scripts.States.Refactor.Movement;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 using State = _Leonardo_Estigarribia._Scripts.Enemy.State;
 
-namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Idle
+namespace _Leonardo_Estigarribia._Scripts.States.Idle
 {
     public abstract class BaseIdleState : State
     {

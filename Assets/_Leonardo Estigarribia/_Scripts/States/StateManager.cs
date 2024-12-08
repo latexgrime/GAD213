@@ -1,8 +1,9 @@
 using _Leonardo_Estigarribia._Scripts.Enemy;
+using _Leonardo_Estigarribia._Scripts.States.Attack;
+using _Leonardo_Estigarribia._Scripts.States.Idle;
+using _Leonardo_Estigarribia._Scripts.States.Movement;
 using _Leonardo_Estigarribia._Scripts.States.Refactor;
-using _Leonardo_Estigarribia._Scripts.States.Refactor.Attack;
 using _Leonardo_Estigarribia._Scripts.States.Refactor.Idle;
-using _Leonardo_Estigarribia._Scripts.States.Refactor.Movement;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;

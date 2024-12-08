@@ -1,11 +1,8 @@
-using _Leonardo_Estigarribia._Scripts.Enemy;
-using _Leonardo_Estigarribia._Scripts.States.Refactor.Movement;
 using UnityEngine;
-using UnityEngine.Serialization;
 using State = _Leonardo_Estigarribia._Scripts.Enemy.State;
 using Vector3 = UnityEngine.Vector3;
 
-namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Attack
+namespace _Leonardo_Estigarribia._Scripts.States.Attack
 {
     public abstract class BaseAttackState : State
     {

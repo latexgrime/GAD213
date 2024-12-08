@@ -1,7 +1,7 @@
 using UnityEngine;
 using State = _Leonardo_Estigarribia._Scripts.Enemy.State;
 
-namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Movement
+namespace _Leonardo_Estigarribia._Scripts.States.Movement
 {
     public abstract class BaseMovementState : State
     {

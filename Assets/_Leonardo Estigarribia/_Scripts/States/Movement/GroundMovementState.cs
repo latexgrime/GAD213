@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Movement
+namespace _Leonardo_Estigarribia._Scripts.States.Movement
 {
     public class GroundMovementState : BaseMovementState
     {

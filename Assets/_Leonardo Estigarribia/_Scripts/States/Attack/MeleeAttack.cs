@@ -1,11 +1,9 @@
-using System;
 using System.Collections;
-using System.Numerics;
 using UnityEngine;
 using UnityEngine.Events;
 using Vector3 = UnityEngine.Vector3;
 
-namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Attack
+namespace _Leonardo_Estigarribia._Scripts.States.Attack
 {
     public class MeleeAttack : BaseAttackState
     {
