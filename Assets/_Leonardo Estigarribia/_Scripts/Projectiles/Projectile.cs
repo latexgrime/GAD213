@@ -8,14 +8,16 @@ namespace _Leonardo_Estigarribia._Scripts.Projectiles
         [SerializeField] private float speed = 5f;
         [SerializeField] protected int damage = 2;
         private Rigidbody projectileRb;
+        private Transform shooter;
 
         protected virtual void Awake()
         {
             projectileRb = GetComponent<Rigidbody>();
         }
 
-        public virtual void ShootToDirection(Vector3 direction)
+        public virtual void ShootToDirection(Vector3 direction, Transform shooterTransform)
         {
+            shooter = shooterTransform;  // Store who shot this projectile.
             gameObject.SetActive(true);
             projectileRb.velocity = direction * speed;
         }
@@ -28,12 +30,20 @@ namespace _Leonardo_Estigarribia._Scripts.Projectiles
 
         protected void OnTriggerEnter(Collider other)
         {
+            // If hitting the shooter, ignore the collision.
+            if (shooter == null || other == null || other.transform.root == shooter.root) return;
+            
             if (other.TryGetComponent<EntityStats>(out var entityStats))
             {
                 OnHitEntity(entityStats);
             }
+            else
+            {
+                OnGeneralImpact();
+            }
         }
 
         protected abstract void OnHitEntity(EntityStats entityStats);
+        protected abstract void OnGeneralImpact();
     }
 }

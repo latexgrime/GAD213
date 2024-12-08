@@ -44,7 +44,7 @@ namespace _Leonardo_Estigarribia._Scripts.States.Attack
 
             Projectile projectile = projectilePool.GetProjectile();
             projectile.transform.position = shootPosition;
-            projectile.ShootToDirection(directionToPlayer);
+            projectile.ShootToDirection(directionToPlayer, transform);
             
             attackingEvent.Invoke();
             isAttacking = false;

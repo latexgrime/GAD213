@@ -9,6 +9,10 @@ namespace _Leonardo_Estigarribia._Scripts.Projectiles
 
         protected override void OnHitEntity(EntityStats entityStats)
         {
+        }
+
+        protected override void OnGeneralImpact()
+        {
             var hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
             
             foreach (var hitCollider in hitColliders)
@@ -16,7 +20,6 @@ namespace _Leonardo_Estigarribia._Scripts.Projectiles
                     hitStats.TakeDamage(damage);
             
             explosionEffect.Play();
-            Deactivate();
-        }
+            Deactivate();        }
     }
 }
