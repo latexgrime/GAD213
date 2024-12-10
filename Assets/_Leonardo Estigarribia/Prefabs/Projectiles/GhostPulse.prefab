@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8925906195894493534
 Transform:
   m_ObjectHideFlags: 0
@@ -81,7 +81,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.25
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-4742285670344025096
 MonoBehaviour:
@@ -95,9 +95,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2446575ccd7e044caee61809b88383f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 7.5
   damage: 5
-  explosionRadius: 1
+  explosionRadius: 1.5
   explosionEffect: {fileID: 207298860612054840, guid: c8fe4130da0b314478d545f44ec9b99a,
     type: 3}
   explosionDestructionAfterTime: 2
@@ -115,6 +115,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PulseParticles
+      objectReference: {fileID: 0}
+    - target: {fileID: 5109581802350153234, guid: a47dd798f59f7aa4194bbe510c51168c,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5109581802350153234, guid: a47dd798f59f7aa4194bbe510c51168c,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5109581802350153234, guid: a47dd798f59f7aa4194bbe510c51168c,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5109581802350153234, guid: a47dd798f59f7aa4194bbe510c51168c,
         type: 3}
