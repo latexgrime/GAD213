@@ -94,16 +94,15 @@ namespace _Leonardo_Estigarribia._Scripts
             // If the current health is the same or less than zero, this entity is dead.
             if (currentHealth <= 0)
             {
-                if (!isPlayer)
-                {
-                    stateManager.SetStateToDead();
-                }
-
                 if (isPlayer)
                 {
                     gameObject.GetComponent<AnimatorManager>().PlayTargetAnimation("Death", false, false); 
                 }
                 
+                if (!isPlayer)
+                {
+                    stateManager.SetStateToDead();
+                }
                 StartCoroutine(DyingVFX());
             }
         }

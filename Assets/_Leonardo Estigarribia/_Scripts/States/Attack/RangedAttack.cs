@@ -19,7 +19,10 @@ namespace _Leonardo_Estigarribia._Scripts.States.Attack
         protected override void Start()
         {
             base.Start();
-            projectilePool = GetComponentInChildren<ProjectilePool>();
+            if (projectilePool == null)
+            {
+                projectilePool = GetComponentInChildren<ProjectilePool>();
+            }
         }
 
         protected override void PerformAttack()
@@ -37,8 +40,7 @@ namespace _Leonardo_Estigarribia._Scripts.States.Attack
             stateManager.animator.SetTrigger("attack");
             
             yield return new WaitForSeconds(attackingEventDelay);
-            
-            // Change this to be ranged attack. This was set for testing purposes.
+
             Vector3 shootPosition = transform.position + transform.forward * lookDirectionOffset.z + transform.up * lookDirectionOffset.y;
             Vector3 directionToPlayer = (stateManager.playerTransform.position - shootPosition).normalized;
 
@@ -48,12 +50,10 @@ namespace _Leonardo_Estigarribia._Scripts.States.Attack
             
             attackingEvent.Invoke();
             isAttacking = false;
-            
         }
 
         protected override void ResetAttackAnimation()
         {
-            
         }
     }
 }

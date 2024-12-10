@@ -1,7 +1,6 @@
-using _Leonardo_Estigarribia._Scripts.States.Idle;
 using UnityEngine;
 
-namespace _Leonardo_Estigarribia._Scripts.States.Refactor.Idle
+namespace _Leonardo_Estigarribia._Scripts.States.Idle
 {
     public class GroundIdleState : BaseIdleState
     {

@@ -1,4 +1,3 @@
-using _Leonardo_Estigarribia._Scripts.States.Refactor.Idle;
 using UnityEngine;
 
 namespace _Leonardo_Estigarribia._Scripts.States.Idle

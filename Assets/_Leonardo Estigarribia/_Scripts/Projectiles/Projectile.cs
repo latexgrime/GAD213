@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace _Leonardo_Estigarribia._Scripts.Projectiles
@@ -9,6 +10,7 @@ namespace _Leonardo_Estigarribia._Scripts.Projectiles
         [SerializeField] protected int damage = 2;
         private Rigidbody projectileRb;
         private Transform shooter;
+        private AudioSource audioSource;
 
         protected virtual void Awake()
         {
@@ -17,9 +19,11 @@ namespace _Leonardo_Estigarribia._Scripts.Projectiles
 
         public virtual void ShootToDirection(Vector3 direction, Transform shooterTransform)
         {
-            shooter = shooterTransform;  // Store who shot this projectile.
+            // Store who shot this projectile.
+            shooter = shooterTransform;  
             gameObject.SetActive(true);
             projectileRb.velocity = direction * speed;
+            transform.LookAt(direction);
         }
 
         public virtual void Deactivate()
@@ -31,19 +35,23 @@ namespace _Leonardo_Estigarribia._Scripts.Projectiles
         protected void OnTriggerEnter(Collider other)
         {
             // If hitting the shooter, ignore the collision.
+
             if (shooter == null || other == null || other.transform.root == shooter.root) return;
             
             if (other.TryGetComponent<EntityStats>(out var entityStats))
             {
                 OnHitEntity(entityStats);
             }
-            else
-            {
-                OnGeneralImpact();
-            }
+            
+            OnGeneralImpact();
+            
         }
 
         protected abstract void OnHitEntity(EntityStats entityStats);
         protected abstract void OnGeneralImpact();
+
+        protected abstract void PlayVisualEffectsOnPosition(Transform position, GameObject particleEffects);
+
+        protected abstract IEnumerator DestroyVisualEffectAfterTime(float destructionTime);
     }
 }
