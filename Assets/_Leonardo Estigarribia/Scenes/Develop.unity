@@ -4628,6 +4628,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1694133694}
     m_Modifications:
+    - target: {fileID: -4742285670344025096, guid: 68dccd4d4c276e2479bd2bde1380e9bb,
+        type: 3}
+      propertyPath: speed
+      value: 7.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -4742285670344025096, guid: 68dccd4d4c276e2479bd2bde1380e9bb,
+        type: 3}
+      propertyPath: explosionRadius
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7852810885467888951, guid: 68dccd4d4c276e2479bd2bde1380e9bb,
         type: 3}
       propertyPath: m_Name

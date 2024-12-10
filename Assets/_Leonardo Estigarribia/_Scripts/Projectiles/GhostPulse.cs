@@ -19,7 +19,7 @@ namespace _Leonardo_Estigarribia._Scripts.Projectiles
 
         [Header("- Sound effects.")] [SerializeField]
         private AudioClip explosionSoundEffect;
-        private AudioSource audioSource;
+        private AudioSource particleEffectAudioSource;
         
         protected override void OnHitEntity(EntityStats entityStats)
         {
@@ -42,8 +42,8 @@ namespace _Leonardo_Estigarribia._Scripts.Projectiles
         {
             _particleEffect = Instantiate(explosionEffect, transform.position, quaternion.identity);
             
-            audioSource = _particleEffect.GetComponent<AudioSource>();
-            audioSource.PlayOneShot(explosionSoundEffect);
+            particleEffectAudioSource = _particleEffect.GetComponent<AudioSource>();
+            particleEffectAudioSource.PlayOneShot(explosionSoundEffect);
             
             StartCoroutine(DestroyVisualEffectAfterTime(explosionDestructionAfterTime));
         }

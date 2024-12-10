@@ -44,6 +44,8 @@ namespace _Leonardo_Estigarribia._Scripts.States.Attack
             Vector3 shootPosition = transform.position + transform.forward * lookDirectionOffset.z + transform.up * lookDirectionOffset.y;
             Vector3 directionToPlayer = (stateManager.playerTransform.position - shootPosition).normalized;
 
+            transform.LookAt(directionToPlayer);
+            
             Projectile projectile = projectilePool.GetProjectile();
             projectile.transform.position = shootPosition;
             projectile.ShootToDirection(directionToPlayer, transform);
