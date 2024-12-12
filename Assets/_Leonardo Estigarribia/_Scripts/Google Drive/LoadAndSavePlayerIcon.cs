@@ -15,20 +15,17 @@ namespace _Leonardo_Estigarribia._Scripts.Google_Drive
         public RawImage downloadedDriveImage;
         public byte[] downloadContent;
 
-        [SerializeField] private KeyCode saveKeyCode = KeyCode.Alpha7;
-        [SerializeField] private KeyCode loadKeyCode = KeyCode.Alpha9;
+        [SerializeField] private KeyCode saveKeyCode = KeyCode.Keypad7;
+        [SerializeField] private KeyCode loadKeyCode = KeyCode.Keypad9;
 
         private void Start()
         {
-            imageToUpload = playerIcon.GetComponent<Image>().sprite.texture;
+            //imageToUpload = playerIcon.GetComponent<Image>().sprite.texture;
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(saveKeyCode))
-            {
-                // Save image to Drive cloud.
-            }
+            if (Input.GetKeyDown(saveKeyCode)) StartCoroutine(UploadFile());
 
             if (Input.GetKeyDown(loadKeyCode))
             {
@@ -36,8 +33,9 @@ namespace _Leonardo_Estigarribia._Scripts.Google_Drive
             }
         }
 
-        public IEnumerator UploadFile()
+        private IEnumerator UploadFile()
         {
+            Debug.Log("Starting uploading file to cloud coroutine.");
             // Encode texture and set request.
             var content = imageToUpload.EncodeToPNG();
             var file = new File { Name = "PlayerIcon", Content = content };
@@ -57,9 +55,9 @@ namespace _Leonardo_Estigarribia._Scripts.Google_Drive
             Debug.Log($"Request ID: {request.ResponseData.Id}");
         }
 
-        public IEnumerator DownloadFile()
+        /*public IEnumerator DownloadFile()
         {
             var request = GoogleDriveFiles.Download()
-        }
+        }*/
     }
 }

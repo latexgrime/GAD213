@@ -8,7 +8,7 @@ namespace _Leonardo_Estigarribia._Scripts.PlayFab_Systems
 {
     public class CloudSavingSystem : MonoBehaviour
     {
-        [SerializeField] private KeyCode saveKeyButton = KeyCode.S;
+        [SerializeField] private KeyCode saveKeyButton = KeyCode.Keypad0;
 
         private PlayerData playerData;
         public Transform playerTransform;
