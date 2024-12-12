@@ -18,6 +18,9 @@ namespace _Leonardo_Estigarribia._Scripts.Google_Drive
         [SerializeField] private KeyCode saveKeyCode = KeyCode.Keypad7;
         [SerializeField] private KeyCode loadKeyCode = KeyCode.Keypad9;
 
+        /// <summary>
+        /// This is the ID of the image from Google Drive that is going to be downloaded and set as the new player icon.
+        /// </summary>
         [SerializeField] private string googleDriveImageId;
 
         private void Start()
@@ -31,7 +34,7 @@ namespace _Leonardo_Estigarribia._Scripts.Google_Drive
 
             if (Input.GetKeyDown(loadKeyCode))
             {
-                // Load image from Drive cloud.
+                StartCoroutine(DownloadFile());
             }
         }
 
@@ -57,9 +60,32 @@ namespace _Leonardo_Estigarribia._Scripts.Google_Drive
             Debug.Log($"Request ID: {request.ResponseData.Id}");
         }
 
-        /*public IEnumerator DownloadFile()
+        public IEnumerator DownloadFile()
         {
-            var request = GoogleDriveFiles.Download()
-        }*/
+            Debug.Log("Starting DOWNLOADING file to cloud coroutine.");
+
+            var request = GoogleDriveFiles.Download(googleDriveImageId);
+            yield return request.Send();
+
+            if (request.IsError)
+            {
+                Debug.Log($"Error while downloading file. Exception: {request.Error}");
+            }
+            
+            Debug.Log($"Is request done: {request.IsDone}");
+            Debug.Log($"Response data: {request.ResponseData}");
+            downloadContent = request.ResponseData.Content;
+            
+            Debug.Log($"Setting texture.");
+            Texture2D downloadedTexture = new Texture2D(2, 2);
+            downloadedTexture.LoadImage(downloadContent);
+            downloadedTexture.Apply();
+            SetPlayerIcon(downloadedTexture);
+        }
+
+        private void SetPlayerIcon(Texture2D texture)
+        {
+            playerIcon.GetComponent<Image>().sprite = Sprite.Create(texture, playerIcon.rect, playerIcon.pivot);
+        }
     }
 }
