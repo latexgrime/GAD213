@@ -9,18 +9,20 @@ namespace _Leonardo_Estigarribia._Scripts.Google_Drive
 {
     public class LoadAndSavePlayerIcon : MonoBehaviour
     {
-        public RectTransform playerIcon;
+        [SerializeField] private RectTransform playerIcon;
 
-        public Texture2D imageToUpload;
-        public RawImage downloadedDriveImage;
+        [SerializeField] private Texture2D imageToUpload;
+        [SerializeField] private RawImage downloadedDriveImage;
         public byte[] downloadContent;
 
         [SerializeField] private KeyCode saveKeyCode = KeyCode.Keypad7;
         [SerializeField] private KeyCode loadKeyCode = KeyCode.Keypad9;
 
+        [SerializeField] private string googleDriveImageId;
+
         private void Start()
         {
-            //imageToUpload = playerIcon.GetComponent<Image>().sprite.texture;
+            imageToUpload = playerIcon.GetComponent<Image>().sprite.texture;
         }
 
         private void Update()
