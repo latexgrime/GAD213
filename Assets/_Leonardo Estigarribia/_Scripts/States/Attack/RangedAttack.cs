@@ -38,13 +38,14 @@ namespace _Leonardo_Estigarribia._Scripts.States.Attack
         {
             isAttacking = true;
             stateManager.animator.SetTrigger("attack");
-            
+            transform.LookAt(stateManager.playerTransform.position);
+
             yield return new WaitForSeconds(attackingEventDelay);
 
             Vector3 shootPosition = transform.position + transform.forward * lookDirectionOffset.z + transform.up * lookDirectionOffset.y;
             Vector3 directionToPlayer = (stateManager.playerTransform.position - shootPosition).normalized;
 
-            transform.LookAt(directionToPlayer);
+            transform.LookAt(stateManager.playerTransform.position);
             
             Projectile projectile = projectilePool.GetProjectile();
             projectile.transform.position = shootPosition;
