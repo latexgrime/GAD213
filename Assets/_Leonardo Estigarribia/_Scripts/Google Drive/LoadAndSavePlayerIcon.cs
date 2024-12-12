@@ -11,17 +11,25 @@ namespace _Leonardo_Estigarribia._Scripts.Google_Drive
     {
         [SerializeField] private RectTransform playerIcon;
 
-        [SerializeField] private Texture2D imageToUpload;
-        [SerializeField] private RawImage downloadedDriveImage;
-        public byte[] downloadContent;
-
+        [Header("- Uploading image to Google Drive.")]
         [SerializeField] private KeyCode saveKeyCode = KeyCode.Keypad7;
+        /// <summary>
+        /// This is going to automatically be set to be the player icon in the top right of the screen.
+        /// </summary>
+        [SerializeField] private Texture2D imageToUpload;
+        
+        [Header("- Downloading image from Google Drive.")]
         [SerializeField] private KeyCode loadKeyCode = KeyCode.Keypad9;
+        /// <summary>
+        /// This is the ID of the image you want to download.
+        /// </summary>
+        [SerializeField] private string googleDriveImageId ;
+
+        private byte[] downloadContent;
 
         /// <summary>
         /// This is the ID of the image from Google Drive that is going to be downloaded and set as the new player icon.
         /// </summary>
-        [SerializeField] private string googleDriveImageId;
 
         private void Start()
         {
@@ -85,7 +93,9 @@ namespace _Leonardo_Estigarribia._Scripts.Google_Drive
 
         private void SetPlayerIcon(Texture2D texture)
         {
-            playerIcon.GetComponent<Image>().sprite = Sprite.Create(texture, playerIcon.rect, playerIcon.pivot);
+            var rect = new Rect(0, 0, texture.width, texture.height);
+            playerIcon.GetComponent<Image>().sprite = Sprite.Create(texture, rect, playerIcon.pivot);
         }
+
     }
 }
