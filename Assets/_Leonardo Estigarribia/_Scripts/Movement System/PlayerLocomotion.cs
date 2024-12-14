@@ -1,11 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Runtime.InteropServices.ComTypes;
 using _Leonardo_Estigarribia._Scripts;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.Serialization;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
@@ -51,32 +46,37 @@ public class PlayerLocomotion : MonoBehaviour
     [SerializeField] private float dodgePower = 10f;
     public bool isDodging;
 
-    [Header("- Attack")] 
-    [SerializeField] private int attackDamage;
+    [Header("- Attack")] [SerializeField] private int attackDamage;
     [SerializeField] private float attackVerticalOffset;
     [SerializeField] private float attackRadius;
     [SerializeField] private float attackDistance;
     [SerializeField] private AnimationClip attackAnimLength;
-    
-    [Header("- VFX")]
-    [SerializeField] private ParticleSystem attackVFX;
-    [FormerlySerializedAs("jumpVFX")] [SerializeField] private ParticleSystem landVFX;
 
-    [Header("- SFX")] 
-    private float currentStepInterval = 0;
+    [Header("- VFX")] [SerializeField] private ParticleSystem attackVFX;
+
+    [FormerlySerializedAs("jumpVFX")] [SerializeField]
+    private ParticleSystem landVFX;
+
+    [Header("- SFX")] private float currentStepInterval;
     [SerializeField] private AudioClip[] jumpSFX;
     [SerializeField] private AudioClip landSFX;
     [SerializeField] private AudioClip[] walkSFX;
     [SerializeField] private AudioClip[] attackSFX;
 
-    private float stepTimer = 0f;
-    [FormerlySerializedAs("walkSFXPeriod")] [SerializeField] private float walkSFXinterval = 0.4f;
-    [FormerlySerializedAs("jogSFXPeriod")] [SerializeField] private float jogSFXInverval = 0.3f;
-    [FormerlySerializedAs("sprintSFXPeriod")] [SerializeField] private float sprintSFXInterval = 0.2f;
+    private float stepTimer;
+
+    [FormerlySerializedAs("walkSFXPeriod")] [SerializeField]
+    private float walkSFXinterval = 0.4f;
+
+    [FormerlySerializedAs("jogSFXPeriod")] [SerializeField]
+    private float jogSFXInverval = 0.3f;
+
+    [FormerlySerializedAs("sprintSFXPeriod")] [SerializeField]
+    private float sprintSFXInterval = 0.2f;
 
     public bool attackTrigger;
     public bool isAttacking;
-    
+
     private void Awake()
     {
         FindComponents();
@@ -104,7 +104,7 @@ public class PlayerLocomotion : MonoBehaviour
 
         if (playerManager.isInteracting)
             return;
-        
+
         HandleMovement();
         HandleRotation();
     }
@@ -113,7 +113,7 @@ public class PlayerLocomotion : MonoBehaviour
     {
         if (isJumping)
             return;
-        
+
         moveDirection = cameraObject.forward * inputManager.verticalInput;
         moveDirection = moveDirection + cameraObject.right * inputManager.horizontalInput;
         moveDirection.Normalize();
@@ -121,7 +121,7 @@ public class PlayerLocomotion : MonoBehaviour
 
         // Play walking SFX.
         PlayWalkSFX();
-        
+
         if (isSprinting)
         {
             moveDirection = moveDirection * sprintingSpeed;
@@ -150,37 +150,26 @@ public class PlayerLocomotion : MonoBehaviour
 
         originalPitch = audioSource.pitch;
         originalVolume = audioSource.volume;
-        
+
         if (inputManager.moveAmount >= 0.01f)
-        {
             if (!isJumping && isGrounded)
             {
                 stepTimer += Time.deltaTime;
-                if (isWalking)
-                { 
-                    currentStepInterval = walkSFXinterval;
-                }
+                if (isWalking) currentStepInterval = walkSFXinterval;
 
-                if (!isWalking && !isSprinting)
-                { 
-                    currentStepInterval = jogSFXInverval;
-                }
+                if (!isWalking && !isSprinting) currentStepInterval = jogSFXInverval;
 
-                if (isSprinting)
-                {
-                    currentStepInterval = sprintSFXInterval;
-                }
+                if (isSprinting) currentStepInterval = sprintSFXInterval;
 
                 if (stepTimer >= currentStepInterval)
                 {
                     audioSource.volume = Random.Range(audioSource.volume - 0.1f, audioSource.volume + 0.1f);
                     audioSource.pitch = Random.Range(audioSource.pitch - 0.2f, audioSource.pitch + 0.2f);
-                    
+
                     audioSource.PlayOneShot(walkSFX[Random.Range(0, walkSFX.Length)]);
                     stepTimer = 0;
                 }
             }
-        }
 
         audioSource.pitch = originalPitch;
         audioSource.volume = originalVolume;
@@ -253,10 +242,10 @@ public class PlayerLocomotion : MonoBehaviour
             // Jump animation.
             animatorManager.animator.SetBool("isJumping", true);
             animatorManager.PlayTargetAnimation("Jump", false, false);
-            
+
             // Random Jump SFX.
-            audioSource.PlayOneShot(jumpSFX[Random.Range(0,jumpSFX.Length)]);
-            
+            audioSource.PlayOneShot(jumpSFX[Random.Range(0, jumpSFX.Length)]);
+
             isJumping = true;
             startJump = false;
             StartCoroutine(ApplyJumpForce());
@@ -298,9 +287,9 @@ public class PlayerLocomotion : MonoBehaviour
                 rollDirection.Normalize();
 
                 animatorManager.PlayTargetAnimation("Roll Forward", true, false);
-                audioSource.PlayOneShot(jumpSFX[Random.Range(0,jumpSFX.Length)]);
+                audioSource.PlayOneShot(jumpSFX[Random.Range(0, jumpSFX.Length)]);
                 StartCoroutine(ApplyDodgeForce());
-            }   
+            }
         /*else // Roll.
             {
                 isDodging = false;
@@ -334,12 +323,12 @@ public class PlayerLocomotion : MonoBehaviour
         {
             // Lock the player control when attacking.
             isAttacking = true;
-            
+
             // Attack animation, VFX and SFX.
             animatorManager.PlayTargetAnimation("Attack", true, false);
             attackVFX.Play();
             audioSource.PlayOneShot(attackSFX[Random.Range(0, attackSFX.Length)]); // Random SFX from the list.
-            
+
             // Attack thing in front of the player.
             DamageHitObject();
 
@@ -351,25 +340,20 @@ public class PlayerLocomotion : MonoBehaviour
 
     private void DamageHitObject()
     {
-        Vector3 sphereCastOffset = transform.position + Vector3.up * attackVerticalOffset;
-        RaycastHit[] hits =
+        var sphereCastOffset = transform.position + Vector3.up * attackVerticalOffset;
+        var hits =
             Physics.SphereCastAll(sphereCastOffset, attackRadius, transform.forward, attackDistance);
-        Debug.DrawLine(sphereCastOffset,sphereCastOffset + transform.forward * attackDistance, Color.cyan, 0.5f);
+        Debug.DrawLine(sphereCastOffset, sphereCastOffset + transform.forward * attackDistance, Color.cyan, 0.5f);
         foreach (var hit in hits)
-        {
-                
             // If the hit is the player itself, then ignore it.
-            if (hit.transform.gameObject != this.gameObject)
-            {
+            if (hit.transform.gameObject != gameObject)
                 // If the hit has the EntityStats class, then damage it.
                 if (hit.transform.gameObject.GetComponent<EntityStats>())
                 {
-                    EntityStats hitStats = hit.transform.gameObject.GetComponent<EntityStats>();
+                    var hitStats = hit.transform.gameObject.GetComponent<EntityStats>();
                     hitStats.TakeDamage(attackDamage);
                     Debug.Log($"Damaged {hit.transform.name} for {attackDamage} damage.");
                 }
-            }
-        }
     }
 
     private IEnumerator ResetAttackingBool(float length)
