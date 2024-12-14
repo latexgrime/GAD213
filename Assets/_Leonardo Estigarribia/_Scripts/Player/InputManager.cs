@@ -47,7 +47,10 @@ public class InputManager : MonoBehaviour
         playerLocomotion = GetComponent<PlayerLocomotion>();
         cameraManager = FindObjectOfType<CameraManager>();
         inventoriesCanvas = GameObject.FindWithTag("InventoriesCanvas");
-        inventoriesCanvas.SetActive(false);
+        if (inventoriesCanvas != null)
+        {
+            inventoriesCanvas.SetActive(false);
+        }
     }
 
     private void OnEnable()

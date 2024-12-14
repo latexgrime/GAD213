@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using LeonardoEstigarribia.InventorySystem.inventoryItem;
 using LeonardoEstigarribia.InventorySystem.itemGrid;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 #endregion
 
@@ -14,6 +15,7 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryHighlight
     /// </summary>
     public class InventoryHightlight : MonoBehaviour
     {
+        [SerializeField] private bool inventoryActive;
         [SerializeField] private RectTransform itemHighlighter;
 
         [SerializeField]
@@ -26,12 +28,15 @@ namespace LeonardoEstigarribia.InventorySystem.inventoryHighlight
 
         private void Awake()
         {
-            // Instantiate a reusable pool of highlighters.
-            for (var i = 0; i < highlighterPoolSize; i++)
+            if (inventoryActive)
             {
-                var instantiatedHighlighter = Instantiate(itemHighlighter);
-                instantiatedHighlighter.gameObject.SetActive(false);
-                activeHighlighters.Add(instantiatedHighlighter);
+                // Instantiate a reusable pool of highlighters.
+                for (var i = 0; i < highlighterPoolSize; i++)
+                {
+                    var instantiatedHighlighter = Instantiate(itemHighlighter);
+                    instantiatedHighlighter.gameObject.SetActive(false);
+                    activeHighlighters.Add(instantiatedHighlighter);
+                }
             }
         }
 

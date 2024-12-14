@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1014160669930365261}
   - component: {fileID: 4002063908326577101}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Camera Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4408782397005525416}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Camera Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,9 @@ GameObject:
   - component: {fileID: 9110778150564851774}
   - component: {fileID: 7920889875263691982}
   - component: {fileID: 8762126790712493033}
-  m_Layer: 0
+  - component: {fileID: 7011742499057790861}
+  - component: {fileID: 881770781811010394}
+  m_Layer: 3
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -230,3 +232,40 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &7011742499057790861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8247716078782326688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8a0322c4329faa4c9fa8957f8dbf6e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedGrid: {fileID: 0}
+  itemRotationKeyCode: 114
+  existingComplexItemsInProject:
+  - {fileID: 11400000, guid: 8d187f73c63b5da40a75abdab9791f9f, type: 2}
+  - {fileID: 11400000, guid: a7a48e8411592bf4098cfb416fe6d699, type: 2}
+  spawnRandomItemKeyCode: 121
+  setRandomItemInInventoryKeyCode: 116
+  itemPrefab: {fileID: 8423469868171641495, guid: b6bf3a9dbe0dbfa41960b53965900952,
+    type: 3}
+  canvasTransform: {fileID: 0}
+--- !u!114 &881770781811010394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8247716078782326688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d39092731b4eeb49b88c526c9abe70f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemHighlighter: {fileID: 0}
+  activeHighlighters: []
+  highlighterPoolSize: 10
