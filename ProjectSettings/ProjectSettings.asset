@@ -850,8 +850,8 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: GAD213 - Game System Design
-  metroPackageVersion: 
+  metroPackageName: GAD213-GameSystemDesign
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -859,7 +859,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: GAD213 - Game System Design
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: GAD213 - Game System Design
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
