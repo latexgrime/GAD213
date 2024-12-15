@@ -1,7 +1,8 @@
 using System.Collections;
-using _Leonardo_Estigarribia._Scripts.Enemy;
 using _Leonardo_Estigarribia._Scripts.States;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace _Leonardo_Estigarribia._Scripts
@@ -10,28 +11,27 @@ namespace _Leonardo_Estigarribia._Scripts
     {
         private AudioSource audioSource;
 
-        [Header("- Health points")] 
-        [SerializeField] private int maxHealth = 10;
+        [Header("- Health points")] [SerializeField]
+        private int maxHealth = 10;
 
         [SerializeField] private int currentHealth;
 
-        [Header("- Particle VFX")] 
-        [SerializeField] private ParticleSystem[] takingDamageVFX;
+        [Header("- Particle VFX")] [SerializeField]
+        private ParticleSystem[] takingDamageVFX;
 
         [SerializeField] private ParticleSystem[] healVFX;
         [SerializeField] private GameObject dieVFX;
 
-        [Header("- SFX")] 
-        [SerializeField] private AudioClip[] takingDamageSFX;
+        [Header("- SFX")] [SerializeField] private AudioClip[] takingDamageSFX;
         [SerializeField] private AudioClip[] healSFX;
         [SerializeField] private AudioClip dieSFX;
 
-        [Header("- UI")] 
-        [SerializeField] EntityUIManager entityUIManager;
+        [Header("- UI")] [SerializeField] private EntityUIManager entityUIManager;
 
-        private bool isPlayer;
         private StateManager stateManager;
-        private bool isDying = false;
+        private bool isPlayer;
+        private bool isDying;
+        [FormerlySerializedAs("onDeadEvent")] [SerializeField] private UnityEvent onPlayerDeadEvent;
 
         private void Start()
         {
@@ -96,13 +96,11 @@ namespace _Leonardo_Estigarribia._Scripts
             {
                 if (isPlayer)
                 {
-                    gameObject.GetComponent<AnimatorManager>().PlayTargetAnimation("Death", false, false); 
+                    gameObject.GetComponent<AnimatorManager>().PlayTargetAnimation("Death", false, false);
+                    onPlayerDeadEvent.Invoke();
                 }
-                
-                if (!isPlayer)
-                {
-                    stateManager.SetStateToDead();
-                }
+
+                if (!isPlayer) stateManager.SetStateToDead();
                 StartCoroutine(DyingVFX());
             }
         }

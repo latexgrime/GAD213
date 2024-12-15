@@ -43,13 +43,17 @@ namespace _Leonardo_Estigarribia._Scripts.States.Attack
             yield return new WaitForSeconds(attackingEventDelay);
 
             Vector3 shootPosition = transform.position + transform.forward * lookDirectionOffset.z + transform.up * lookDirectionOffset.y;
-            Vector3 directionToPlayer = (stateManager.playerTransform.position - shootPosition).normalized;
-
-            transform.LookAt(stateManager.playerTransform.position);
+            if (stateManager.playerTransform != null)
+            {
+                Vector3 directionToPlayer = (stateManager.playerTransform.position - shootPosition).normalized;
+                transform.LookAt(stateManager.playerTransform.position);
             
-            Projectile projectile = projectilePool.GetProjectile();
-            projectile.transform.position = shootPosition;
-            projectile.ShootToDirection(directionToPlayer, transform);
+                Projectile projectile = projectilePool.GetProjectile();
+                projectile.transform.position = shootPosition;
+                projectile.ShootToDirection(directionToPlayer, transform);
+            }
+
+
             
             attackingEvent.Invoke();
             isAttacking = false;
