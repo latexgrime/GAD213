@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityGoogleDrive;
 using UnityGoogleDrive.Data;
@@ -14,6 +15,11 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
         private const string IconDataNamePrefix = "SavedPlayerIcon_";
 
         private string currentIconId;
+
+        private void Start()
+        {
+            LoadIconList();
+        }
 
         public void SaveData(PlayerSaveData data)
         {
@@ -29,7 +35,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
         public async Task<PlayerSaveData> LoadDataAsync()
         {
             var taskCompletionSource = new TaskCompletionSource<PlayerSaveData>();
-            StartCoroutine(DownloadPlayerIcon(downloadedIconData =>
+            StartCoroutine(DownloadPlayerIcon(currentIconId,downloadedIconData =>
             {
                 var saveData = new PlayerSaveData
                 {
@@ -66,11 +72,9 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
 
             // If everything goes well, store the ID in the list for future (and better debugging) purposes.\
             var newIconId = request.ResponseData.Id;
-            savedIcons.Add(new PlayerIconInfo(newIconId, fileName));
-
+            AddNewIcon(newIconId, fileName);
+            
             currentIconId = newIconId;
-
-            //SaveIconListToPlayerPrefs
 
             Debug.Log($"Successfully uploaded player icon. File ID: {currentIconId}.");
         }
@@ -139,8 +143,36 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
 
         private void LoadIconList()
         {
-            
+            // This is to refresh the list.
+            savedIcons.Clear();
+
+            int count = PlayerPrefs.GetInt($"{IconDataNamePrefix}Count", 0);
+
+            for (int i = 0; i < count; i++)
+            {
+                string baseName = $"{IconDataNamePrefix}{i}_";
+                string id = PlayerPrefs.GetString($"{baseName}ID");
+                string fileName = PlayerPrefs.GetString($"{baseName}Name");
+                // I have no idea why this needs to be a long but it works so leave it like that.
+                long date = long.Parse(PlayerPrefs.GetString($"{baseName}Date"));
+
+                var iconInfo = new PlayerIconInfo(id, fileName)
+                {
+                    SaveDate = new DateTime(date)
+                };
+                
+                savedIcons.Add(iconInfo);
+            }
+            Debug.Log($"Loaded {savedIcons.Count} icons data from PlayerPrefs.");
         }
+
+        public void AddNewIcon(string iconID, string fileName)
+        {
+            savedIcons.Add(new PlayerIconInfo(iconID, fileName));
+            SaveIconList();
+            Debug.Log($"Added new icon: {fileName}, ID: {iconID}.");    
+        }
+        
     }
 }
 
