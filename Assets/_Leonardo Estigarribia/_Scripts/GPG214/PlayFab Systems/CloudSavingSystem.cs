@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
-using _Leonardo_Estigarribia._Scripts.GPG214;
 using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine;
 
-namespace _Leonardo_Estigarribia._Scripts.PlayFab_Systems
+namespace _Leonardo_Estigarribia._Scripts.GPG214.PlayFab_Systems
 {
     public class CloudSavingSystem : MonoBehaviour
     {

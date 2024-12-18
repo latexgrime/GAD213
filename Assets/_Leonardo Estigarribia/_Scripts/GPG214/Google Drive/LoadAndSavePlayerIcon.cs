@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityGoogleDrive;
 using UnityGoogleDrive.Data;
 
-namespace _Leonardo_Estigarribia._Scripts.Google_Drive
+namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
 {
     public class LoadAndSavePlayerIcon : MonoBehaviour
     {
