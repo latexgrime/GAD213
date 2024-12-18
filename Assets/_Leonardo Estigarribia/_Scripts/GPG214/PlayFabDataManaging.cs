@@ -8,7 +8,8 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
 {
     public class PlayFabDataManaging : ISavingLoadingData
     {
-        
+        private PlayerSaveData loadedData = null;
+        private bool isLoading = false;
         public void SaveData(PlayerSaveData data)
         {
             var cloudDataToSave = new Dictionary<string,string>
@@ -37,14 +38,15 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         
         public PlayerSaveData LoadData()
         {
-            PlayerSaveData loadedData = null;
             var request = new GetUserDataRequest();
+            isLoading = true;
             PlayFabClientAPI.GetUserData(request,
                 result =>
                 {
                     if (result.Data == null)
                     {
                         Debug.LogError($"No data found in PlayFab.");
+                        isLoading = false;
                         return;
                     }
 
@@ -59,13 +61,20 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
                         CurrentHealth = int.Parse(result.Data.GetValueOrDefault("CurrentHealth").Value),
                         MaxHealth = int.Parse(result.Data.GetValueOrDefault("MaxHealth").Value)
                     };
+                    isLoading = false;
                 },
                 error =>
                 {
                     Debug.LogError($"Data could not be loaded form PlayFab: {error.ErrorMessage}");
+                    isLoading = false;
                 }
-                
             );
+            while (isLoading)
+            {
+                Debug.Log("Loading data from PlayFab.");
+                
+            }
+            Debug.Log("Loading data done.");
             return loadedData;
         }
         

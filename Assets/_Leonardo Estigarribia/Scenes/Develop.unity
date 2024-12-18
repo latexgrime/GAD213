@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -745,6 +745,39 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!1 &480971267
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 480971268}
+  m_Layer: 0
+  m_Name: NewDataManagement
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &480971268
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480971267}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 11.75, y: 1, z: 25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1845468608}
+  - {fileID: 799608710}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &524848046
 GameObject:
   m_ObjectHideFlags: 0
@@ -1459,6 +1492,55 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8885388609705984933}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &799608709
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 799608710}
+  - component: {fileID: 799608711}
+  m_Layer: 0
+  m_Name: SavingAndLoadingManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &799608710
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799608709}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 480971268}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &799608711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799608709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5cdda41b6296044ea462c057dcbc720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localSaveKeyCode: 282
+  localLoadingKeyCode: 284
+  cloudSaveKeyCode: 286
+  cloudLoadKeyCode: 288
+  localSaveFileName: PlayerSave.xml
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1944,7 +2026,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1421733488
 Transform:
   m_ObjectHideFlags: 0
@@ -1972,6 +2054,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f90f1d410855dd44ae349f1f719d4b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerData: {fileID: 0}
   loadDataFromCloudKeycode: 259
 --- !u!1 &1446619292
 GameObject:
@@ -2740,7 +2823,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1777441401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2778,7 +2861,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1821372046}
-  - component: {fileID: 1821372045}
   m_Layer: 0
   m_Name: LocalFileManagement
   m_TagString: Untagged
@@ -2786,22 +2868,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1821372045
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1821372044}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5891187140138794e867cc8518cec963, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  localSaveKeyCode: 282
-  localLoadKeyCode: 284
-  saveFileName: PlayerSave.xml
-  savePath: 
 --- !u!4 &1821372046
 Transform:
   m_ObjectHideFlags: 0
@@ -2843,11 +2909,11 @@ Transform:
   m_GameObject: {fileID: 1845468607}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -11.75, y: -1, z: -25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 480971268}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1845468609
 MonoBehaviour:
@@ -2862,7 +2928,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerName: 
-  playerPosition: {x: 0, y: 0, z: 0}
+  storedPlayerPosition: {x: 0, y: 0, z: 0}
   playerIcon: {fileID: 897730130785965377}
   playerEntityStats: {fileID: 0}
 --- !u!43 &2006278519
@@ -3827,4 +3893,4 @@ SceneRoots:
   - {fileID: 19049795}
   - {fileID: 571492787}
   - {fileID: 1821372046}
-  - {fileID: 1845468608}
+  - {fileID: 480971268}
