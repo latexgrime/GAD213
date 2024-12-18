@@ -42,12 +42,12 @@ namespace _Leonardo_Estigarribia._Scripts.PlayFab_Systems
             // Set it to the local instance.
             if (result.Data.ContainsKey("PlayerName"))
             {
-                playerData.playerName = result.Data["PlayerName"].Value;
+                playerData.SetPlayerName(result.Data["PlayerName"].Value);
             }
 
-            float x = playerData.playerPosition.x;
-            float y = playerData.playerPosition.y;
-            float z = playerData.playerPosition.z;
+            float x = playerData.GetPlayerPosition().x;
+            float y = playerData.GetPlayerPosition().y;
+            float z = playerData.GetPlayerPosition().z;
 
             if (result.Data.ContainsKey("PlayerPosX"))
             {
@@ -65,8 +65,7 @@ namespace _Leonardo_Estigarribia._Scripts.PlayFab_Systems
             }
             
             // Set it to the local instance and set the saved position to the actual player position.
-            playerData.playerPosition = new Vector3(x, y, z);
-            playerData.SetPlayerPosition(x, y, z);
+            playerData.SetPlayerPosition(new Vector3(x, y, z), true);
             
         }
         

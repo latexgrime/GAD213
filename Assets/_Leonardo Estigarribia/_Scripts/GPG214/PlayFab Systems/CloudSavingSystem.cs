@@ -12,8 +12,6 @@ namespace _Leonardo_Estigarribia._Scripts.PlayFab_Systems
         [SerializeField] private KeyCode saveKeyButton = KeyCode.Keypad0;
 
         private PlayerData playerData;
-        public Transform playerTransform;
-        public string playerName = "Default";
         // public string playerIconID;
 
         private void Start()
@@ -26,20 +24,18 @@ namespace _Leonardo_Estigarribia._Scripts.PlayFab_Systems
             if (Input.GetKeyUp(saveKeyButton))
             {
                 SavePlayerDataToCloud();
-                // Debug.
-                SavePlayerToLocalInstance();
             }
         }
 
         public void SavePlayerDataToCloud()
         {
-            var x = playerTransform.position.x.ToString();
-            var y = playerTransform.position.y.ToString();
-            var z = playerTransform.position.z.ToString();
+            var x = playerData.GetPlayerPosition().x.ToString();
+            var y = playerData.GetPlayerPosition().y.ToString();
+            var z = playerData.GetPlayerPosition().z.ToString();
 
             var data = new Dictionary<string, string>
             {
-                { " PlayerName", playerName },
+                { " PlayerName", playerData.GetPlayerName() },
                 { " PlayerPosX", x },
                 { " PlayerPosY", y },
                 { " PlayerPosZ", z }
@@ -61,13 +57,6 @@ namespace _Leonardo_Estigarribia._Scripts.PlayFab_Systems
         private void OnFailDataSend(PlayFabError obj)
         {
             Debug.LogError($"Failed to save player data, error: {obj.GenerateErrorReport()}");
-        }
-        
-        // Local save for Debug Purposes.
-        public void SavePlayerToLocalInstance()
-        {
-            playerData.playerName = playerName;
-            playerData.playerPosition = playerTransform.position;
         }
     }
 }

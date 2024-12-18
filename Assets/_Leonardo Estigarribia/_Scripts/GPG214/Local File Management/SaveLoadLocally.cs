@@ -63,11 +63,10 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management
 
                 Vector3 loadedPosition = new Vector3(loadedData.positionX, loadedData.positionY, loadedData.positionZ);
 
-                playerData.playerPosition = loadedPosition;
-                // This moves the player to the position.
-                playerData.SetPlayerPosition(loadedPosition.x, loadedPosition.y, loadedPosition.z);
+                // Load the player position and set it in the world.
+                playerData.SetPlayerPosition(loadedPosition, true);
 
-                playerData.playerName = loadedData.playerName;
+                playerData.SetPlayerName(loadedData.playerName);
 
                 if (loadedData.playerIconBytes != null)
                 {
@@ -80,7 +79,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management
                             // Setting the pivot in the center for now.
                             new Vector2(0.5f,0.5f)
                             );
-                        playerData.playerIcon.sprite = newSprite;
+                        playerData.SetPlayerIcon(newSprite);;
                     }
                 }
                 Debug.Log($"Success in loading player data from: {savePath}.");
@@ -100,12 +99,12 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management
             Texture2D playerIconTexture = null;
             
             // Check if the player has an Icon set.
-            if (playerData.playerIcon != null)
+            if (playerData.GetPlayerIcon() != null)
             {
-                playerIconTexture = playerData.playerIcon.sprite.texture;
+                playerIconTexture = playerData.GetPlayerIcon().sprite.texture;
             }
 
-            PlayerSaveData dataToSave = new PlayerSaveData(playerData.playerPosition, playerData.playerName, playerIconTexture);
+            PlayerSaveData dataToSave = new PlayerSaveData(playerData.GetPlayerPosition(), playerData.GetPlayerName(), playerIconTexture);
             
             using (FileStream stream = new FileStream(savePath, FileMode.Create))
             {
