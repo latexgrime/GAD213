@@ -9,7 +9,6 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management
     public class SaveLoadLocally : MonoBehaviour
     {
         private PlayerData playerData;
-        [SerializeField] private PlayerSaveData playerSaveData;
         private XmlSerializer serializer;
         
         [SerializeField] private KeyCode localSaveKeyCode = KeyCode.F1;

@@ -45,27 +45,25 @@ namespace _Leonardo_Estigarribia._Scripts.PlayFab_Systems
                 playerData.SetPlayerName(result.Data["PlayerName"].Value);
             }
 
-            float x = playerData.GetPlayerPosition().x;
-            float y = playerData.GetPlayerPosition().y;
-            float z = playerData.GetPlayerPosition().z;
+            Vector3 cloudLoadedPosition = new Vector3();
 
             if (result.Data.ContainsKey("PlayerPosX"))
             {
-                float.TryParse(result.Data["PlayerPosX"].Value, out x);
+                float.TryParse(result.Data["PlayerPosX"].Value, out cloudLoadedPosition.x);
             }
             
             if (result.Data.ContainsKey("PlayerPosY"))
             {
-                float.TryParse(result.Data["PlayerPosY"].Value, out y);
+                float.TryParse(result.Data["PlayerPosY"].Value, out cloudLoadedPosition.y);
             }
             
             if (result.Data.ContainsKey("PlayerPosZ"))
             {
-                float.TryParse(result.Data["PlayerPosZ"].Value, out z);
+                float.TryParse(result.Data["PlayerPosZ"].Value, out cloudLoadedPosition.z);
             }
             
             // Set it to the local instance and set the saved position to the actual player position.
-            playerData.SetPlayerPosition(new Vector3(x, y, z), true);
+            playerData.SetPlayerPosition(cloudLoadedPosition, true);
             
         }
         

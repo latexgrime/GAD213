@@ -4,7 +4,7 @@ using UnityEngine;
 namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management
 {
     /// <summary>
-    /// This class is in charge of containing the saved data of the player.
+    /// This class is in charge of containing the saved or loaded data as a reference for the player's loading/saving systems.
     /// </summary>
     [Serializable]
     public class PlayerSaveData

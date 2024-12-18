@@ -24,6 +24,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         {
             playerGameObject = GameObject.FindGameObjectWithTag("Player");
             playerEntityStats = playerGameObject.GetComponent<EntityStats>();
+            playerPosition = playerGameObject.transform.position;
         }
 
         public Vector3 GetPlayerPosition()
@@ -71,8 +72,8 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         {
             playerIcon.sprite = iconToSet;
         }
-        
-        public void SetPlayerPositionInWorld(float x, float y, float z)
+
+        private void SetPlayerPositionInWorld(float x, float y, float z)
         {
             playerGameObject.transform.position = new Vector3(x, y, z);
         }
