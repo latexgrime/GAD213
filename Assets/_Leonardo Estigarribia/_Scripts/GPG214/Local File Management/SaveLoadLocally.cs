@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management
@@ -63,8 +64,15 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management
             {
                 playerIconTexture = playerData.playerIcon.sprite.texture;
             }
+
+            PlayerSaveData dataToSave = new PlayerSaveData(playerData.playerPosition, playerData.playerName, playerIconTexture);
             
+            using (FileStream stream = new FileStream(savePath, FileMode.Create))
+            {
+                serializer.Serialize(stream, dataToSave);
+            }
             
+            Debug.Log($"Saved player data at: {savePath}");
         }
     }
 }
