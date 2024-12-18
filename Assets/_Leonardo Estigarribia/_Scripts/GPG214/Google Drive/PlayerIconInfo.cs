@@ -1,19 +1,30 @@
 using System;
+using UnityEngine;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
 {
     [Serializable]
     public class PlayerIconInfo
     {
-        public string IconId { get; set; }
-        public string FileName { get; set; }
-        public DateTime SaveDate { get; set; }
+
+        [SerializeField] private string iconId;
+        [SerializeField] private string fileName;
+        [SerializeField] private DateTime saveDate;
+
+
+        public string IconId => iconId;
+        public string FileName => fileName;
+        public DateTime SaveDate
+        {
+            get => saveDate;
+            set => saveDate = value;
+        }
 
         public PlayerIconInfo(string id, string fileName)
         {
-            IconId = id;
-            FileName = fileName;
-            SaveDate = DateTime.Now;
+            iconId = id;
+            this.fileName = fileName;
+            saveDate = DateTime.Now;
         }
     }
 }

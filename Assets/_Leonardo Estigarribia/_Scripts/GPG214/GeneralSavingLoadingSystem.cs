@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive;
 using Unity.Properties;
 using UnityEditor.IMGUI.Controls;
@@ -141,14 +142,23 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
             googleDriveDataManaging.SaveData(saveData);
         }
 
-        private async void LoadPlayerIconFromGoogleDrive()
+        private async void LoadPlayerIconFromGoogleDrive(string iconID = null)
         {
-            var loadedData = await googleDriveDataManaging.LoadDataAsync();
+            PlayerSaveData loadedData;
 
+            if (iconID != null)
+            {
+                var googleDriveManager = (GoogleDriveDataManaging)googleDriveDataManaging;
+                loadedData = await googleDriveManager.LoadSpecificIcon(iconID);
+            }
+            else
+            {
+                loadedData = await googleDriveDataManaging.LoadDataAsync();
+            }
+            
             if (loadedData != null && loadedData.IconData != null)
             {
                 var texture = new Texture2D(2, 2);
-
                 texture.LoadImage(loadedData.IconData);
                 var sprite = Sprite.Create(
                     texture,
@@ -157,6 +167,37 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
                 
                 playerData.SetPlayerIcon(sprite);
                 Debug.Log("Player Icon downloaded from google drive set into scene.");
+            }
+        }
+
+        public List<PlayerIconInfo> GetSavedIcons()
+        {
+            var googleDriveManager = (GoogleDriveDataManaging)googleDriveDataManaging;
+            return googleDriveManager.GetSavedIcons();
+        }
+
+        public void ApplyIconData(byte[] iconData)
+        {
+            if (iconData != null)
+            {
+                var texture = new Texture2D(2, 2);
+                texture.LoadImage(iconData);
+                
+                var sprite = Sprite.Create(
+                    texture,
+                    new Rect(0, 0, texture.width, texture.height),
+                    new Vector2(0.5f, 0.5f));
+                
+                playerData.SetPlayerIcon(sprite);
+                Debug.Log("Applied new icon correctly.");
+            }
+        }
+        
+        public void LoadSavedIcon(PlayerIconInfo iconInfo)
+        {
+            if (iconInfo != null)
+            {
+                LoadPlayerIconFromGoogleDrive(iconInfo.IconId);
             }
         }
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
+using System.Xml.Xsl;
 using UnityEngine;
 using UnityGoogleDrive;
 using UnityGoogleDrive.Data;
@@ -11,9 +11,14 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
 {
     public class GoogleDriveDataManaging : MonoBehaviour, ISavingLoadingData
     {
-        [SerializeField] private List<PlayerIconInfo> savedIcons = new();
-        private const string IconDataNamePrefix = "SavedPlayerIcon_";
+        [Header("- Saved Icons List")] public List<PlayerIconInfo> savedIcons = new();
 
+        [Header("- Manual Icon Loading")] [SerializeField]
+        private string iconIdToLoad;
+
+        [SerializeField] private KeyCode loadSpecificIconKeyCode = KeyCode.Keypad5;
+
+        private const string IconDataNamePrefix = "SavedPlayerIcon_";
         private string currentIconId;
 
         private void Start()
@@ -21,6 +26,63 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
             LoadIconList();
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(loadSpecificIconKeyCode) && !string.IsNullOrEmpty(iconIdToLoad))
+            {
+                StartCoroutine(LoadSpecificIconCoroutine(iconIdToLoad));
+            }
+        }
+
+        IEnumerator LoadSpecificIconCoroutine(string iconID)
+        {
+            Debug.Log($"Attempting to load Icon with ID: {iconID}");
+
+            var iconInfo = savedIcons.Find(icon => icon.IconId == iconID);
+            if (iconInfo != null)
+            {
+                Debug.Log($"Icon found in saved list: {iconInfo.FileName}");
+            }
+            else
+            {
+                Debug.LogError("This ID wasn't found in the saved icons list. Attempting download from cloud.");
+            }
+
+            var request = GoogleDriveFiles.Download(iconID);
+            yield return request.Send();
+
+            if (request.IsError)
+            {
+                Debug.LogError($"{request.Error}");
+                yield break;
+            }
+
+            var saveData = new PlayerSaveData
+            {
+                IconData = request.ResponseData.Content
+            };
+
+            var savingSystem = FindObjectOfType<GeneralSavingLoadingSystem>();
+            savingSystem.ApplyIconData(saveData.IconData);
+        }
+        
+        public async Task<PlayerSaveData> LoadSpecificIcon(string iconIdToLoad)
+        {
+            var taskCompletionSource = new TaskCompletionSource<PlayerSaveData>();
+
+            StartCoroutine(DownloadPlayerIcon(iconIdToLoad, downloadedIconData =>
+            {
+                var saveData = new PlayerSaveData
+                {
+                    IconData = downloadedIconData
+                };
+                taskCompletionSource.SetResult(saveData);
+            }));
+
+            return await taskCompletionSource.Task;
+        }
+
+        
         public void SaveData(PlayerSaveData data)
         {
             if (data.IconData != null) StartCoroutine(UploadIcon(data.IconData));
@@ -35,7 +97,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
         public async Task<PlayerSaveData> LoadDataAsync()
         {
             var taskCompletionSource = new TaskCompletionSource<PlayerSaveData>();
-            StartCoroutine(DownloadPlayerIcon(currentIconId,downloadedIconData =>
+            StartCoroutine(DownloadPlayerIcon(currentIconId, downloadedIconData =>
             {
                 var saveData = new PlayerSaveData
                 {
@@ -73,28 +135,12 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
             // If everything goes well, store the ID in the list for future (and better debugging) purposes.\
             var newIconId = request.ResponseData.Id;
             AddNewIcon(newIconId, fileName);
-            
+
             currentIconId = newIconId;
 
             Debug.Log($"Successfully uploaded player icon. File ID: {currentIconId}.");
         }
-
-        public async Task<PlayerSaveData> LoadSpecificIcon(string iconIdToLoad)
-        {
-            var taskCompletionSource = new TaskCompletionSource<PlayerSaveData>();
-
-            StartCoroutine(DownloadPlayerIcon(iconIdToLoad, downloadedIconData =>
-            {
-                var saveData = new PlayerSaveData
-                {
-                    IconData = downloadedIconData
-                };
-                taskCompletionSource.SetResult(saveData);
-            }));
-
-            return await taskCompletionSource.Task;
-        }
-
+        
 
         // The Action next to the byte array parameter its like setting an instruction after a task its done.
         private IEnumerator DownloadPlayerIcon(string iconId, Action<byte[]> onComplete)
@@ -126,14 +172,14 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
         {
             PlayerPrefs.SetInt($"{IconDataNamePrefix}Count", savedIcons.Count);
 
-            for (int i = 0; i < savedIcons.Count; i++)
+            for (var i = 0; i < savedIcons.Count; i++)
             {
                 // This is to differentiate different kinds of data.
-                string baseName = $"{IconDataNamePrefix}{i}_";
+                var baseName = $"{IconDataNamePrefix}{i}_";
 
                 PlayerPrefs.SetString($"{baseName}ID", savedIcons[i].IconId);
                 PlayerPrefs.SetString($"{baseName}FileName", savedIcons[i].FileName);
-                PlayerPrefs.SetString($"{baseName}Date", savedIcons[i].SaveDate.ToString());
+                PlayerPrefs.SetString($"{baseName}Date", savedIcons[i].SaveDate.Ticks.ToString());
 
                 PlayerPrefs.Save();
 
@@ -146,23 +192,24 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
             // This is to refresh the list.
             savedIcons.Clear();
 
-            int count = PlayerPrefs.GetInt($"{IconDataNamePrefix}Count", 0);
+            var count = PlayerPrefs.GetInt($"{IconDataNamePrefix}Count", 0);
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
-                string baseName = $"{IconDataNamePrefix}{i}_";
-                string id = PlayerPrefs.GetString($"{baseName}ID");
-                string fileName = PlayerPrefs.GetString($"{baseName}Name");
+                var baseName = $"{IconDataNamePrefix}{i}_";
+                var id = PlayerPrefs.GetString($"{baseName}ID");
+                var fileName = PlayerPrefs.GetString($"{baseName}FileName");
                 // I have no idea why this needs to be a long but it works so leave it like that.
-                long date = long.Parse(PlayerPrefs.GetString($"{baseName}Date"));
+                var date = long.Parse(PlayerPrefs.GetString($"{baseName}Date"));
 
                 var iconInfo = new PlayerIconInfo(id, fileName)
                 {
                     SaveDate = new DateTime(date)
                 };
-                
+
                 savedIcons.Add(iconInfo);
             }
+
             Debug.Log($"Loaded {savedIcons.Count} icons data from PlayerPrefs.");
         }
 
@@ -170,9 +217,13 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
         {
             savedIcons.Add(new PlayerIconInfo(iconID, fileName));
             SaveIconList();
-            Debug.Log($"Added new icon: {fileName}, ID: {iconID}.");    
+            Debug.Log($"Added new icon: {fileName}, ID: {iconID}.");
         }
-        
+
+        public List<PlayerIconInfo> GetSavedIcons()
+        {
+            return new List<PlayerIconInfo>(savedIcons);
+        }
     }
 }
 
