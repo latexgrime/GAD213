@@ -14,6 +14,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         private PlayerData playerData;
         private ISavingLoadingData localDataManaging;
         private ISavingLoadingData playFabDataManaging;
+        private ISavingLoadingData g
 
         
         #region General Script Logic
