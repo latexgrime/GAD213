@@ -66,9 +66,7 @@ namespace _Leonardo_Estigarribia._Scripts.PlayFab_Systems
             // Set it to the local instance and set the saved position to the actual player position.
             playerData.playerPosition = new Vector3(x, y, z);
             playerData.SetPlayerPosition(x, y, z);
-
-
-
+            
         }
         
         private void OnDataReceivedFailure(PlayFabError error)

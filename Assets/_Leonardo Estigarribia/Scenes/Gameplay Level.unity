@@ -316,7 +316,7 @@ PrefabInstance:
     - target: {fileID: 3458773598036114440, guid: e2e0023d744875847a21c74a0392b887,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 39.25
+      value: 38
       objectReference: {fileID: 0}
     - target: {fileID: 3458773598036114440, guid: e2e0023d744875847a21c74a0392b887,
         type: 3}
@@ -326,7 +326,7 @@ PrefabInstance:
     - target: {fileID: 3458773598036114440, guid: e2e0023d744875847a21c74a0392b887,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 44
+      value: 43
       objectReference: {fileID: 0}
     - target: {fileID: 3458773598036114440, guid: e2e0023d744875847a21c74a0392b887,
         type: 3}
@@ -367,6 +367,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FlyingRangedEnemy (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329676928458957446, guid: e2e0023d744875847a21c74a0392b887,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7710153712061548600, guid: e2e0023d744875847a21c74a0392b887,
         type: 3}
@@ -1318,6 +1323,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FlyingRangedEnemy (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329676928458957446, guid: e2e0023d744875847a21c74a0392b887,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7710153712061548600, guid: e2e0023d744875847a21c74a0392b887,
         type: 3}
@@ -2435,6 +2445,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FlyingRangedEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329676928458957446, guid: e2e0023d744875847a21c74a0392b887,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7710153712061548600, guid: e2e0023d744875847a21c74a0392b887,
         type: 3}
@@ -4849,6 +4864,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FlyingRangedEnemy (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329676928458957446, guid: e2e0023d744875847a21c74a0392b887,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7710153712061548600, guid: e2e0023d744875847a21c74a0392b887,
         type: 3}
