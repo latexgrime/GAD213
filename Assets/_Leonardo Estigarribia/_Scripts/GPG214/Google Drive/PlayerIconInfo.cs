@@ -26,5 +26,10 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
             this.fileName = fileName;
             saveDate = DateTime.Now;
         }
+
+        public PlayerIconInfo(string id, string fileName, DateTime date) : this(id, fileName)
+        {
+            SaveDate = date;
+        }
     }
 }

@@ -191,7 +191,6 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
         {
             // This is to refresh the list.
             savedIcons.Clear();
-
             var count = PlayerPrefs.GetInt($"{IconDataNamePrefix}Count", 0);
 
             for (var i = 0; i < count; i++)
@@ -199,14 +198,19 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
                 var baseName = $"{IconDataNamePrefix}{i}_";
                 var id = PlayerPrefs.GetString($"{baseName}ID");
                 var fileName = PlayerPrefs.GetString($"{baseName}FileName");
-                // I have no idea why this needs to be a long but it works so leave it like that.
-                var date = long.Parse(PlayerPrefs.GetString($"{baseName}Date"));
+                var dateString = (PlayerPrefs.GetString($"{baseName}Date", "0"));
 
-                var iconInfo = new PlayerIconInfo(id, fileName)
+                DateTime iconDate;
+                if (!long.TryParse(dateString, out var dateTicks))
                 {
-                    SaveDate = new DateTime(date)
-                };
+                    iconDate = DateTime.Now;
+                }
+                else
+                {
+                    iconDate = new DateTime(dateTicks);
+                }
 
+                var iconInfo = new PlayerIconInfo(id, fileName, iconDate);
                 savedIcons.Add(iconInfo);
             }
 
