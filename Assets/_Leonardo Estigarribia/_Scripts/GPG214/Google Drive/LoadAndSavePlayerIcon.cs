@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityGoogleDrive;
@@ -7,7 +8,7 @@ using UnityGoogleDrive.Data;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
 {
-    public class LoadAndSavePlayerIcon : MonoBehaviour
+    public class LoadAndSavePlayerIcon : MonoBehaviour, ISavingLoadingData
     {
         [SerializeField] private RectTransform playerIcon;
 
@@ -26,10 +27,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
         [SerializeField] private string googleDriveImageId ;
 
         private byte[] downloadContent;
-
-        /// <summary>
-        /// This is the ID of the image from Google Drive that is going to be downloaded and set as the new player icon.
-        /// </summary>
+        
 
         private void Start()
         {
@@ -97,5 +95,23 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
             playerIcon.GetComponent<Image>().sprite = Sprite.Create(texture, rect, playerIcon.pivot);
         }
 
+        
+        
+        
+        
+        public void SaveData(PlayerSaveData data)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public PlayerSaveData LoadData()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<PlayerSaveData> LoadDataAsync()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
