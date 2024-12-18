@@ -1,4 +1,8 @@
+using _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive;
+using Unity.Properties;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
+using UnityGoogleDrive;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214
 {
@@ -8,13 +12,15 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         [SerializeField] private KeyCode localLoadingKeyCode = KeyCode.F3;
         [SerializeField] private KeyCode cloudSaveKeyCode = KeyCode.F5;
         [SerializeField] private KeyCode cloudLoadKeyCode = KeyCode.F7;
+        [SerializeField] private KeyCode googleDriveSaveKeyCode = KeyCode.Keypad1;
+        [SerializeField] private KeyCode googleDriveLoadKeyCode = KeyCode.Keypad3;
 
         [SerializeField] private string localSaveFileName = "PlayerSave.xml";
 
         private PlayerData playerData;
         private ISavingLoadingData localDataManaging;
         private ISavingLoadingData playFabDataManaging;
-        private ISavingLoadingData g
+        private ISavingLoadingData googleDriveDataManaging;
 
         
         #region General Script Logic
@@ -24,6 +30,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
             playerData = FindObjectOfType<PlayerData>();
             localDataManaging = new LocalDataManaging(localSaveFileName);
             playFabDataManaging = new PlayFabDataManaging();
+            googleDriveDataManaging = GetComponent<GoogleDriveDataManaging>();
         }
 
         private void Update()
@@ -40,6 +47,12 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
             if (Input.GetKeyDown(cloudSaveKeyCode)) SaveDataToCloud();
 
             if (Input.GetKeyDown(cloudLoadKeyCode)) LoadDataFromCloud();
+
+            if (Input.GetKeyDown(googleDriveSaveKeyCode)) SavePlayerIconToGoogleDrive();
+            
+            if (Input.GetKeyDown(googleDriveLoadKeyCode)) LoadPlayerIconFromGoogleDrive();
+            
+
         }
 
         private PlayerSaveData CreateSaveData()
@@ -98,7 +111,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         // Region ends -------------------------------------------------------------------------------
         #endregion
 
-        #region Cloud Data Managing Methods
+        #region PlayFab Managing Methods
         // Region start -------------------------------------------------------------------------------
 
         private void SaveDataToCloud()
@@ -120,5 +133,34 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
 
         #endregion
 
+        #region Google Drive Managing Methods
+
+        private void SavePlayerIconToGoogleDrive()
+        {
+            var saveData = CreateSaveData();
+            googleDriveDataManaging.SaveData(saveData);
+        }
+
+        private async void LoadPlayerIconFromGoogleDrive()
+        {
+            var loadedData = await googleDriveDataManaging.LoadDataAsync();
+
+            if (loadedData != null && loadedData.IconData != null)
+            {
+                var texture = new Texture2D(2, 2);
+
+                texture.LoadImage(loadedData.IconData);
+                var sprite = Sprite.Create(
+                    texture,
+                    new Rect(0, 0, texture.width, texture.height),
+                    new Vector2(0.5f, 0.5f));
+                
+                playerData.SetPlayerIcon(sprite);
+                Debug.Log("Player Icon downloaded from google drive set into scene.");
+            }
+        }
+
+        #endregion
+        
     }
 }
