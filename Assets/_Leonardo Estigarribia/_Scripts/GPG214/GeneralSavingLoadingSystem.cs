@@ -89,7 +89,10 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         private void LoadDataLocally()
         {
             var loadedData = localDataManaging.LoadData();
-            ApplyLoadedData(loadedData);
+            if (loadedData != null)
+            {
+                ApplyLoadedData(loadedData);
+            }
         }
         // Region ends -------------------------------------------------------------------------------
         #endregion
@@ -104,10 +107,13 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
             playFabDataManaging.SaveData(saveData);
         }
 
-        private void LoadDataFromCloud()
+        private async void LoadDataFromCloud()
         {
-            var loadedData = playFabDataManaging.LoadData();
-            ApplyLoadedData(loadedData);
+            var loadedData = await playFabDataManaging.LoadDataAsync();
+            if (loadedData != null)
+            {
+                ApplyLoadedData(loadedData);
+            }
         }
         // Region ends -------------------------------------------------------------------------------
 

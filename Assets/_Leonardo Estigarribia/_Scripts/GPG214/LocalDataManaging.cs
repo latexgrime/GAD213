@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using UnityEngine;
 
@@ -41,6 +42,12 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
                 
                 return (PlayerSaveData)serializer.Deserialize(stream);
             }
+        }
+
+        public Task<PlayerSaveData> LoadDataAsync()
+        {
+            // This is because of the interface, a workaround due to the PlayFabDataManaging operations.
+            return Task.FromResult(LoadData());
         }
     }
 }

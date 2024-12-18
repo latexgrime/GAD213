@@ -2927,7 +2927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4f3426b0df31c040adf720947c8ff2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: 
+  playerName: CrazyFrogRules
   storedPlayerPosition: {x: 0, y: 0, z: 0}
   playerIcon: {fileID: 897730130785965377}
   playerEntityStats: {fileID: 0}
