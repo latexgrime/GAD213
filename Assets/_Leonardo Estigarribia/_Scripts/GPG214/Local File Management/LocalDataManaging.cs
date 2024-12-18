@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using UnityEngine;
 
-namespace _Leonardo_Estigarribia._Scripts.GPG214
+namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management
 {
     public class LocalDataManaging : ISavingLoadingData
     {
