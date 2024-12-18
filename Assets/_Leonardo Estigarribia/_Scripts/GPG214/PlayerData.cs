@@ -1,12 +1,13 @@
+using System;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214
 {
     public class PlayerData : MonoBehaviour
     {
         public GameObject player;
-    
+        
         public Image playerIcon;
         public Vector3 playerPosition;
         public string playerName;
