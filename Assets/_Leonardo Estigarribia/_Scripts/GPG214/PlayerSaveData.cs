@@ -16,6 +16,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         
         public PlayerSaveData(Vector3 position, string name, Texture2D icon, int currentHealth, int maxHealth)
         {
+            Position = position;
             PlayerName = name;
             IconData = icon.EncodeToPNG();
             CurrentHealth = currentHealth;

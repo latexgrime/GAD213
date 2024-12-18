@@ -37,6 +37,8 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
             }
             using (var stream = new FileStream(savePath, FileMode.Open))
             {
+                Debug.Log($"File found at: {savePath}");
+                
                 return (PlayerSaveData)serializer.Deserialize(stream);
             }
         }
