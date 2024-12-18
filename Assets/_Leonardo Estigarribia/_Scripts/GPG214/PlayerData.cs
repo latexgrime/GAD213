@@ -1,17 +1,20 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlayerData : MonoBehaviour
+namespace _Leonardo_Estigarribia._Scripts.GPG214
 {
-    public GameObject player;
-    
-    public Image playerIcon;
-    public Vector3 playerPosition;
-    public string playerName;
-    public string playerId;
-
-    public void SetPlayerPosition(float x, float y, float z)
+    public class PlayerData : MonoBehaviour
     {
-        player.transform.position = new Vector3(x, y, z);
+        public GameObject player;
+    
+        public Image playerIcon;
+        public Vector3 playerPosition;
+        public string playerName;
+        public string playerId;
+
+        public void SetPlayerPosition(float x, float y, float z)
+        {
+            player.transform.position = new Vector3(x, y, z);
+        }
     }
 }
