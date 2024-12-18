@@ -37,27 +37,36 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         
         public PlayerSaveData LoadData()
         {
+            PlayerSaveData loadedData = null;
             var request = new GetUserDataRequest();
-            PlayFabClientAPI.GetUserData(request, result =>
-            {
-                if (result.Data == null)
+            PlayFabClientAPI.GetUserData(request,
+                result =>
                 {
-                    Debug.LogError($"No data found in PlayFab.");
-                    return;
+                    if (result.Data == null)
+                    {
+                        Debug.LogError($"No data found in PlayFab.");
+                        return;
+                    }
+
+                    loadedData = new PlayerSaveData
+                    {
+                        PlayerName = result.Data.ContainsKey("PlayerName").ToString(),
+                        Position = new Vector3(
+                            float.Parse(result.Data.GetValueOrDefault("PlayerPosX").Value),
+                            float.Parse(result.Data.GetValueOrDefault("PlayerPosY").Value),
+                            float.Parse(result.Data.GetValueOrDefault("PlayerPosZ").Value)
+                        ),
+                        CurrentHealth = int.Parse(result.Data.GetValueOrDefault("CurrentHealth").Value),
+                        MaxHealth = int.Parse(result.Data.GetValueOrDefault("MaxHealth").Value)
+                    };
+                },
+                error =>
+                {
+                    Debug.LogError($"Data could not be loaded form PlayFab: {error.ErrorMessage}");
                 }
                 
-                var data = new PlayerSaveData
-                {
-                    PlayerName = result.Data.ContainsKey("PlayerName").ToString(),
-                    Position = new Vector3(
-                        float.Parse(result.Data["PlayerPosX"].Value),
-                        result.Data["PlayerPosY"].Value,
-                        result.Data["PlayerPosZ"].Value,
-                        ),
-                    CurrentHealth = int.
-                    
-                }
-            });
+            );
+            return loadedData;
         }
         
     }
