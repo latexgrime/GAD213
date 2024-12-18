@@ -11,27 +11,24 @@ namespace _Leonardo_Estigarribia._Scripts
     {
         private AudioSource audioSource;
 
-        [Header("- Health points")] [SerializeField]
-        private int maxHealth = 10;
-
+        [Header("- Health points")] 
+        [SerializeField] private int maxHealth = 10;
         [SerializeField] private int currentHealth;
 
-        [Header("- Particle VFX")] [SerializeField]
-        private ParticleSystem[] takingDamageVFX;
-
-        [SerializeField] private ParticleSystem[] healVFX;
+        [Header("- Particle VFX")] 
+        [SerializeField] private ParticleSystem[] takingDamageVFX;
         [SerializeField] private GameObject dieVFX;
 
-        [Header("- SFX")] [SerializeField] private AudioClip[] takingDamageSFX;
-        [SerializeField] private AudioClip[] healSFX;
+        [Header("- SFX")] 
+        [SerializeField] private AudioClip[] takingDamageSFX;
         [SerializeField] private AudioClip dieSFX;
 
-        [Header("- UI")] [SerializeField] private EntityUIManager entityUIManager;
-
-        private StateManager stateManager;
+        [Header("- UI")] 
+        [SerializeField] private EntityUIManager entityUIManager;
+        [SerializeField] private UnityEvent onPlayerDeadEvent;
         private bool isPlayer;
         private bool isDying;
-        [FormerlySerializedAs("onDeadEvent")] [SerializeField] private UnityEvent onPlayerDeadEvent;
+        private StateManager stateManager;
 
         private void Start()
         {
@@ -87,6 +84,16 @@ namespace _Leonardo_Estigarribia._Scripts
         public int GetCurrentHealth()
         {
             return currentHealth;
+        }
+        
+        public void SetMaxHealth(int maxHealthToSet)
+        {
+            maxHealth = maxHealthToSet;
+        }
+        
+        public void SetCurrentHealth(int currentHealthToSet)
+        {
+            currentHealth = currentHealthToSet;
         }
 
         private void Die()

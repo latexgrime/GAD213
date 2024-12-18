@@ -27,17 +27,16 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
             UpdateStoredPosition();
         }
 
-        /// <summary>
-        /// Updates the stored position of the player.
-        /// </summary>
-        public void UpdateStoredPosition()
-        {
-            storedPlayerPosition = playerGameObject.transform.position;
-        }
+        #region Managing Position Data
 
         public Vector3 GetStoredPlayerPosition()
         {
             return storedPlayerPosition;
+        }
+        
+        public void UpdateStoredPosition()
+        {
+            storedPlayerPosition = playerGameObject.transform.position;
         }
 
         /// <summary>
@@ -54,32 +53,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
                 SetPlayerPositionInWorld(positionToSet.x, positionToSet.y, positionToSet.z);
             }
         } 
-
-        public string GetPlayerName()
-        {
-            return playerName;
-        }
-
-        public void SetPlayerName(string nameToSet)
-        {
-            playerName = nameToSet;
-        }
-
-        public Image GetPlayerIcon()
-        {
-            return playerIcon;
-        }
-
-        public void SetPlayerIcon(Image iconToSet)
-        {
-            playerIcon = iconToSet;
-        }
-
-        public void SetPlayerIcon(Sprite iconToSet)
-        {
-            playerIcon.sprite = iconToSet;
-        }
-
+        
         private void SetPlayerPositionInWorld(float x, float y, float z)
         {
             if (playerGameObject != null)
@@ -96,5 +70,64 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
                 }
             }
         }
+
+        #endregion
+        
+        #region Managing Name Data
+
+        public string GetPlayerName()
+        {
+            return playerName;
+        }
+
+        public void SetPlayerName(string nameToSet)
+        {
+            playerName = nameToSet;
+        }
+
+        #endregion
+
+        #region Managing Icon Data
+        
+        public Image GetPlayerIcon()
+        {
+            return playerIcon;
+        }
+
+        public void SetPlayerIcon(Image iconToSet)
+        {
+            playerIcon = iconToSet;
+        }
+
+        public void SetPlayerIcon(Sprite iconToSet)
+        {
+            playerIcon.sprite = iconToSet;
+        }
+        #endregion
+
+        #region Managing Player Health Data
+
+        public int GetCurrentPlayerHealth()
+        {
+            return playerEntityStats.GetCurrentHealth();
+        }
+
+        public int GetCurrentPlayerMaxHealth()
+        {
+            return playerEntityStats.GetMaxHealth();
+        }
+
+        public void SetCurrentPlayerHealth(int value)
+        {
+            playerEntityStats.SetCurrentHealth(value);
+        }
+
+        public void SetCurrentPlayerMaxHealth(int value)
+        {
+            playerEntityStats.SetMaxHealth(value);
+        }
+
+        #endregion
+
     }
 }

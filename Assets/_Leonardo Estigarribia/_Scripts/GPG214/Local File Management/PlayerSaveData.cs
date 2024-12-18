@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management
 {
@@ -13,15 +14,24 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management
         public float positionY;
         public float positionZ;
         public string playerName;
+        public int playerCurrentHealth;
+        public int playerMaxHealth;
         public byte[] playerIconBytes;
 
-        public PlayerSaveData(Vector3 position, string name, Texture2D icon)
+        public PlayerSaveData(
+            Vector3 position,
+            string name,
+            Texture2D icon,
+            int playerCurrentHealth,
+            int playerMaxHealth)
         {
             positionX = position.x;
             positionY = position.y;
             positionZ = position.z;
             playerName = name;
             playerIconBytes = icon.EncodeToPNG();
+            this.playerCurrentHealth = playerCurrentHealth;
+            this.playerMaxHealth = playerMaxHealth;
         }
         
         public PlayerSaveData() { }
