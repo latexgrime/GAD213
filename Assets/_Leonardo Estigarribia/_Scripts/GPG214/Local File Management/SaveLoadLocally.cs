@@ -95,15 +95,16 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management
                 if (directory != null) Directory.CreateDirectory(directory);
             }
             
-            Texture2D playerIconTexture = null;
+            playerData.UpdateStoredPosition();
             
+            Texture2D playerIconTexture = null;
             // Check if the player has an Icon set.
             if (playerData.GetPlayerIcon() != null)
             {
                 playerIconTexture = playerData.GetPlayerIcon().sprite.texture;
             }
 
-            PlayerSaveData dataToSave = new PlayerSaveData(playerData.GetPlayerPosition(), playerData.GetPlayerName(), playerIconTexture);
+            PlayerSaveData dataToSave = new PlayerSaveData(playerData.GetStoredPlayerPosition(), playerData.GetPlayerName(), playerIconTexture);
             
             using (FileStream stream = new FileStream(savePath, FileMode.Create))
             {

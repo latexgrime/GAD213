@@ -14,7 +14,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         
         [Header("- General player information")]
         [SerializeField] private string playerName;
-        [SerializeField] private Vector3 playerPosition;
+        [SerializeField] private Vector3 storedPlayerPosition;
         [SerializeField] private Image playerIcon;
         
         [Header("- Player in game stats")]
@@ -24,13 +24,20 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         {
             playerGameObject = GameObject.FindGameObjectWithTag("Player");
             playerEntityStats = playerGameObject.GetComponent<EntityStats>();
-            playerPosition = playerGameObject.transform.position;
+            UpdateStoredPosition();
         }
 
-        public Vector3 GetPlayerPosition()
+        /// <summary>
+        /// Updates the stored position of the player.
+        /// </summary>
+        public void UpdateStoredPosition()
         {
-            playerPosition = playerGameObject.transform.position;
-            return playerPosition;
+            storedPlayerPosition = playerGameObject.transform.position;
+        }
+
+        public Vector3 GetStoredPlayerPosition()
+        {
+            return storedPlayerPosition;
         }
 
         /// <summary>
@@ -40,7 +47,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         /// <param name="setInWorld">When called this function, if this bool is true, the player will be teleported to the positionToSet vector, otherwise it won't.</param>
         public void SetPlayerPosition(Vector3 positionToSet, bool setInWorld)
         {
-            playerPosition = positionToSet;
+            storedPlayerPosition = positionToSet;
             
             if (setInWorld)
             {
@@ -75,7 +82,19 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
 
         private void SetPlayerPositionInWorld(float x, float y, float z)
         {
-            playerGameObject.transform.position = new Vector3(x, y, z);
+            if (playerGameObject != null)
+            {
+                Rigidbody rb = playerGameObject.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.position = new Vector3(x, y, z);
+                    playerGameObject.transform.position = new Vector3(x, y, z);
+                }
+                else
+                {
+                    playerGameObject.transform.position = new Vector3(x, y, z);
+                }
+            }
         }
     }
 }

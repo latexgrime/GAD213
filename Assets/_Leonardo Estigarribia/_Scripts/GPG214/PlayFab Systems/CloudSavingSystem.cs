@@ -29,9 +29,9 @@ namespace _Leonardo_Estigarribia._Scripts.PlayFab_Systems
 
         public void SavePlayerDataToCloud()
         {
-            var x = playerData.GetPlayerPosition().x.ToString();
-            var y = playerData.GetPlayerPosition().y.ToString();
-            var z = playerData.GetPlayerPosition().z.ToString();
+            var x = playerData.GetStoredPlayerPosition().x.ToString();
+            var y = playerData.GetStoredPlayerPosition().y.ToString();
+            var z = playerData.GetStoredPlayerPosition().z.ToString();
 
             var data = new Dictionary<string, string>
             {
