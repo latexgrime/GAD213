@@ -37,13 +37,53 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management
         {
             if (Input.GetKeyDown(localSaveKeyCode))
             {
-                // Save player data locally.
                 SaveLocalData();
             }
 
             if (Input.GetKeyDown(localLoadKeyCode))
             {
-                // Load player data locally.
+                LoadLocalData();
+            }
+        }
+
+        private void LoadLocalData()
+        {
+            if (!File.Exists(savePath))
+            {
+                Debug.LogError($"No save file found at {savePath}");
+                return;
+            }
+            else
+            {
+                PlayerSaveData loadedData;
+                using (FileStream stream = new FileStream(savePath, FileMode.Open))
+                {
+                    loadedData = (PlayerSaveData)serializer.Deserialize(stream);
+                }
+
+                Vector3 loadedPosition = new Vector3(loadedData.positionX, loadedData.positionY, loadedData.positionZ);
+
+                playerData.playerPosition = loadedPosition;
+                // This moves the player to the position.
+                playerData.SetPlayerPosition(loadedPosition.x, loadedPosition.y, loadedPosition.z);
+
+                playerData.playerName = loadedData.playerName;
+
+                if (loadedData.playerIconBytes != null)
+                {
+                    Texture2D loadedTexture = new Texture2D(2, 2);
+                    if (loadedTexture.LoadImage(loadedData.playerIconBytes))
+                    {
+                        Sprite newSprite = Sprite.Create(
+                            loadedTexture,
+                            new Rect(0,0,loadedTexture.width, loadedTexture.height),
+                            // Setting the pivot in the center for now.
+                            new Vector2(0.5f,0.5f)
+                            );
+                        playerData.playerIcon.sprite = newSprite;
+                    }
+                }
+                Debug.Log($"Success in loading player data from: {savePath}.");
             }
         }
 
