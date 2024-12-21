@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214.TextureLoading
 {
@@ -33,7 +32,6 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.TextureLoading
         {
             if (spawnMap != null)
             {
-                Debug.Log("Starting Coins Loader from textures.");
                 GenerateSpawnPoints();
                 SpawnCoins();
             }
@@ -45,15 +43,13 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.TextureLoading
 
         private void GenerateSpawnPoints()
         {
-            Debug.Log("Generating spawn points.");
-
             spawnPoints.Clear();
 
-            // Calculate world space bounds based on texture size
+            // Calculate world space bounds based on texture size.
             var worldWidth = spawnMap.width * gridSize;
             var worldLength = spawnMap.height * gridSize;
 
-            // Center offset so spawns are centered on the object
+            // Center offset so spawns are centered on the object.
             var centerOffset = new Vector3(-worldWidth / 2f, 0, -worldLength / 2f);
 
             for (var x = 0; x < spawnMap.width; x++)
@@ -75,15 +71,12 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.TextureLoading
                     }
                 }
             }
-
-            Debug.Log($"Generated {spawnPoints.Count} spawn points from texture");
         }
 
         private void SpawnCoins()
         {
             foreach (var point in spawnPoints)
             {
-                Debug.Log($"Instantiating coin in: {point}");
                 Instantiate(coinPrefab, point, Quaternion.identity);
             }
         }
