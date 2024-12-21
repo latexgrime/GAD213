@@ -1,6 +1,7 @@
 using System.Collections;
 using _Leonardo_Estigarribia._Scripts;
 using _Leonardo_Estigarribia._Scripts.GPG214.Coins;
+using _Leonardo_Estigarribia._Scripts.GPG214.CombatAnalytics;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Quaternion = UnityEngine.Quaternion;
@@ -366,7 +367,6 @@ public class PlayerLocomotion : MonoBehaviour
         var sphereCastOffset = transform.position + Vector3.up * attackVerticalOffset;
         var hits =
             Physics.SphereCastAll(sphereCastOffset, attackRadius, transform.forward, attackDistance);
-        Debug.DrawLine(sphereCastOffset, sphereCastOffset + transform.forward * attackDistance, Color.cyan, 0.5f);
         foreach (var hit in hits)
             // If the hit is the player itself, then ignore it.
             if (hit.transform.gameObject != gameObject)
@@ -376,6 +376,11 @@ public class PlayerLocomotion : MonoBehaviour
                     var hitStats = hit.transform.gameObject.GetComponent<EntityStats>();
                     hitStats.TakeDamage(attackDamage);
                     Debug.Log($"Damaged {hit.transform.name} for {attackDamage} damage.");
+
+                    if (hitStats.GetCurrentHealth() <= 0)
+                    {
+                        CombatAnalytics.Instance.LogKill(hit.transform.position);
+                    }
                 }
     }
 

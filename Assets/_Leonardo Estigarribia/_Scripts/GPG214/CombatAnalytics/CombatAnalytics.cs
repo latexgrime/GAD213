@@ -72,7 +72,18 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.CombatAnalytics
             killLog.Add(killData);
             lastKillTime = currentTime;
             
-            Debug.Log($"Kill logged at position: {positionOfKill}. Player health: {killData.playerHealthWhenKill}. Time elapsed since last kill: {killData.timeOfKill}");
+            Debug.Log($"Kill logged at position: {positionOfKill}. Player health: {killData.playerHealthWhenKill}. Time: {killData.timeOfKill}");
+        }
+
+        public float GetTimeSinceLastKill()
+        {
+            if (killLog.Count == 0) return 0f;
+            return Time.time - sessionStartTime - lastKillTime;
+        }
+
+        public List<KillData> GetKillLog()
+        {
+            return new List<KillData>(killLog);
         }
     }
     
