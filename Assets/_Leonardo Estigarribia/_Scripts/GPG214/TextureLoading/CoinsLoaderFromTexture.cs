@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214.TextureLoading
 {
@@ -37,12 +38,13 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.TextureLoading
             }
             else
             {
-                Debug.LogWarning("CoinsLoaderFromTexture.cs: Spawn map texture not set.");
+                Debug.LogWarning("GPG214: CoinsLoaderFromTexture.cs: Spawn map texture not set.");
             }
         }
 
         private void GenerateSpawnPoints()
         {
+            Profiler.BeginSample("GPG214: Coin spawn point generation from image.");
             spawnPoints.Clear();
 
             // Calculate world space bounds based on texture size.
@@ -71,14 +73,17 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.TextureLoading
                     }
                 }
             }
+            Profiler.EndSample();
         }
 
         private void SpawnCoins()
         {
+            Profiler.BeginSample("GPG214: Coins instantiating.");
             foreach (var point in spawnPoints)
             {
                 Instantiate(coinPrefab, point, Quaternion.identity);
             }
+            Profiler.EndSample();
         }
 
         private void OnDrawGizmos()

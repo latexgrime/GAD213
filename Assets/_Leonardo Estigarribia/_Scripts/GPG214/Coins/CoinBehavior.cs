@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214.Coins
 {
@@ -25,18 +26,24 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Coins
             if (other.CompareTag("Player"))
             {
                 CoinsManager.CoinsManagerInstance.AddCoin();
+                Profiler.BeginSample("GPG214: Coin collection logic.");
                 StartCoroutine(GrabCoinVisuals());
+                Profiler.EndSample();
             }
         }
 
         private IEnumerator GrabCoinVisuals()
         {
+            Profiler.BeginSample("GPG214: Grabbing coin visual effects");
             coinGrabEffect.Play();
             audioSource.PlayOneShot(coinGrabSfx);
             meshRenderer.enabled = false;
             meshCollider.enabled = false;
+            Profiler.EndSample();
             yield return new WaitForSeconds(durationBeforeObjectDestroys);
+            Profiler.BeginSample("GPG214: Coin clean up.");
             Destroy(gameObject);
+            Profiler.EndSample();
         }
     }
 }
