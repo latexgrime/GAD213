@@ -239,12 +239,16 @@ public class PlayerLocomotion : MonoBehaviour
     
     // New variables to handle double jumping for GPG214.
     private bool canDoubleJump = false;
-    private bool hasDoubleJumped = false;
+    private bool hasDoubleJumped;
     
     private void HandleJumping()
     {
         if (isGrounded && !isJumping)
         {
+            isJumping = true;
+            hasDoubleJumped = false;
+            startJump = false;
+            
             // Jump animation.
             animatorManager.animator.SetBool("isJumping", true);
             animatorManager.PlayTargetAnimation("Jump", false, false);
@@ -252,14 +256,14 @@ public class PlayerLocomotion : MonoBehaviour
             // Random Jump SFX.
             audioSource.PlayOneShot(jumpSFX[Random.Range(0, jumpSFX.Length)]);
             
-            isJumping = true;
-            hasDoubleJumped = false;
-            startJump = false;
             // Apply normal jump forces.
             StartCoroutine(ApplyJumpForce(1f));
         }
         else if (!isGrounded && !hasDoubleJumped && CoinsManager.Instance.IsDoubleJumpUnlocked())
         {
+            hasDoubleJumped = true;
+            startJump = false;
+
             // Jump animation.
             animatorManager.animator.SetBool("isJumping", true);
             animatorManager.PlayTargetAnimation("Jump", false, false);
@@ -267,8 +271,6 @@ public class PlayerLocomotion : MonoBehaviour
             // Random Jump SFX.
             audioSource.PlayOneShot(jumpSFX[Random.Range(0, jumpSFX.Length)]);
 
-            hasDoubleJumped = true;
-            // Apply 10 times the force due to the falling logic.
             StartCoroutine(ApplyJumpForce(5f));
         }
     }
