@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityGoogleDrive;
 
-namespace _Leonardo_Estigarribia._Scripts.GPG214
+namespace _Leonardo_Estigarribia._Scripts.GPG214.AssetBundles
 {
     public class GoogleDriveAssetBundleManager : MonoBehaviour
     {

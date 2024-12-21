@@ -1,13 +1,9 @@
-using System;
 using System.Threading.Tasks;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Rendering;
 
-namespace _Leonardo_Estigarribia._Scripts.GPG214
+namespace _Leonardo_Estigarribia._Scripts.GPG214.AssetBundles
 {
     public class CoinVariantSpawnerUI : MonoBehaviour
     {

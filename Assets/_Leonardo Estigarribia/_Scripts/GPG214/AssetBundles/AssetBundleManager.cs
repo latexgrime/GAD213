@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace _Leonardo_Estigarribia._Scripts.GPG214
+namespace _Leonardo_Estigarribia._Scripts.GPG214.AssetBundles
 {
     public class AssetBundleManager : MonoBehaviour
     {
