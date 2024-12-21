@@ -1,3 +1,6 @@
+using System.Runtime.InteropServices.WindowsRuntime;
+using _Leonardo_Estigarribia._Scripts.GPG214.Coins;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +12,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
     /// </summary>
     public class PlayerData : MonoBehaviour
     {
+        private CoinsManager coinsManager;
         private GameObject playerGameObject;
 
         [Header("- General player information")] [SerializeField]
@@ -23,8 +27,31 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         {
             playerGameObject = GameObject.FindGameObjectWithTag("Player");
             playerEntityStats = playerGameObject.GetComponent<EntityStats>();
+            coinsManager = CoinsManager.Instance;
             UpdateStoredPosition();
         }
+
+        #region Managing Coins and Unlockables Data
+
+        public int GetCollectedCoins()
+        {
+            return coinsManager.GetCurrentCoins();
+        }
+
+        public bool GetIsDoubleJumpUnlocked()
+        {
+            return coinsManager.IsDoubleJumpUnlocked();
+        }
+
+        public void SetCollectedCoins(int amount)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                coinsManager.AddCoin();
+            }
+        }
+        
+        #endregion
 
         #region Managing Position Data
 

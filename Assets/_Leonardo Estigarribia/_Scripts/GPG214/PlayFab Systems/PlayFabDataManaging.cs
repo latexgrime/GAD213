@@ -18,7 +18,9 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.PlayFab_Systems
                 { " PlayerPosY", data.Position.y.ToString() },
                 { " PlayerPosZ", data.Position.z.ToString() },
                 { "CurrentHealth", data.CurrentHealth.ToString() },
-                { "MaxHealth", data.MaxHealth.ToString()}
+                { "MaxHealth", data.MaxHealth.ToString()},
+                { "CollectedCoins", data.CollectedCoins.ToString()},
+                { "IsDoubleJumpUnlocked",data.IsDoubleJumpUnlocked.ToString()}
             };
 
             var request = new UpdateUserDataRequest { Data = cloudDataToSave };
@@ -55,6 +57,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.PlayFab_Systems
                         return;
                     }
 
+                    // Getting the data here.
                     var loadedData = new PlayerSaveData
                     {
                         PlayerName = result.Data["PlayerName"].Value.ToString(),
@@ -64,7 +67,10 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.PlayFab_Systems
                             float.Parse(result.Data.GetValueOrDefault("PlayerPosZ").Value)
                         ),
                         CurrentHealth = int.Parse(result.Data.GetValueOrDefault("CurrentHealth").Value),
-                        MaxHealth = int.Parse(result.Data.GetValueOrDefault("MaxHealth").Value)
+                        MaxHealth = int.Parse(result.Data.GetValueOrDefault("MaxHealth").Value),
+                        CollectedCoins = int.Parse(result.Data.GetValueOrDefault("CollectedCoins").Value),
+                        IsDoubleJumpUnlocked = bool.Parse(result.Data["IsDoubleJumpUnlocked"].Value)
+                        
                     };
                     
                     taskCompletitionSource.SetResult(loadedData);

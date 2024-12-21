@@ -65,7 +65,9 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
                 playerData.GetPlayerName(),
                 iconTexture,
                 playerData.GetCurrentPlayerHealth(),
-                playerData.GetCurrentPlayerMaxHealth()
+                playerData.GetCurrentPlayerMaxHealth(),
+                playerData.GetCollectedCoins(),
+                playerData.GetIsDoubleJumpUnlocked()
             );
         }
 
@@ -75,6 +77,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
             playerData.SetPlayerName(loadedData.PlayerName);
             playerData.SetCurrentPlayerHealth(loadedData.CurrentHealth);
             playerData.SetCurrentPlayerMaxHealth(loadedData.MaxHealth);
+            playerData.SetCollectedCoins(loadedData.CollectedCoins);
 
             var texture = new Texture2D(2, 2);
             if (texture.LoadImage(loadedData.IconData))
