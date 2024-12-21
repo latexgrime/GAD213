@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Leonardo_Estigarribia._Scripts.GPG214.Coins.Pooling;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -81,7 +82,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.TextureLoading
             Profiler.BeginSample("GPG214: Coins instantiating.");
             foreach (var point in spawnPoints)
             {
-                Instantiate(coinPrefab, point, Quaternion.identity);
+                CoinPoolManager.Instance.GetCoin(point);
             }
             Profiler.EndSample();
         }

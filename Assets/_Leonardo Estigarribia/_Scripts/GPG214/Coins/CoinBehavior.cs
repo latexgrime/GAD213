@@ -1,4 +1,5 @@
 using System.Collections;
+using _Leonardo_Estigarribia._Scripts.GPG214.Coins.Pooling;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -42,7 +43,8 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Coins
             Profiler.EndSample();
             yield return new WaitForSeconds(durationBeforeObjectDestroys);
             Profiler.BeginSample("GPG214: Coin clean up.");
-            Destroy(gameObject);
+            meshRenderer.enabled = true;
+            CoinPoolManager.Instance.ReturnCoin(gameObject);
             Profiler.EndSample();
         }
     }
