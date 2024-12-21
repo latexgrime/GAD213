@@ -6,23 +6,23 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Coins
 {
     public class CoinsManager : MonoBehaviour
     {
-        private static CoinsManager instance;
+        private static CoinsManager _instance;
 
-        public static CoinsManager Instance
+        public static CoinsManager CoinsManagerInstance
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = FindObjectOfType<CoinsManager>();
-                    if (instance == null)
+                    _instance = FindObjectOfType<CoinsManager>();
+                    if (_instance == null)
                     {
                         var gameObject = new GameObject("CoinManager");
-                        instance = gameObject.AddComponent<CoinsManager>();
+                        _instance = gameObject.AddComponent<CoinsManager>();
                     }
                 }
 
-                return instance;
+                return _instance;
             }
         }
 
@@ -35,9 +35,9 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Coins
 
         private void Awake()
         {
-            if (instance == null)
-                instance = this;
-            else if (instance != this) Destroy(gameObject);
+            if (_instance == null)
+                _instance = this;
+            else if (_instance != this) Destroy(gameObject);
         }
 
         public void AddCoin()

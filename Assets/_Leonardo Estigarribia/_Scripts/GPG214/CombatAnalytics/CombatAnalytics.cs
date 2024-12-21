@@ -1,57 +1,50 @@
-using System;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214.CombatAnalytics
 {
-    /// <summary>
-    /// This class can be seen as a "report" of a single kill. 
-    /// </summary>
-    public class KillData
-    {
-        public Vector3 killPosition;
-        public int playerHealthWhenKill;
-        public float timeOfKill;
-    }
-    
     public class CombatAnalytics : MonoBehaviour
     {
-        private static CombatAnalytics instance;
-        public static CombatAnalytics Instance
+
+        private static CombatAnalytics _instance;
+        public static CombatAnalytics CombatAnalyticsInstance
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = FindObjectOfType<CombatAnalytics>();
-                    if (instance == null)
+                    _instance = FindObjectOfType<CombatAnalytics>();
+                    if (_instance == null)
                     {
-                        GameObject combatAnalyticsGameObject = new GameObject("CombatAnalytics");
-                        instance = combatAnalyticsGameObject.AddComponent<CombatAnalytics>();
+                        var combatAnalyticsGameObject = new GameObject("CombatAnalytics");
+                        _instance = combatAnalyticsGameObject.AddComponent<CombatAnalytics>();
                     }
                 }
 
-                return instance;
+                return _instance;
             }
         }
-        
-        
-        private List<KillData> killLog = new List<KillData>();
-        private float lastKillTime = 0f;
+
+
+        private readonly List<KillData> killLog = new();
+        private float lastKillTime;
         private float sessionStartTime;
         private PlayerData playerData;
 
         private void Awake()
         {
-            if (instance == null)
+            if (_instance == null)
             {
-                instance = this;
+                _instance = this;
                 sessionStartTime = Time.time;
             }
-            else if (instance != this)
+            else if (_instance != this)
             {
                 Destroy(gameObject);
-            } ;
+            }
+
+            ;
         }
 
         private void Start()
@@ -61,18 +54,19 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.CombatAnalytics
 
         public void LogKill(Vector3 positionOfKill)
         {
-            float currentTime = Time.time - sessionStartTime;
-            KillData killData = new KillData()
+            var currentTime = Time.time - sessionStartTime;
+            var killData = new KillData
             {
                 killPosition = positionOfKill,
                 playerHealthWhenKill = playerData.GetCurrentPlayerHealth(),
                 timeOfKill = currentTime
             };
-            
+
             killLog.Add(killData);
             lastKillTime = currentTime;
-            
-            Debug.Log($"Kill logged at position: {positionOfKill}. Player health: {killData.playerHealthWhenKill}. Time: {killData.timeOfKill}");
+
+            Debug.Log(
+                $"Kill logged at position: {positionOfKill}. Player health: {killData.playerHealthWhenKill}. Time: {killData.timeOfKill}");
         }
 
         public float GetTimeSinceLastKill()
@@ -87,4 +81,14 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.CombatAnalytics
         }
     }
     
+    /// <summary>
+    ///     This class can be seen as a "report" of a single kill.
+    /// </summary>
+    public class KillData
+    {
+        public Vector3 killPosition;
+        public int playerHealthWhenKill;
+        public float timeOfKill;
+    }
+
 }

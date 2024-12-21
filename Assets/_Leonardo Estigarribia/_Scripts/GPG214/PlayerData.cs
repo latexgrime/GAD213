@@ -27,7 +27,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         {
             playerGameObject = GameObject.FindGameObjectWithTag("Player");
             playerEntityStats = playerGameObject.GetComponent<EntityStats>();
-            coinsManager = CoinsManager.Instance;
+            coinsManager = CoinsManager.CoinsManagerInstance;
             UpdateStoredPosition();
         }
 

@@ -260,7 +260,7 @@ public class PlayerLocomotion : MonoBehaviour
             // Apply normal jump forces.
             StartCoroutine(ApplyJumpForce(1f));
         }
-        else if (!isGrounded && !hasDoubleJumped && CoinsManager.Instance.IsDoubleJumpUnlocked())
+        else if (!isGrounded && !hasDoubleJumped && CoinsManager.CoinsManagerInstance.IsDoubleJumpUnlocked())
         {
             hasDoubleJumped = true;
             startJump = false;
@@ -379,7 +379,7 @@ public class PlayerLocomotion : MonoBehaviour
 
                     if (hitStats.GetCurrentHealth() <= 0)
                     {
-                        CombatAnalytics.Instance.LogKill(hit.transform.position);
+                        CombatAnalytics.CombatAnalyticsInstance.LogKill(hit.transform.position);
                     }
                 }
     }

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 783154668840078486}
   - component: {fileID: 1104943709742482702}
   m_Layer: 0
-  m_Name: Coin
+  m_Name: CoinBronze
   m_TagString: Coin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 2715879242674906273}
   serializedVersion: 2
   m_LocalRotation: {x: 0.00058486254, y: 0.00016023939, z: -0.000000010160735, w: 0.9999998}
-  m_LocalPosition: {x: -31.5, y: 1, z: -30.75}
+  m_LocalPosition: {x: -30, y: 1, z: -26}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -4342424911767312120, guid: c4101eeb70996ae489dd22e75e0efa30, type: 3}
+  - {fileID: 2100000, guid: c68b844747e0efe47b0805377788bcc8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

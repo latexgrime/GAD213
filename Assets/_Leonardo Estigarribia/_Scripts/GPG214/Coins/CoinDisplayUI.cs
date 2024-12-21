@@ -10,7 +10,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Coins
 
         private void Start()
         {
-            coinsManager = CoinsManager.Instance;
+            coinsManager = CoinsManager.CoinsManagerInstance;
             coinsManager.OnCoinsChanged += UpdateCoinsDisplay;
             UpdateCoinsDisplay(coinsManager.GetCurrentCoins());
         }
