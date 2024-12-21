@@ -239,7 +239,6 @@ public class PlayerLocomotion : MonoBehaviour
     
     
     // New variables to handle double jumping for GPG214.
-    private bool canDoubleJump = false;
     private bool hasDoubleJumped;
     
     private void HandleJumping()
