@@ -22,7 +22,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Coins
         {
             if (other.CompareTag("Player"))
             {
-                // Do coin logic here:
+                CoinsManager.Instance.AddCoin();
                 StartCoroutine(GrabCoinVisuals());
             }
         }
