@@ -1,10 +1,6 @@
-using System.Collections.Generic;
 using _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive;
 using _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management;
-using Unity.Properties;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
-using UnityGoogleDrive;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214
 {
@@ -12,8 +8,10 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
     {
         [SerializeField] private KeyCode localSaveKeyCode = KeyCode.F1;
         [SerializeField] private KeyCode localLoadingKeyCode = KeyCode.F3;
+
         [SerializeField] private KeyCode cloudSaveKeyCode = KeyCode.F5;
         [SerializeField] private KeyCode cloudLoadKeyCode = KeyCode.F7;
+
         [SerializeField] private KeyCode googleDriveSaveKeyCode = KeyCode.Keypad1;
         [SerializeField] private KeyCode googleDriveLoadKeyCode = KeyCode.Keypad3;
 
@@ -24,8 +22,8 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         private ISavingLoadingData playFabDataManaging;
         private ISavingLoadingData googleDriveDataManaging;
 
-        
         #region General Script Logic
+
         // Region start -------------------------------------------------------------------------------
         private void Start()
         {
@@ -51,10 +49,8 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
             if (Input.GetKeyDown(cloudLoadKeyCode)) LoadDataFromCloud();
 
             if (Input.GetKeyDown(googleDriveSaveKeyCode)) SavePlayerIconToGoogleDrive();
-            
-            if (Input.GetKeyDown(googleDriveLoadKeyCode)) LoadPlayerIconFromGoogleDrive();
-            
 
+            if (Input.GetKeyDown(googleDriveLoadKeyCode)) LoadPlayerIconFromGoogleDrive();
         }
 
         private PlayerSaveData CreateSaveData()
@@ -70,7 +66,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
                 playerData.GetCurrentPlayerMaxHealth()
             );
         }
-        
+
         private void ApplyLoadedData(PlayerSaveData loadedData)
         {
             playerData.SetPlayerPosition(loadedData.Position, true);
@@ -89,11 +85,13 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
                 playerData.SetPlayerIcon(sprite);
             }
         }
-        
+
         // Region ends -------------------------------------------------------------------------------
+
         #endregion
 
         #region Local Data Managing Methods
+
         // Region start -------------------------------------------------------------------------------
         private void SaveDataLocally()
         {
@@ -105,15 +103,15 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         private void LoadDataLocally()
         {
             var loadedData = localDataManaging.LoadData();
-            if (loadedData != null)
-            {
-                ApplyLoadedData(loadedData);
-            }
+            if (loadedData != null) ApplyLoadedData(loadedData);
         }
+
         // Region ends -------------------------------------------------------------------------------
+
         #endregion
 
         #region PlayFab Managing Methods
+
         // Region start -------------------------------------------------------------------------------
 
         private void SaveDataToCloud()
@@ -126,10 +124,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         private async void LoadDataFromCloud()
         {
             var loadedData = await playFabDataManaging.LoadDataAsync();
-            if (loadedData != null)
-            {
-                ApplyLoadedData(loadedData);
-            }
+            if (loadedData != null) ApplyLoadedData(loadedData);
         }
         // Region ends -------------------------------------------------------------------------------
 
@@ -156,7 +151,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
             {
                 loadedData = await googleDriveDataManaging.LoadDataAsync();
             }
-            
+
             if (loadedData != null && loadedData.IconData != null)
             {
                 var texture = new Texture2D(2, 2);
@@ -165,17 +160,17 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
                     texture,
                     new Rect(0, 0, texture.width, texture.height),
                     new Vector2(0.5f, 0.5f));
-                
+
                 playerData.SetPlayerIcon(sprite);
                 Debug.Log("Player Icon downloaded from google drive set into scene.");
             }
         }
 
-        public List<PlayerIconInfo> GetSavedIcons()
+        /*public List<PlayerIconInfo> GetSavedIcons()
         {
             var googleDriveManager = (GoogleDriveDataManaging)googleDriveDataManaging;
             return googleDriveManager.GetSavedIcons();
-        }
+        }*/
 
         public void ApplyIconData(byte[] iconData)
         {
@@ -183,26 +178,25 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
             {
                 var texture = new Texture2D(2, 2);
                 texture.LoadImage(iconData);
-                
+
                 var sprite = Sprite.Create(
                     texture,
                     new Rect(0, 0, texture.width, texture.height),
                     new Vector2(0.5f, 0.5f));
-                
+
                 playerData.SetPlayerIcon(sprite);
                 Debug.Log("Applied new icon correctly.");
             }
         }
-        
-        public void LoadSavedIcon(PlayerIconInfo iconInfo)
+
+        /*public void LoadSavedIcon(PlayerIconInfo iconInfo)
         {
             if (iconInfo != null)
             {
                 LoadPlayerIconFromGoogleDrive(iconInfo.IconId);
             }
-        }
+        }*/
 
         #endregion
-        
     }
 }

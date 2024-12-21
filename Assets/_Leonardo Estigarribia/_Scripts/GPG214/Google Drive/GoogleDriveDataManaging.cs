@@ -66,11 +66,11 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
             savingSystem.ApplyIconData(saveData.IconData);
         }
         
-        public async Task<PlayerSaveData> LoadSpecificIcon(string iconIdToLoad)
+        public async Task<PlayerSaveData> LoadSpecificIcon(string iconId)
         {
             var taskCompletionSource = new TaskCompletionSource<PlayerSaveData>();
 
-            StartCoroutine(DownloadPlayerIcon(iconIdToLoad, downloadedIconData =>
+            StartCoroutine(DownloadPlayerIcon(iconId, downloadedIconData =>
             {
                 var saveData = new PlayerSaveData
                 {
@@ -189,7 +189,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Google_Drive
 
         private void LoadIconList()
         {
-            // This is to refresh the list.
+            // Refresh the list.
             savedIcons.Clear();
             var count = PlayerPrefs.GetInt($"{IconDataNamePrefix}Count", 0);
 

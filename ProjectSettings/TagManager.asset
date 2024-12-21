@@ -8,6 +8,7 @@ TagManager:
   - HealthBarForeground
   - PlayerUI
   - Enemy
+  - Coin
   layers:
   - Default
   - TransparentFX
