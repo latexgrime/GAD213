@@ -19,7 +19,15 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management
         public void SaveData(PlayerSaveData data)
         {
             var directory = Path.GetDirectoryName(savePath);
-            if (directory != null && !Directory.Exists(directory)) Directory.CreateDirectory(directory);
+            if (directory != null && !Directory.Exists(directory))
+            {
+                Debug.Log("Player save file not found, creating new one...");
+                Directory.CreateDirectory(directory);
+            }
+            else
+            {
+                Debug.Log("Player save file found! Overriding data from previous file.");
+            }
 
             using (var stream = new FileStream(savePath, FileMode.Create))
             {
