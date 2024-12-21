@@ -45,10 +45,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
 
         public void SetCollectedCoins(int amount)
         {
-            for (int i = 0; i < amount; i++)
-            {
-                coinsManager.AddCoin();
-            }
+            coinsManager.SetCoins(amount);
         }
         
         #endregion

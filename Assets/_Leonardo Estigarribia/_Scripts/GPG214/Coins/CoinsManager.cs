@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214.Coins
@@ -59,6 +60,18 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Coins
         public int GetCurrentCoins()
         {
             return currentCoins;
+        }
+
+        public void SetCoins(int amount)
+        {
+            currentCoins = amount;
+            OnCoinsChanged?.Invoke(currentCoins);
+
+            if (currentCoins >= coinsForDoubleJump && !isDoubleJumpUnlocked)
+            {
+                isDoubleJumpUnlocked = true;
+                OnDoubleJumpUnlocked?.Invoke();
+            }
         }
     }
 }
