@@ -1,5 +1,6 @@
 using System.Collections;
 using _Leonardo_Estigarribia._Scripts;
+using _Leonardo_Estigarribia._Scripts.GPG214.Coins;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Quaternion = UnityEngine.Quaternion;
@@ -195,7 +196,7 @@ public class PlayerLocomotion : MonoBehaviour
 
         transform.rotation = playerRotation;
     }
-
+    
     private void HandleFallingAndLanding()
     {
         RaycastHit hit;
@@ -234,7 +235,12 @@ public class PlayerLocomotion : MonoBehaviour
             isGrounded = false;
         }
     }
-
+    
+    
+    // New variables to handle double jumping for GPG214.
+    private bool canDoubleJump = false;
+    private bool hasDoubleJumped = false;
+    
     private void HandleJumping()
     {
         if (isGrounded && !isJumping)
@@ -245,14 +251,29 @@ public class PlayerLocomotion : MonoBehaviour
 
             // Random Jump SFX.
             audioSource.PlayOneShot(jumpSFX[Random.Range(0, jumpSFX.Length)]);
-
+            
             isJumping = true;
+            hasDoubleJumped = false;
             startJump = false;
-            StartCoroutine(ApplyJumpForce());
+            // Apply normal jump forces.
+            StartCoroutine(ApplyJumpForce(1f));
+        }
+        else if (!isGrounded && !hasDoubleJumped && CoinsManager.Instance.IsDoubleJumpUnlocked())
+        {
+            // Jump animation.
+            animatorManager.animator.SetBool("isJumping", true);
+            animatorManager.PlayTargetAnimation("Jump", false, false);
+
+            // Random Jump SFX.
+            audioSource.PlayOneShot(jumpSFX[Random.Range(0, jumpSFX.Length)]);
+
+            hasDoubleJumped = true;
+            // Apply 10 times the force due to the falling logic.
+            StartCoroutine(ApplyJumpForce(5f));
         }
     }
 
-    private IEnumerator ApplyJumpForce()
+    private IEnumerator ApplyJumpForce(float forceMultiplier)
     {
         var timeElapsed = 0f;
 
@@ -262,7 +283,7 @@ public class PlayerLocomotion : MonoBehaviour
             var easeFactor = Mathf.SmoothStep(0f, 2f, timeElapsed / jumpDuration);
 
             // Apply the force using the easing factor.
-            playerRigidbody.AddForce(transform.up * jumpPower * (1 - easeFactor) * Time.deltaTime,
+            playerRigidbody.AddForce(transform.up * (jumpPower * forceMultiplier * (1 - easeFactor) * Time.deltaTime),
                 ForceMode.Acceleration);
 
             timeElapsed += Time.deltaTime;
