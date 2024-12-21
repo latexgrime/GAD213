@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace _Leonardo_Estigarribia._Scripts.GPG214
+namespace _Leonardo_Estigarribia._Scripts.GPG214.Interfaces
 {
     public interface ISavingLoadingData
     {

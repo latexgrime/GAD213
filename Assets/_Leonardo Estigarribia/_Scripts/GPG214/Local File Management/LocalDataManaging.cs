@@ -1,6 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using _Leonardo_Estigarribia._Scripts.GPG214.Interfaces;
 using UnityEngine;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214.Local_File_Management

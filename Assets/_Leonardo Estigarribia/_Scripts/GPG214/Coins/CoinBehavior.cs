@@ -1,8 +1,7 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
-namespace _Leonardo_Estigarribia._Scripts.GPG214
+namespace _Leonardo_Estigarribia._Scripts.GPG214.Coins
 {
     public class CoinBehavior : MonoBehaviour
     {
