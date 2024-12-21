@@ -43,8 +43,26 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
             {
                 if (!loadedBundles.ContainsKey(bundleName))
                 {
-                    byte[] bundleData = await 
+                    byte[] bundleData = await GoogleDriveAssetBundleManager.Instance.DownloadAssetBundle(bundleName);
+                    if (bundleData == null)
+                    {
+                        Debug.LogError($"Failed to download bundle data.");
+                        return null;
+                    }
+                    
+                    AssetBundle bundle = AssetBundle.LoadFromMemory(bundleData);
+                    if (bundle = null)
+                    {
+                        Debug.LogError("Failed to load asset bundle from memory.");
+                        return null;
+                    }
+
+                    loadedBundles[bundleName] = bundle;
                 }
+            }
+            catch
+            {
+                
             }
         }
     }

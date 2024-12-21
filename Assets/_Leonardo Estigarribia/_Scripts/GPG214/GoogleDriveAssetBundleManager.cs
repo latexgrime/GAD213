@@ -120,15 +120,49 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
 
             var bundleId = request.ResponseData.Id;
             
+            AddNewBundle(bundleId, bundleName);
+            
             Debug.Log($"Successfully uploaded asset bundle. {bundleId}");
             onComplete?.Invoke(true);
         }
 
+        private void AddNewBundle(string bundleId, string bundleName)
+        {
+            savedBundles.Add( new AssetBundleInfo(bundleId, bundleName));
+            SaveBundleList();
+        }
+
+        private void SaveBundleList()
+        {
+            PlayerPrefs.SetInt($"{BundleDataNamePrefix}Count", savedBundles.Count);
+
+            for (int i = 0; i < savedBundles.Count; i++)
+            {
+                var baseName = $"{BundleDataNamePrefix}{i}_";
+                PlayerPrefs.SetString($"{baseName}ID", savedBundles[i].BundleId);
+                PlayerPrefs.SetString($"{baseName}Name", savedBundles[i].BundleName);
+                PlayerPrefs.Save();
+            }
+        }
+
         private void LoadBundleList()
         {
-            // Handle the loading of asset bundles kinda the same way I did it with player prefs and player icons.
             savedBundles.Clear();
+            var count = PlayerPrefs.GetInt($"{BundleDataNamePrefix}Count", 0);
+
+            for (int i = 0; i < count; i++)
+            {
+                var baseName = $"{BundleDataNamePrefix}{i}_";
+                var bundleId = PlayerPrefs.GetString($"{baseName}ID");
+                var bundleName = PlayerPrefs.GetString($"{baseName}Name");
+
+                if (!string.IsNullOrEmpty(bundleId) && !string.IsNullOrEmpty(bundleName))
+                {
+                    savedBundles.Add(new AssetBundleInfo(bundleId, bundleName));
+                }
+            }
             
+            Debug.Log($"Loaded {savedBundles.Count} asset bundles.");
         }
     }
     

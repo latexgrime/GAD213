@@ -1,10 +1,9 @@
 using System;
-using UnityEngine;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214
 {
     [Serializable]
-    public class AssetBundleInfo : MonoBehaviour
+    public class AssetBundleInfo
     {
         public string BundleId { get; set; }
         public string BundleName { get; set; }
