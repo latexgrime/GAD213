@@ -5,8 +5,9 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Coins
 {
     public class CoinBehavior : MonoBehaviour
     {
-        private MeshRenderer meshRenderer;
         private AudioSource audioSource;
+        private MeshCollider meshCollider;
+        private MeshRenderer meshRenderer;
         
         [SerializeField] private float durationBeforeObjectDestroys = 1f;
         [SerializeField] private ParticleSystem coinGrabEffect;
@@ -15,6 +16,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Coins
         private void Start()
         {
             meshRenderer = GetComponent<MeshRenderer>();
+            meshCollider = GetComponent<MeshCollider>();
             audioSource = GetComponent<AudioSource>();
         }
 
@@ -32,6 +34,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214.Coins
             coinGrabEffect.Play();
             audioSource.PlayOneShot(coinGrabSfx);
             meshRenderer.enabled = false;
+            meshCollider.enabled = false;
             yield return new WaitForSeconds(durationBeforeObjectDestroys);
             Destroy(gameObject);
         }
