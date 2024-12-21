@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Leonardo_Estigarribia._Scripts.GPG214
@@ -51,7 +53,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
                     }
                     
                     AssetBundle bundle = AssetBundle.LoadFromMemory(bundleData);
-                    if (bundle = null)
+                    if (bundle == null)
                     {
                         Debug.LogError("Failed to load asset bundle from memory.");
                         return null;
@@ -59,10 +61,29 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
 
                     loadedBundles[bundleName] = bundle;
                 }
+
+                GameObject coinPrefab = loadedBundles[bundleName].LoadAsset<GameObject>(variantName);
+                if (coinPrefab == null)
+                {
+                    Debug.LogError($"Failed to load coin variant: {variantName}");
+                    return null;
+                }
+
+                return coinPrefab;
             }
             catch
             {
-                
+                Debug.LogError($"Error loading coin variant.");
+                return null;
+            }
+        }
+
+        public async void SpawnCoinVariant(string variantName, Vector3 position)
+        {
+            GameObject coinPrefab = await LoadCoinVariant(variantName);
+            if (coinPrefab != null)
+            {
+                Instantiate(coinPrefab, position, Quaternion.identity);
             }
         }
     }

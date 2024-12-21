@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityGoogleDrive;
 
@@ -23,7 +21,8 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
                     _instance = FindObjectOfType<GoogleDriveAssetBundleManager>();
                     if (_instance == null)
                     {
-                        var GoogleDriveAssetBundleManagerGameObject = new GameObject("Google Drive Asset Bundle Manager");
+                        var GoogleDriveAssetBundleManagerGameObject =
+                            new GameObject("Google Drive Asset Bundle Manager");
                         _instance =
                             GoogleDriveAssetBundleManagerGameObject.AddComponent<GoogleDriveAssetBundleManager>();
                     }
@@ -31,11 +30,10 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
 
                 return _instance;
             }
-            
         }
 
-        private List<AssetBundleInfo> savedBundles = new List<AssetBundleInfo>();
-        private string BundleDataNamePrefix = "SavedAssetBundle_";
+        private readonly List<AssetBundleInfo> savedBundles = new();
+        private readonly string BundleDataNamePrefix = "SavedAssetBundle_";
 
         private void Awake()
         {
@@ -62,10 +60,8 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
                 return await taskCompletionSource.Task;
             }
 
-            StartCoroutine(DownloadBundleCoroutine(bundleInfo.BundleId, downloadedData =>
-            {
-                taskCompletionSource.SetResult(downloadedData);
-            }));
+            StartCoroutine(DownloadBundleCoroutine(bundleInfo.BundleId,
+                downloadedData => { taskCompletionSource.SetResult(downloadedData); }));
             return await taskCompletionSource.Task;
         }
 
@@ -82,7 +78,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
                 onComplete?.Invoke(null);
             }
 
-            Debug.Log($"Successfully downloaded asset bundle");
+            Debug.Log("Successfully downloaded asset bundle");
             onComplete?.Invoke(request.ResponseData.Content);
         }
 
@@ -90,18 +86,16 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         {
             var taskCompletionSource = new TaskCompletionSource<bool>();
 
-            byte[] bundleData = File.ReadAllBytes(bundlePath);
-            StartCoroutine(UploadBundleCoroutine(bundleData, bundleName, success =>
-            {
-                taskCompletionSource.SetResult(success);
-            }));
+            var bundleData = File.ReadAllBytes(bundlePath);
+            StartCoroutine(UploadBundleCoroutine(bundleData, bundleName,
+                success => { taskCompletionSource.SetResult(success); }));
             return await taskCompletionSource.Task;
         }
 
         private IEnumerator UploadBundleCoroutine(byte[] bundleData, string bundleName, Action<bool> onComplete)
         {
             Debug.Log($"Uploading Asset Bundle: {bundleName}");
-            var file = new UnityGoogleDrive.Data.File()
+            var file = new UnityGoogleDrive.Data.File
             {
                 Name = bundleName,
                 Content = bundleData
@@ -109,9 +103,9 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
 
             var request = GoogleDriveFiles.Create(file);
             request.Fields = new List<string> { "id" };
-            
+
             yield return request.Send();
-            
+
             if (request.IsError)
             {
                 Debug.LogError($"Could not upload Asset Bundle. Exception: {request.Error}");
@@ -119,16 +113,16 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
             }
 
             var bundleId = request.ResponseData.Id;
-            
+
             AddNewBundle(bundleId, bundleName);
-            
+
             Debug.Log($"Successfully uploaded asset bundle. {bundleId}");
             onComplete?.Invoke(true);
         }
 
         private void AddNewBundle(string bundleId, string bundleName)
         {
-            savedBundles.Add( new AssetBundleInfo(bundleId, bundleName));
+            savedBundles.Add(new AssetBundleInfo(bundleId, bundleName));
             SaveBundleList();
         }
 
@@ -136,7 +130,7 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
         {
             PlayerPrefs.SetInt($"{BundleDataNamePrefix}Count", savedBundles.Count);
 
-            for (int i = 0; i < savedBundles.Count; i++)
+            for (var i = 0; i < savedBundles.Count; i++)
             {
                 var baseName = $"{BundleDataNamePrefix}{i}_";
                 PlayerPrefs.SetString($"{baseName}ID", savedBundles[i].BundleId);
@@ -150,20 +144,17 @@ namespace _Leonardo_Estigarribia._Scripts.GPG214
             savedBundles.Clear();
             var count = PlayerPrefs.GetInt($"{BundleDataNamePrefix}Count", 0);
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 var baseName = $"{BundleDataNamePrefix}{i}_";
                 var bundleId = PlayerPrefs.GetString($"{baseName}ID");
                 var bundleName = PlayerPrefs.GetString($"{baseName}Name");
 
                 if (!string.IsNullOrEmpty(bundleId) && !string.IsNullOrEmpty(bundleName))
-                {
                     savedBundles.Add(new AssetBundleInfo(bundleId, bundleName));
-                }
             }
-            
+
             Debug.Log($"Loaded {savedBundles.Count} asset bundles.");
         }
     }
-    
 }
